@@ -1,0 +1,136 @@
+DD:DirectDrawCreate...Done
+DD:QueryInterface...Done
+DD:SetCooperativeLevel...Done
+DD:CreateSurface...Done
+DD:CreateClipper...Done
+DD:SetHWnd...Done
+DD:SetClipper...Done
+DD:CreateSurface(back)...Done
+DS:DirectSoundCreate...Done
+DS:SetCooperativeLevel...Done
+DS:CreateSoundBuffer(primary)...Done
+DS:GetCaps...Done
+DS:CreateSoundBuffer...Done
+DS:GetCaps(dsound)...Done
+DS:SetFormat...Done
+DS:SetFormat(primary)...Done
+DS:GetCurrentPosition...Done
+DS:Play(primary)...Done
+DS:Play...Done
+DI: Min=0, Max=65535
+DI: center=32767
+DI: play=8191
+DI: Min=0, Max=65535
+DI: center=32767
+DI: play=8191
+dwOfs=48
+dwType=4
+tszName=Button 0
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=1
+dwDimension=0
+wExponent=0
+
+dwOfs=49
+dwType=260
+tszName=Button 1
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=2
+dwDimension=0
+wExponent=0
+
+dwOfs=50
+dwType=516
+tszName=Button 2
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=3
+dwDimension=0
+wExponent=0
+
+dwOfs=51
+dwType=772
+tszName=Button 3
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=4
+dwDimension=0
+wExponent=0
+
+dwOfs=52
+dwType=1028
+tszName=Button 4
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=5
+dwDimension=0
+wExponent=0
+
+dwOfs=53
+dwType=1284
+tszName=Button 5
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=6
+dwDimension=0
+wExponent=0
+
+dwOfs=54
+dwType=1540
+tszName=Button 6
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=7
+dwDimension=0
+wExponent=0
+
+dwOfs=55
+dwType=1796
+tszName=Button 7
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=8
+dwDimension=0
+wExponent=0
+
+dwOfs=56
+dwType=2052
+tszName=Button 8
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=9
+dwDimension=0
+wExponent=0
+
+dwOfs=57
+dwType=2308
+tszName=Button 9
+wCollectionNumber=0
+wDesignatorIndex=0
+wUsagePage=9
+wUsage=10
+dwDimension=0
+wExponent=0
+
+DS:waiting thread termination...Done
+DS:Stop...Done
+DS:Stop(primary)...Done
+DS:Release(soundbuffer)...Done
+DS:Release(primary soundbuffer)...Done
+DS:Release(dsound)...Done
+DD:Release(clipper)...Done
+DD:Release(backsurface)...Done
+DD:Release(primarysurface)...Done
+DD:SetCooperativeLevel...Done
+DD:Release(ddraw)...Done

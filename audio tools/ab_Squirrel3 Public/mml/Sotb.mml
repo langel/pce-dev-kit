@@ -1,0 +1,99 @@
+;     _______  __               __                     
+;    |   _   ||  |--..---.-..--|  |.-----..--.--.--.   
+;    |   1___||     ||  _  ||  _  ||  _  ||  |  |  |   
+;    |____   ||__|__||___._||_____||_____||________|   
+;    |:  1   |                                         
+;    |::.. . |                                         
+;    `-------'                                         
+;                                                      
+;
+;                ___     __    __              
+;       .-----..'  _|   |  |_ |  |--..-----.   
+;       |  _  ||   _|   |   _||     ||  -__|   
+;       |_____||__|     |____||__|__||_____|   
+;                                              
+;                                              
+;                                              
+;                                              
+;
+;           _______  __     __        
+;          |   _   ||  |--.|__|.-----.
+;          |.  1___||     ||  ||  _  |
+;          |.  |___ |__|__||__||   __|
+;          |:  1   |           |__|   
+;          |::.. . |                  
+;          `-------'              
+;		  
+;		By Arkhan.  Included for Esteban.  
+		  
+		  
+.TRACK  sotb
+
+.CHANNEL 0  Setup
+T45 V31 ^D0
+
+kicks=o3 L16 @M0 ^SC127 ^ST255 ccr4.'
+kicksnare=@m0P15,15ccr8c@m1c#r8'
+
+.CHANNEL 1  arpin
+O4 P13,13 @15 @E09 L4 ^ME0 ^MD1
+l32<ega2&a8.l16>b+<bagf2.&f8.e32f32g2.>b+<bagg2.&g8.r>e32g32a2&a8.>b+<bag
+f2.&f8.e32f32g2.>b+<bagg2.&g8.rl32<ega2.&a8r16ega2.&a8r16l8.ega+8a2>ega+8
+a2<ega+8a2>ega+8a2<ab>b+8<ag4r16ab>c8fe4r16ab>b+8<ag4r16ab>c8f1e1<<e32g32
+a2&al16>b+<bagf2.&f8.e32f32g2.>b+<bagg2.&g8.r>e32g32a2&a8.>b+<bagf2.&f8.e32f32
+g2.>b+<bagg2.&g8.rl32<ega2.&a8r16ega2.&a8r16l8.ega+8a2>ega+8a2<ega+8a2>eg
+a+8a2<ab>b+8<ag4r16ab>c8fe4r16ab>b+8<ag4r16ab>c8f1e1<<e32g32a2&al16>b+<bag
+f2.&f8.e32f32g2.>b+<bagg2.&g8.r>e32g32a2&a8.>b+<bagf2.&f8.e32f32g2.>b+<bag
+g2.&g8.
+
+.CHANNEL 2 BELLS
+O4 P15,15 @21 @E13 L8 ^ME0 ^MD1
+l1<ecec-ece<baal2>cfb+fcfb+ffcfcfcfffccl1ecec-ece<baal2>cfb+fcfb+ffcfc
+fcfffccl1ecec-ece<b
+
+.CHANNEL 3 BASS
+O4 P15,15 @22 @E01 L16 ^ME0 ^MD1
+l1o1afcgafcgaal2cfcfcfcffcfcfcfffccl1afcgafcgaal2cfcfcfcffcfcfcfffccl1
+afcgafcg
+
+.CHANNEL 4 LEAD2
+O3 P13,13 @15 @E09 L16
+l32<ega2&a8.l16>b+<bagf2.&f8.e32f32g2.>b+<bagg2.&g8.r>e32g32a2&a8.>b+<bag
+f2.&f8.e32f32g2.>b+<bagg2.&g8.rl32<ega2.&a8r16ega2.&a8r16l8.ega+8a2>ega+8
+a2<ega+8a2>ega+8a2<ab>b+8<ag4r16ab>c8fe4r16ab>b+8<ag4r16ab>c8f1e1<<e32g32
+a2&al16>b+<bagf2.&f8.e32f32g2.>b+<bagg2.&g8.r>e32g32a2&a8.>b+<bagf2.&f8.e32f32
+g2.>b+<bagg2.&g8.rl32<ega2.&a8r16ega2.&a8r16l8.ega+8a2>ega+8a2<ega+8a2>eg
+a+8a2<ab>b+8<ag4r16ab>c8fe4r16ab>b+8<ag4r16ab>c8f1e1<<e32g32a2&al16>b+<bag
+f2.&f8.e32f32g2.>b+<bagg2.&g8.r>e32g32a2&a8.>b+<bagf2.&f8.e32f32g2.>b+<bag
+g2.&g8.
+
+.CHANNEL 5 DRUM
+O3 P14,14 @0 @E01 @m0 ^SC127 ^ST255 
+l16cr4.[17(kicks)]
+
+[2@m0P15,15ccr8ccr8]
+[72(kicksnare)]
+
+@m0P15,15ccr8c@m1c#r
+
+.CHANNEL 6 HAT
+O4 P13,13 @19 @E01 L4 @m1
+[46dddd]
+
+.Envelope
+     .mod 0 wiggle
+     0,2,4,6,4,2,0,-2,-4,-6,-4,-2,0,2,4,6,4,2,0,-2,-4,-6,-4,-2
+	
+.Perc 0 
+       C:  E01 W00 P14,14 T9000 T10000 T12000 T14000 T17000        
+       C#: E01 W00 P0,15  T200  T400   T1000  N15 N20 T3000 T7000 N9 N15  
+       D:  E00 W00 P11,0  T90   T110   N30 n29
+       D#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       E:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       F:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       F#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       G:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       G#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       A:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       A#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       B:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26	

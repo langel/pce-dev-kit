@@ -1,0 +1,1126 @@
+
+
+
+ Chapter 1: Processor and Assmebler Overview
+ ===========================================
+  
+  
+   Basic ROM structure
+   -------------------
+    
+    We need to get familiar with the assembler and rom layout. The assembler has special
+    directives that help facilitate the rom layout. This tutorial assumes you know some
+    65x or 6280 assembly, or at least some assembly language in general. If not, it would
+    be a good idea to have a document with all the 'opcodes' handy to follow along.
+    
+    Be prepared to be going back and fourth between the intro section and here to get 
+    familiar with the architecture and quirks. The first thing we need to do is setup our
+    boot code for bank $00. This is because it's the only bank that is mapped on startup.
+    
+    A quick run down of some symbols:
+    
+      '$' denote a hex value
+      '#' denote an immediate value
+      ';' used for comments
+      ':' used to create an address label
+      '.' used for marking a directive
+      '=' shorthand for equate
+      '%' denote a binary value
+      '<' denote a ZP register
+      
+    Don't worry if you don't know all the terminology, I'll cover some of this as we go on.
+        
+    
+    
+    
+    ;#listing1.asm
+    ;------------
+    
+      .bank $00     ;tell the assembler the following code/data will be in bank 00
+      
+      .code         ;this directive tell the assembler that we are specifing code in this area. 
+                    ;It's not terribly important to use this directive, but why not.
+      
+      .org  $e010   ;set the assembler to use this address. This also effects the 
+                    ;address in the rom.
+                    
+    start_up:   
+    
+      sei           ;temporarily disable ALL interrupts. SEI = set interrupt disable flag
+                      
+      lda #$00      ;these aren't doing anything, just some example instructions. Filler as it were.
+      ldx #$01      ;
+      ldy #$02      ;
+      
+      csh           ;set the CPU to 7.16mhz mode. The default on boot is 1.79mhz mode.
+                    
+    loop:           ;create a label in the address range
+      jmp loop      ; 'jump' to loop. This is just an infinite loop.
+        
+    ;end
+    
+      .org $FFFE
+
+      .dw $E010
+
+
+
+
+    Bank $00 tells the assembler that we are working in external address range $0000-1fff. ORG
+    tells the assembler where in CPU logical memory this code(and bank) will be mapped to. If
+    you don't specify a logical address, the assembler will use either $0000 or some continuation
+    of a previous address. 
+    
+    'ORG' does something else, too. While it does setup the logical address, it also effects the
+    address with in the BANK range. Remember how the PCE uses banks of $2000 bytes? ORG $E010 will
+    put our example code at $0010 in the rom. So the value of ORG with logical AND $1FFF also sets
+    the destination address in the rom (or CDRAM if there were a CD project).
+    
+    Here's another example of ORG:
+    
+      .bank $04
+      .org $D123
+      
+    Where would the code or data start? BANK $04 is address $8000 ($04 x $2000). Take the ORG address
+    of $D123 and AND it by $1FFF ($D123 AND $1FFF). We get $1123 and adds this to the external address
+    ... and we get $9123. This is where our code or data will start. At this point it's not important
+    to know the offset in the rom that ORG effects, just that it does effect more than just the 
+    logical address range. It's something to keep in mind. For now, we're really just interested in the
+    logical address range since we are creating labels and such.
+
+    Onto the rest of the explanation. The CODE directive just tells the assembler to expect code from
+    this point onward. Alternatively, there's also the DATA directive and does just the opposite. For
+    the most part, it doesn't have a great effect on the operation of the assembler until you start
+    'including' binary data into a project and such.
+
+    Our first instruction disables all interrupts for the moment. We don't know if any are pending and
+    sure don't want them to initiate before we've had a chance to set everything up - most importantly
+    RAM ;)
+    
+    The next three instructions just load some values in the cpu registers. Nothing relevant, just some
+    filler code to make it look prettier. The 'CSH' instruction sets the CPU to high speed and 'JMP' 
+    just does an infinte loop onto itself. This is technically a legal rom, but nothing is initialized.
+    Not ram, stack, video, interrupts, or sound.
+    
+    A quick note on the three filler instructions. Notice the use of '#' symbol. This means we are loading
+    an immediate value into a register. What's an immediate value? A hardcoded number that is assembled
+    into the rom for the instruction. Since the three general registers are 8bit, you can load a value
+    from $00 to $ff into them. If you don't specify a '#' in front of the value, the assembler thinks you
+    are trying to load a value from 'memory'. 
+    
+    If I had used LDX $01, the assembler would think I was trying to load a value from $0001 - a memory
+    location of the CPU's logical address range. It's not a good idea to use that short hand for $0001,
+    so make sure *if* you're loading from an address, to write the whole address out. A quick run down
+    of load register instruction:
+    
+      ldx #$01    ;load the immediate value of $01 into the register
+      ldx $01     ;load a byte from the address of $0001 (value unknown - whatever is at $0001 at the time)
+      ldx $0001   ;same as above, but the correct way to write it ;)
+      ldx <$01    ;load a byte from ZP register $01 (value unknown - whatever is at ZP reg $01 at the time)
+
+
+    Now for JMP loop. JMP instruction can jump anywhere in the 65335 byte CPU address range. The value for
+    the jump instruction is an immediate, but we've used a label instead. The assembler will convert that
+    label into a 16bit(2 bytes) immediate for the instruction at assemble time. This takes a load off our
+    backs since we don't need to sit there and count bytes in order to know where to jump to. Having the 
+    assembler create a label as a mnemonic for an cpu address and then allowing us to use it in an
+    instruction is... well keeps us from going insane. 
+    
+    Labels aren't just used for code either, you can use them for data as well. You can also use them with
+    instructions like 'load register' and use them to define an address in ram (you know, to write something
+    too). A label pointing to ram basically becomes a 'variable', if you're familiar with other programming
+    languages. A label in rom address is like a read only static label in C.
+    
+    Now, we have a second ORG usage at the end of the listing. I'm basically telling the assembler to skip
+    to the end of the bank by specifying $FFFE ($1FFE in the rom). The 'dw' directive tells the assembler
+    to declare a "word" value in the rom. $FFFE (or $1FFE) is a special location for both rom and cpu
+    address range. This is where the 'reset vector' lives. The cpu needs this for boot or reset. I put
+    value $e010 because that's the address I want the cpu to jump to on startup. Now for something a bit
+    more confusing; I could have used a label instead. See that label "start_up:"? I could have put that 
+    label after .dw instead of the actual address. This would make things more automated and allow me to
+    make changes easier - if they effect the start/boot address.
+    
+  
+    So let's run through the example code real quick.
+    
+      -On startup: the cpu loads bank $00 to MPR7 (address range $E000-FFFF)
+    
+      -MPR7 = 00, all other MPR's are setup with random values.
+    
+      -The cpu 'jumps' to the address located at $FFFE which is $e010.
+    
+      -The first instruction at $e010 is SEI. Disable interrupts.
+    
+      -next load some values into registers A,X, and Y.
+      
+      -next set cpu speed to high
+      
+      -last execute jump instruction, which jumps to itself
+      
+      
+    That's it. To assemble the listing, use the following: "pceas listing1.asm". You can
+    run the rom through mednafen's debugger and see it in action. To do this, open the rom
+    with mednafen, press alt+D, press "s", press "F10". This will put you at the beginning
+    of the rom. Use "s" to single step through the instructions.
+
+
+   
+   
+   Initializing the system
+   -----------------------
+
+    So we've created a rom that jumps to an infinite loop, but we really haven't setup the
+    CPU yet. To do this, we need to cover the CPU basics: stack, ram, harware bank.
+    
+    First the stack. The stack is a special area in RAM that values are saved to. One can
+    manually save to the stack and other times the CPU saves to the stack. What's actually
+    saved to this area of memory? For the most part CPU registers. Let's look at an example.
+    
+    
+      lda #$10      ;load the A register with the value of $10
+      pha           ;PUSH the value in register a onto the stack
+      lda #$20      ;load register a with the value $20
+      pla           ;POP the latest value from the stack and drop it into the A register 
+      .             ;Register A now contains $10, not $20. Value $20 is lost forever... ;)
+      .
+      
+    While that code is totally useless, it doesn't really do anything, let's look at what's
+    happening more indepth. The stack is 256 bytes long. The stack 'pointer' is an 8bit 
+    register. When a value is 'pushed' onto the stack, the cpu writes the value to the area
+    in memory for the stack, pointed∂ƒ by the stack register. The stack register is then updated
+    to point to the next place in the stack ram or buffer. PHA wrote the value in the A register
+    to the stack. We did this because we wanted to quickly save that value, and then when we 
+    wanted to retrieve that value form the stack, we used PLA. How does PLA know what value to
+    pull from the stack? The answer is LIFO (last in, first out).
+    
+    
+    The stack is at address range $2100-$21ff. The stack pointer starts at the top and works
+    its way down. The stack pointer is initialized at $21ff. If we push register A onto the
+    stack, then the stack pointer decremented to $21fe. Decremented by one since reg A is only
+    1 byte.
+    
+          ------
+    $21ff |$10 |  <- we push value of reg A onto the stack
+          ------
+    $21fe |    |  <- now the stack pointer register is decremented and points here.
+          ------
+    $21fd |    |
+          ------
+    $21fc |    |
+          ------
+    $21fb |    |
+          ------
+            .
+            .
+            .
+            .
+            .
+            .
+          ------
+    $2100 |    |
+          ------
+            
+              
+    The old analogy of explaining the stack is to visualize a stack of dishes/plates. For this
+    analogy to work, lets flip the stack upside down. Think of $21ff as the bottom, and $2100
+    as the top. Everytime we want to store a value, we put a plate on the stack. And when we
+    want that value back, we pull the plate off the stack. The tricky thing about the stack
+    is that you have to pull the plates back off the stack in the opposite order you put them
+    on there. 
+    
+    Let's push two different values onto the stack. If we want to get back the first value we 
+    pushed onto the stack, we need to pop off the second/last value before we can get to it.
+    That seems a bit absurd, doesn't it? And it might be, but that's how it works. The programmer
+    needs to be careful when manually saving values to the stack and keep track of the *order* of
+    its usage.
+    
+    So we know a little about the stack and how it works (hopefully), but how do we initialize
+    the stack? The stack pointer, referred to as SP from here on, can be 'transfered' back and
+    fourth between the X register and itself. We use the X register to manually change the SP
+    value. Advance programming, one could manipulate the stack for different usage, but we'll
+    keep it simple.
+    
+    Here's how we initialize the stack:
+    
+        ldx #$ff
+        txs
+        
+    We load the X register with the immediate value of $FF. TXS is "trasnfer X to stack pointer"
+    and it does exactly that. SP is now #$FF. The stack is fixed at cpu location $2100. Since the
+    SP is an 8bit value, it's added to $2100 to make the full address range of $2100-21ff. We call
+    this 'indexed'. More on this later ;)
+    
+    We covered manually using the stack, but there's an even more important task of the stack. The
+    automated usage of the stack. Interrupts and subroutine calls. Both of these *need* a functioning
+    stack in order ot operate. They handle pushing and poping values on the stack themselves. Let's
+    move on to setting up ram.
+    
+    Since we're working in a hucard project, we need to map the only available ram in the system to
+    a special address range of the cpu. If you guess the area of the stack, you guess correctly :)
+    
+    Base ram on the PCE is in the external address range $1F0000-1F1FFF. That doesn't really help us
+    at all. We need the bank number. $1F0000 / $2000 = $F8.. or I could've just told you $F8 to begin
+    with. Yes, bank $F8 is the system ram - all 8k of it. To map it to the address range we need it in,
+    we use MPR1.
+    
+    Let's look at the CPU address range and the MPR pages again:
+    
+      $0000-1fff  MPR0
+      ----------      
+      $2000-3fff  MPR1  
+      ----------
+      $4000-5fff  MPR2
+      ----------
+      $6000-7fff  MPR3
+      ----------
+      $8000-9fff  MPR4
+      ----------
+      $a000-bfff  MPR5
+      ----------
+      $c000-dfff  MPR6
+      ----------
+      $e000-ffff  MPR7
+    
+    There are eight MPR registers. MPR7 is mapped for us on startup to BANK $00. We're good to go on that,
+    but we need to setup the rest of them. The first MPR we're going to setup is RAM BANK $F8.
+    
+    
+    Here's how:
+    
+      lda #$f8
+      tam #$01
+      
+      
+    Simple, right? I knew you'd think so ;) #$F8 is loaded into the A register, then transfered to MPR1
+    with TAM (transfer A to MPR reg). Now ram is mapped to $2000-3fff. Excellent. There's another step to
+    setting up ram (isn't there always?). We need to clear it. You see, there is no bios in the PCE to
+    do such things. Introducing TII, the block transfer instruction. We're going to use it to zero out
+    the ram area.
+    
+      
+      lda #$00
+      sta $2000
+      tii $2000,$2001,$1fff
+    
+    
+    Two new instructions. STA is store A register. This stores the value in the A register to a memory
+    location and $2000 is the very first byte in ram. TII is a block transfer instruction. TII is Transfer
+    Increment Increment. The first address is the source, the second is the destination, and the third is
+    the length of bytes to copy.
+    
+    Quick TII explanation.
+    
+      Grab byte from source ($2000)
+      store byte to destination ($2001)
+      add 1 to source and destination
+      subtract 1 from length, if length is less than 0000 then stop, else continue.
+    
+    The TII instruction writes all 00's to the 8k of ram. Ram is now initialized.
+    
+    
+    The last thing on the list to initialize(for now) is the hardware bank $FF. The hardware bank is the area
+    of memory that Hudson reserved for mapping ports to memory (don't worry if you don't currently know what
+    that means). If we want to access the other hardware of the system, we'll need to map this bank. This is 
+    handled the same as what we did for the RAM bank.
+    
+      
+      Mapping hardware bank:
+      
+        lda #$ff
+        tam #$00
+        
+    It's customary, but not necessary, to map the hardware bank to $0000 PAGE. Let's look at our memory map
+    now.
+    
+    
+      $0000-1fff  MPR0 - bank $FF (ext address $1FE000)
+      ----------      
+      $2000-3fff  MPR1 - bank $F8 (ext address $1F0000)
+      ----------
+      $4000-5fff  MPR2 - random value
+      ----------
+      $6000-7fff  MPR3 - random value
+      ----------
+      $8000-9fff  MPR4 - random value
+      ----------
+      $a000-bfff  MPR5 - random value
+      ----------
+      $c000-dfff  MPR6 - random value
+      ----------
+      $e000-ffff  MPR7 - Bank $00 (ext address $000000)
+    
+    
+   
+    
+    Now let's put this all together.
+    
+    
+    ;#listing2.asm
+    ;------------
+    
+    
+       .bank $00
+       .org $e000
+       
+     start_up:
+     
+       sei                         ;disable interrupts
+       
+       lda #$ff                    ;initialize SP to $FF
+       txs
+       
+       lda #$ff                    ;map hardware bank to MPR0
+       tam #$00
+      
+       lda #$f8                    ;map ram bank to MPR1
+       tam #$01
+       
+       lda #$00                    ;clear the first byte in ram
+       sta $2000
+      
+       tii $2000, $2001, $1fff     ;zero out the rest of the bytes in ram 
+      
+     loop:
+      
+       jmp loop                    ;do our infinite wait loop
+      
+      
+      
+       .org $fffe                  ;skip to the end of bank $00
+    
+       .dw start_up                ;setup the reset vector to point to our start position
+                                   ;using our convenient label.
+      
+     ;#end
+    
+  
+
+
+
+   HuC6280 instructions 
+   --------------------
+
+    It's probably a good idea to go over some of the CPU's instructions and registers. This
+    is by no means a replacement for a 65x or 6280 instruction doc. We'll review some of the
+    common instructions and how they translate into opcodes.
+
+
+  (PC REGISTER)
+
+    I've talked about the SP register and a little about A/X/Y registers, but need to start
+    from the beginning - The PC register.
+        
+    The PC (program counter) register keeps track of where the processor is in the 64k address
+    range. That is, where the processor is executing code from. This register is 16bit (hence
+    64k address range) and can not be directly written or read. There's isn't really a need to
+    do this, but with some clever code it is possible to obtain its value.
+    
+    The PC register points to an address in the 64k logical address range. Each instruction
+    it made up from a series of bytes. When the processor executes an instruction, the number
+    of bytes is added to the PC register. This moves along the processor to the next instruction
+    so on and so fourth.
+    
+     Let's look at how some instruction effect the PC register:
+     
+        PC=$e000:  sei          ; SEI opcode is 1 byte in length, so 1 is added to the PC
+        PC=$e001: lda #$f8      ; LDA immd opcode is 2 bytes, so inc the PC by 2
+        PC=$e003: tam #$01      ; TAM immd opcode is 2 bytes, inc PC by 2
+        PC=$e005: lda #$FF      ; LDA immd opcode 2 bytes, inc PC by 2
+        PC=$e007; tam #$00      ; etc
+     
+     
+    We can see the PC being incremented as it loads the opcodes. Opcode is an instruction in binary
+    form. You can view them in hex form as well. Opcodes are the actual CPU instructions converted
+    by the assembler. With PCEAS opcodes and instructions are 99.98% 1:1. This means the mnemonic
+    we use in the assembler almost always translates directly to the cpu opcode. This isn't always
+    the case with other assemblers. Some assemblers have pseudo instructions that when assembled,
+    are converted to a two or more opcodes. Thankfully we don't have to worry about that. Mnemonic
+    is the text form of an opcode that we use in an assembler. Usually abbreviations of or shortened
+    english words. 
+      
+      Mnemonic    Opcode
+      --------    ------
+      lda #$ff    $A9 $FF
+      sei         $78
+      jmp $e010   $4C $10 $E0 
+
+    
+    Just look at those babies :D Assembly language is a beautiful thing. Now onto branch instructions.
+    
+    There are two methods of jumping off course - so to speak. Branch instructions allow us to make 
+    small jumps of 128 bytes either forward or backwards in the CPU address range. A long branch,
+    labeled as jump, allows the processor to make long jumps into the entire logical address range.
+    
+    The second method are 'calls'. Calls allow the processor to jump to another area, execute some
+    code, and return right back to where it was originally. Calls are referred to as subroutines and
+    are 'jumped' to with the JSR instruction (Jump Sub Routine). JSR is just like JMP, but it takes
+    the PC, adds +3 to it, then saves it to the stack (clever, I know). Why +3? Because that's the
+    length of the JSR opcode - 3 bytes. When you 'return' from a subroutine, you want to return to
+    next instruction after JSR. See how that works? Let's have an example.
+    
+        
+        lda #$50            ; load reg A with immediate value $50
+        jsr put_value       ; jump to a subroutine label "put_value"
+        
+        lda #$20            ; A = #$20
+        jsr put_value       ; call subroutine
+        
+        lda #$99            ; A = #$99
+        jsr put_value       ; call subroutine
+      
+      loop:                 ; our infinite loop label
+        jump loop           ; do that infinite wait loop
+        
+        .
+        .
+        .
+        .
+        
+        
+      put_value:            ; our subroutine label
+        sta $2001           ; all our subroutine does is store whatever is in A to address $2001
+        rts                 ; Ahh.. a new instruction
+
+
+    The JSR tells the processor to jump to put_value address. The code in the put_value routine
+    doesn't do much since we haven't explored some of the other instructions. Notice the RTS
+    instruction. RTS is ReTurn from Subroutine. This instruction pops the save PC address from
+    the stack and loads it into the PC register.
+
+
+    Let's review. JMP instructions tells the processor to jump to a different address - anywhere
+    in the 16bit address range. JSR tells the processor to jump to a different address, again
+    anywhere in the 16bit address range, and then return back with the RTS (return) instruction.
+    There's something to be cautious of. All JSR calls must have an RTS instruction down the line.
+    If not, the SP won't be decremented back to its original index/position before the JSR call
+    and you also run the risk of 'overflowing' the stack, i.e. "stack overflow". That would be bad.
+    As your programs and projects grow and become more complicated, you'll have multiple layers of
+    JSR calls or 'nested' calls. And using an RTS when a JSR wasn't issued will also corrupt the
+    program code. In other words, you can't use a JMP and then an RTS, and every JSR executed
+    requires an RTS. 
+
+
+
+  (STATUS REGISTER)
+
+    Next we'll look at the status register. This register contains 8 conditional flags. Each flag
+    is set depending on a specific condition that happens in the processor. Not very descriptive,
+    is it? It's probably a good idea not to go too in depth with this register. And on that, let's
+    look at the most commonly used flags.
+
+    STATUS register, or 'P' for processor, is an 8bit register. Here's a layout of the register:
+    
+      D7 D6 D5 D4 D3 D2 D1 D0
+      ----------------------- 
+      N  V  T  B  D  I  Z  C
+      
+          
+          C = carry flag
+          Z = zero flag
+          I = interrupt enable/disable flag
+          D = decimal mode flag
+          B = software interrupt flag
+          T = special register mode flag
+          V = overflow flag
+          N = negative flag
+
+    The C and Z flag are the ones we're mostly going to be discussing. We can't really talk about
+    these flags without bringing in some other cpu instructions first. The Z flag is probably the
+    easiest one to understand so we'll start with that. 
+    
+    The Z flag is set when a value (usually in a register, but not always) equals zero, hence the
+    name. To show how this flag works, we'll need to bring in some arithmetic instructions. Let's
+    start with INC(increment) and DEC(decrement). INC and DEC add 1 or subtract 1 from a register
+    *or* value in memory. We'll use an example with a register for simplicity.
+    
+        
+        lda #$01      ; load A with immediate value $01
+        dec a         ; subtract 1 from the value in A and store the result in A
+                      ; A now is 00
+                    
+    When register A went from 01 to 00, the Z flag was set. Let's see INC in action.
+    
+    
+        lda #$ff      ; load A with immediate value $FF
+        inc a         ; add 1 to A and store it in A
+                      ; A is now 00
+        
+    This might require a bit more explaining. Whenever a register increments to more than what it
+    can hold, it rolls over. Like an Odometer in a car, it can only hold so many digits before it
+    rolls over. The largest possible value for 8bit is $FF, thus FF + 1 = 00 and the Z flag is set. 
+    
+    Let's do some more examples. (?=unkown to us)
+     
+                      ; Z = ?    
+        lda #$01      ; Z = 0
+        dec a         ; Z = 1 
+
+                      ; Z = ?
+        lda #$ff      ; Z = 0
+        inc a         ; Z = 1
+
+                      ; Z = ?    
+        lda #$01      ; Z = 0
+        inc a         ; Z = 0
+
+                      ; Z = ?
+        lda #$ff      ; Z = 0
+        dec a         ; Z = 0
+
+                      ; Z = ?
+        lda #$00      ; Z = 1
+        inc a         ; Z = 0
+
+                      ; Z = ?
+        lda #$00      ; Z = 1
+        dec a         ; Z = 0
+
+    When a flag is 1 we call this 'set' and when the flag is 0 call this 'clear'. If you look
+    closely at the examples, you'll notice that even loading register A with a value immediately
+    effects the Z flag. Having a chart/list of all the cpu instructions along with what flags
+    they set is a must.
+    
+    Let's look at some other instructions that effect the Z flag. In programming, there needs
+    to be a way to 'compare' one value against another. The Z flag takes on a new meaning. The
+    pair of instructions we're going to look at are CMP(compare) and BNE/BEQ (branch true/false).
+    
+    The CMP instruction takes the value from the A register and compares it to another value.
+    If this value is the same, the Z flag is set, if not then the Z flag is cleared.
+    
+      CMP example:
+                  
+                      ; Z = ?
+        lda #$05      ; Z = 0
+        cmp #$05      ; Z = 1
+        beq true      ; jump to 'true' because Z = 1 
+    
+          .
+          .
+          .
+          
+      true:   
+          ...
+
+    CMP compares the value in register A with the immediate value of $05. What CMP actually
+    does is take the value from A, subtract the compare value, and discard the result. A is
+    not effected, but P register is set accordingly. BEQ is branch if equal, but really it's
+    branch if Z flag is set. Branch if equal mnemonic is just easier to process on our human
+    brains. These Bxx or 'branch conditional' instructions are limited to + or - 128 bytes of
+    "jumping". Not very far in the address range, unfortunately.
+      
+    I'm feeling confident. Let's try our first 'loop'. This will be an increment loop. I hope
+    you're as excited as I am :D
+      
+      Loop example:
+      
+                      ; Z = ?
+        lda #$00      ; Z = 1
+        
+      loop:
+        inc a         ; Z = 0
+        cmp #$05      ; Z = 0 if A != $05, Z = 1 if A = $05
+        bne loop      ; jump to 'loop' if Z = 0
+
+      done:
+        jmp done      ; We're done.
+
+    
+    We load A with $00, then we increment it by +1, test to see if A has reached the value of 5
+    yet, if not then jump back and increment A again. We do this until A equals 5, then the code
+    passes on to the next instruction - the infinite jump loop. Notice the new conditional
+    branch instruction? BNE is Branch Not Equal and branches if the Z flag is cleared. To recap,
+    CMP sets or clears the Z flag depending on whether the compare was true or false. BNE/BEQ
+    branch/jump depending on the state of the Z flag set be CMP.
+
+
+    Now that we've got an idea of the Z flag, time to move on to the C flag. Like the Z flag, the
+    C flag also has multiple purposes/functions. INC and DEC aren't the only add and subtract
+    instructions in the cpu's instruction set. ADC (add with carry) and SBC (subtract with carry)
+    are used for when more than '1' needs to be added or subtracted from a register. The CPU doesn't
+    have a straight add or sub instruction, so we need to manually set the condition of the carry
+    flag *before* using ADC/SBC. The two instructions for setting or clearing the C flag are SEC
+    (set carry) and CLC (clear carry). Example time.
+    
+      Add with carry example
+      ----------------------
+      
+                      ;8bit + 8bit arithmetic
+      
+        lda #$05      ; load 5 into A
+        clc           ; Clear the carry flag
+        adc #$05      ; add 5 to register A and store it back to register A
+
+    
+    When using ADC to add an 8bit value, the C flag is added into the mix. We don't always know
+    the state of the C flag, so clear it to make sure. The logic of the above code looks like
+    this: A=5+5+0. If the carry flag was set, it would look like: A=5+5+1. Hopefully that isn't
+    too confusing. If the state of the C flag is set, then 1 is added into the arithmetic and 
+    0 if cleared. Another tidbit about ADC is that not only does it include the C flag value
+    into the 8bit arithmetic, but it will also *sets* or *clears* the C flag upon the output.
+    
+    
+                      
+        lda #$05      ; C = ?
+        clc           ; C = 0
+        adc #$05      ; C = 0, A = $0A
+            
+        
+        
+        lda #$f0      ; C = ?
+        clc           ; C = 0
+        adc #$10      ; C = 1, A = $00
+
+        lda #$ff      ; C = ?
+        clc           ; C = 0
+        adc #$05      ; C = 1, A = $04
+        
+        
+
+    The C flag is set if the arithmetic result is greater than 8bit. C is the carry over from
+    the 8bit+8bit ADD. We use the same 'carry' system when we do simple decimal addition.
+    
+      (1) 
+        9
+       +9
+       --
+        8
+
+    9+9 result is larger the 'ones' place, so the 1 is the carry. So are we limited to 8bit
+    results and variables? No. What do you do with the carry from 9+9? You add it to the 'tens'
+    place. We do the same on the processor. This example we're going to store our results back
+    into memory. (awesome!)
+    
+    
+        lda #$ff      ; C = ?, A = $ff, $2000 = ??, $2001 = ??
+        clc           ; C = 0, A = $ff, $2000 = ??, $2001 = ??
+        adc #$05      ; C = 1, A = $04, $2000 = ??, $2001 = ??
+        sta $2000     ; C = 1, A = $04, $2000 = 04, $2001 = ??
+        lda #$00      ; C = 1, A = $00, $2000 = 04, $2001 = ??
+        adc #$00      ; C = 1, A = $01, $2000 = 04, $2001 = ??
+        sta $2001     ; C = 0, A = $01, $2000 = 04, $2001 = 01
+
+
+    We have an 8bit + 8bit addition operation with a 16bit result. We stored the 16bit result
+    in $2000/$2001. I guess it would a good time to tell you that I'm *assuming* you know what 
+    hexidecimal is and and how bits relate to bytes/words/dwords and vice versa. If not, you're
+    probably having a harder time following along. I would suggest obtaining some some docs or 
+    tutorials on hex/bits/bytes/words/etc and then come back to this tutorial. Sorry 'bout that.
+    For the rest of you that are somewhat and/or barely following along, onward march.
+
+    Our 'carry' happens when the addition result is greater than 8bit (yeah, I keep mentioning
+    that). If you look at the second addition part, you'll notice that we are adding 00+00!?
+    Ahh, but we are also adding the carry flag. Since C is set from the carry over, we have
+    00+00+C (or 00+00+1). We store this in the MSB. MSB is the high/upper byte of a word or 16bit
+    value. 
+    
+    Because this is an 8bit processor and optimized for 8bit data elements, 16bit and 
+    greater values are stored as multiple 8bit/byte values. So we label the lower half of the
+    16bit value the LSB or least significant byte and the upper half MSB or most significant
+    byte. It's somewhat rare to need a value larger than 16bit, but ADC allows you to support
+    addition on a scale larger than 8bit. 8,16,24,32,48,56,64bit etc.
+
+    Subtraction is the same process. The only difference with SBC is that we have to 'set' the
+    C flag before our instruction. Like so:
+    
+        lda #$00      ; C = ?
+        sec           ; C = 1
+        sbc #$05      ; C = 0
+        sta $2000     ; C = 0, $2000 = FB
+        lda #$01      ; C = 0
+        sbc #$00      ; C = 1
+        sta $2001     ; C = 1, $2001 = 00
+
+    For SBC, the C flag is reverse in function. Explaining the mechanism behind SBC is probably
+    beyond the target of this tutorial. Just think that SBC is the opposite of ADC, so the C
+    flag value should be as well ;) If you don't really understand, it's not that important at 
+    this stage.
+    
+    We've seen how ADC and SBC are effected by the C flag. Now let's look CMP. Yup, CMP also
+    effects the C flag. Remember when we used CMP to see if one value equaled another? With the
+    carry flag, we can see if the value is less than or greater then. How convenient :D
+    
+                            ; C = ?
+        lda #$01            ; C = ?
+        cmp #$02            ; C = 0
+        bcc less_than       ; C = 0, branch if C = 0
+        bcs greater_equal   ; C = 0, branch if C = 1
+
+    Remember, CMP takes the value in A and subtracts that from its 'compare' value. In decimal
+    arithmetic you have to borrow from the next group if the amount you are subtracting by is
+    greater than the target.
+    
+        (1)
+        13
+        -9
+        --
+         4
+
+    So CMP sets the C flag on a subtraction 'borrow', and clears it for no 'borrow'. If C = 0
+    then the value in A is less than, if C = 1 set then value is equal_or_greater than. In all
+    this setting of the C flag, the Z flag is still being effected. Let's look again.
+    
+                            ; C = ?, Z = ?
+        lda #$01            ; C = ?, Z = 0
+        cmp #$02            ; C = 0, Z = 0
+      * bcc less_than       ; C = 0, Z = 0
+        beq equal_to        ; C = 0, Z = 0
+        bcs greater_than    ; C = 0, Z = 0
+
+                            ; C = ?, Z = ?
+        lda #$02            ; C = ?, Z = 0
+        cmp #$02            ; C = 1, Z = 1
+        bcc less_than       ; C = 1, Z = 1
+      * beq equal_to        ; C = 1, Z = 1
+        bcs greater_than    ; C = 1, Z = 1
+
+                            ; C = ?, Z = ?
+        lda #$03            ; C = ?, Z = 0
+        cmp #$02            ; C = 1, Z = 0
+        bcc less_than       ; C = 1, Z = 0
+        beq equal_to        ; C = 1, Z = 0
+      * bcs greater_than    ; C = 1, Z = 0
+
+
+    The asterisks in each example shows you which branch will jump. If we remember our branch 
+    conditional logic, the branch instruction will 'jump' to an address depending on what the 
+    instruction expects the state of 'x' flag to be (either set or clear). If the flag's state
+    doesn't meet the requirements for the 'jump', then the branch (jump) is not taken and the
+    cpu goes onto the next instruction. See how we have them setup in series? The processor
+    will 'fall' through conditional branch instructions until it reaches on the that triggers
+    or 'jumps'. Hopefully by this point you understand that the terms branch and jump are inter
+    changeable. From here on, I'll probably refer to it as branch or branching most of the time. 
+    
+    We've covered the two most important flags. You can make quite complex projects without even
+    touching the other flags. That's not to say you shouldn't learn them at a later point in time.
+    With PC, P, and SP registers out of the way, let's move on shall we?
+
+
+
+  (A/X/Y REGISTERS)
+
+    We've used the A register quite a bit. We've done addition, subtraction, and compare examples.
+    There's a reason for this. The A register is known as the 'Acc' or Accumulator register. All 
+    the *main* arithmetic functions must be done with this register. The X and Y registers are 
+    known as the 'Index' registers. They can do a little more than just 'index', but that is their
+    main function on the processor. Let's see a quick run down of the registers.
+    
+      A reg: handles (larger) arithmetic, shifting, and logic operations.
+      X reg: hangles inc/dec arithmetic and memory indexing
+      Y reg: handles inc/dec arithmetic and memory indexing 
+
+    All registers can use a CMP instruction. For the X and Y registers, the instruction
+    name/mnemonic changes to CPX & CPY. This is important to remember. Using CPY and CPX will not
+    compare a value to Acc. Example:
+    
+        ldx #$01
+        cpx #$02
+        bcc less_than
+        
+        ldy #$01
+        cpy #$02
+        bcc less_than
+    
+        lda #$01
+        cmp #$02
+        bcc less_than
+
+    Time to learn about indexing. But first, we need to go over bytes and the cpu address range.
+    As I've mentioned before, the PC is 16bits. A 16bit value can hold 65536 different values.
+    On the 6280, the smallest element is a single byte (8bits). There are 65536 bytes that the
+    cpu can 'address'. A processor opcode (instruction) is 1, 2, or 3 individual bytes (in series
+    of course). Some are longer than that. When the processor moves forward or jumps to a different
+    location, this is done in alignment of bytes. 
+    
+        address $0005 is 5 bytes from zero (the start or bottom)
+        address $0001 is 1 byte from zero  
+        address $1000 is 4096 bytes from zero
+        
+    Data or code(opcodes) are located in memory by offsets of bytes. Often when we look at memory,
+    we organize it into lines of bytes - like a hex editor.
+    
+        address $0000: 00 10 00 12 00 00 00 23 44 78 a9 01 4c 10 e0 ea
+        address $0010: ea 00 00 00 a9 01 60 ea ea ff ff ff ff ff ff ff
+    
+    But to the processor, it's just one byte after the other from 0 to 65535. The processor knows
+    no difference between 'code' and 'data' that's located in memory. If you make a wrong jump
+    in your code into an area of data, the processor will interpret as 'code' and execute it :D
+    Your program will more than likely will be unable to recover and crash. Crash and burn.
+    
+    So the CPU has the PC register to keep track of where we are(or the processor really) in this
+    vast series of 65536 bytes or 64k (kilobytes). How does indexing fit into all of this? Say
+    we wanted to move some bytes from one area to another. We can do this:
+    
+        lda $2000     ; get a byte from $2000
+        sta $2800     ; store it at $2800
+        lda $2001     ; get a byte from $2001
+        sta $2801     ; store it at $2801
+        lda $2002     ; etc and so fourth and so on
+        sta $2802
+        lda $2003
+        sta $2803
+        lda $2004
+        sta $2804
+    
+    Not only is this tedious, but it wastefully uses space to store all this code. If we wanted to
+    copy $50 bytes, that would be a lot of instructions to write out, let alone wasting memory.
+    In comes the 'indexing' method. Indexing uses a base 'address' that is static (doesn't change)
+    and temporarily adds an 'offset' to it. Example:
+    
+        ldy #$00      ; y = 00
+        lda $2000,y   ; y = 00, $2000+00, get a byte from $2000+00
+        sta $2800,y   ; y = 00, store the byte in Acc to $2800+00
+        iny           ; y = 01. INY = increment Y register
+        lda $2000,y   ; y = 01, get a byte from $2000+$01
+        sta $2800,y   ; y = 01, store byte to $2800+$01
+        iny           ; y = 02, (increment y)
+        lda $2000,y   ; y = 02, get byte from $2000+$02 ($2002)
+        sta $2800,y   ; y = 02, store byte to $2800+$02 ($2802)
+        
+    The Y register acts as the 'indexer'. The value in the Y register is added to the address of
+    the instruction. If Y is $14 and the base address of the load instruction is $4000, then the
+    complete address for loading a byte is $4014. Both X and Y are 8bit registers and can only
+    hold a value from 0 to 255. You can only index up to 256 bytes at a time. If you compare the
+    two code examples, you'll notice that the indexing example actually requires an extra instruction
+    per step of copying a byte. Indexing looks great, but why would we want to increase the amount
+    of work? It looks even more tedious than the first example. Indexing allows something that the
+    first example doesn't. Looping.
+    
+        ldy #$00      ; initialize our indexer 
+      loop:
+        lda $2000,y   ; get a byte from $2000+y
+        sta $2800,y   ; store it at $2800+y
+        iny           ; increment Y
+        cpy #$50      ; see if Y has reached the value $50
+        bcc loop      ; if 'less_than', then jump back to 'loop' address/label
+        
+    Y is the indexer and is added to both $2000 and $2800 address in the load/store instructions.
+    We're copying one byte at a time, so we increment the Y register by 1. We check to see if Y
+    has reached the value of $50, if it is less than 50 then we branch back to the 'loop' label. 
+    X register works the same. Let's do an example with both X and Y indexing.
+
+        ldy #$00      ; initialize Y indexer 
+        ldx #$00      ; initialize X indexer
+      loop:
+        lda $2000,y   ; get a byte from $2000+y
+        sta $2800,x   ; store it at $2800+X
+        inx           ; increment X
+        inx           ; increment X
+        iny           ; increment Y
+        cpy #$50      ; see if Y has reached the value $50
+        bcc loop      ; if 'less_then', then jump back to 'loop' address/label
+
+    I spiced it up a little to make things interesting. For every 'cycle' of the loop, Y is 
+    incremented by 1 and X is incremented by 2 since we have two INX instructions. From the start
+    ; load a byte from $2000, store it at $2800, load a byte from $2001, store it at $2802, load
+    a byte from $2002, store it at $2804, etc. Let's do an example where we copy the bytes in
+    reverse order.
+
+        ldy #$00      ; initialize Y indexer 
+        ldx #$50      ; initialize X indexer
+      loop:
+        lda $2000,y   ; get a byte from $2000+y
+        iny           ; increment Y
+        dex           ; decrement X
+        sta $2800,x   ; store it at $2800+X
+        cpx #$00      ; see if Y has reached the value $50
+        bne loop      ; if 'not_equal', then jump back to 'loop'
+
+    This time we used CPX for the counter. Since we're counting down with X, we want to compare
+    it to $00. This presents a problem with the BCC instruction. Since X starts off with a value
+    greater than $00, we don't want to branch on 'less_than'. That would be known as a 'bug'. It 
+    would fail for the conditional test we need and just 'fall' through without looping. 
+    
+    Also, notice the DEX right before the indexed store instruction? That is an important placement
+    of the decrement instruction. If we think about the logic of this operation in the example, we
+    know we need to copy all $50 bytes from $2000-$204f to $284f-$2800. If DEX was placed after
+    sta $2800,x , then we wouldn't get the last byte copied over to $2800+00.
+    
+                      ; X = 1
+        sta $2800,x   ; X = 1, address = $2801              
+        dex           ; X = 0
+        cpx #$00      ; X = 0  Z = 1
+        bne loop      ; X = 0, Z = 1, no branch is taken, processor falls through to the next 
+                      ;               instruction.
+                      
+    We see that the last byte never gets copied to $2800 because of the placement of the decrement
+    instruction. Are you slightly confused? I sure hope so ;)
+
+
+
+  (MEMORY ADDRESS RANGE)
+
+    Now that we've got a few instructions under out belt and basic understanding of the primary
+    registers, let's cover the internal address range VS the external address range. Then we can
+    move on to writing some full examples.
+    
+    I've mentioned that the CPU address range is 16bits, because of the PC being 16bit. 64k doesn't
+    sound like much memory to work with (and it's not). Externally, the CPU has 21 address lines.
+    This means the external address range is 21bits or 2048k. How does the CPU access all 2048k? It
+    uses a paging system.
+    
+    The processor divides the 64k address range into smaller segments. These segments or PAGEs are
+    8k in size. There are 8 pages total (8 x 8k = 64k). The CPU can take any 8k segment from the 
+    external address range and map it into the internal address range. An 8k segment of the external
+    memory is referred to as a BANK. A PAGE is an 8k slot of the *internal* address range, a BANK is
+    an 8k segment of the *external* address range.  
+
+    The external address range is $000000-$1FFFFF. To get a BANK #, you divide the external address
+    by $2000.
+    
+        $000000-$001fff = bank $00
+        $002000-$003fff = bank $01
+              .
+              .
+              .
+        $028000-$029fff = bank $14
+              .
+              .
+              .
+        $1fe000-$1fffff = bank $ff
+        
+    As we've covered previously, there are eight MPR registers. These register map in the sections of
+    external memory to the CPU's internal address range.
+    
+        $0000-$1fff = $1fe000-$1fffff, MPR0 = bank $ff 
+        $2000-$3fff = $1f0000-$1f1fff, MPR1 = bank $f8
+        $4000-$5fff = $002000-$003fff, MPR2 = bank $01
+        $6000-$7fff = $004000-$005fff, MPR3 = bank $02
+        $8000-$9fff = $006000-$007fff, MPR4 = bank $03
+        $a000-$bfff = $008000-$009fff, MPR5 = bank $04
+        $c000-$dfff = $00a000-$00bfff, MPR6 = bank $05
+        $e000-$ffff = $000000-$001fff, MPR7 = bank $00
+
+    The MPR registers are written/read via the TAM/TMA instructions. These instructions transfer the
+    value in the Acc register to the corresponding MPR register and vice versa. One thing to keep note
+    here is that hucards use the lower half of the external address range. The upper half is reserved
+    for external peripherals. It's not that you *can't* map rom or ram into the upper range, all 21
+    address lines are on the hucard port, but no hucard does because it was considered to be reserved
+    for future upgrades. This means your ROM projects are limited to 1024k or 8megabits (with the 
+    exception of the Street Fighter 2 mapper).
+
+    The last thing to talk about for the external address range is memory mapped ports. The 6280 CPU,
+    and others variants, do not have direct PORTS to read and write from. Ports are external lines
+    that the processor can use to talk with other devices. It's simple and easy to interface both
+    hardware and in software. To get around this issue, ports need to be mapped to memory addresses.
+    This requires some extra circuitry that we really don't care about at the moment (or maybe ever),
+    but we are interested in where these ports are mapped. Thankfully Hudson decided on a single bank
+    to map these ports to. The very last bank. The hardware bank.
+    
+    Bank $FF - the hardware bank. It's customary, but not necessary, to map this bank to the first
+    MPR register. All official ROMs do and we might as well adhere to the same. All the external
+    processors are mapped to this bank. This includes the graphics processor, the video generator,
+    the I/O ports, the TIMER, the interrupt controller, and the audio unit. Hudson designed all the 
+    processors and the custom cpu core. They included special 'transfer' instructions for moving large
+    blocks of data to and from these other processors. These instructions are akin to DMA controllers.
+    They are known as the Txx instructions. We used one of them to initialize the system ram.
+    
+    Hmm. I guess we should look at indirect addressing. I wasn't originally going to cover it, as you
+    the reader should be familiar with some 65x instructions and addressing modes already, but since 
+    I've covered some of the other basic features of the 65x/6280 - I might as well. If you are un-
+    familiar with indirect addressing or pointers in general, it might be a bit confusing at first.
+    That might even be an understatement. 
+    
+    Ok, so far we've been working with direct addressing. Here's an example:
+    
+          lda $2000
+          sta $2800
+          
+    The operand (data part of the instruction, $2000 for LDA and $2800 for STA) directly correlates to
+    an address in processor memory, i.e. direct addressing. With indirect addressing, the address of
+    the operand is the address that 'contains' the address we want to read/write. We uses brackets to
+    signify indirect addressing. It looks like this:
+    
+          lda [$2000]
+        
+    We're going to need some more visual references to understand how this works. First the goal. For
+    this exercise, we need to read a byte form address $7108. We won't directly read from this address.
+    Instead we are going to store that address number($7108) in address location $2000 and then load
+    a byte indirectly. 
+    
+                        ; in this exercise value $ff is stored at $7108
+    
+          lda #$08      ; take the lower half of $7108
+          sta $2000     ; and store it at $2000
+          lda #$71      ; and the upper half of $7108
+          sta $2001     ; stored at $2001
+          
+                        ; $2000/$2001 now contains a 16bit address
+          
+          lda [$2000]   ; get the 16bit address from $2000/$2001, load it, then get the byte from the
+                        ; loaded address ($7108)
+                        ; A now contains $ff
+
+    In indirect addressing, we point to the lower half of the address value in memory. The processor
+    automatically fetches the upper half from the next address (which is address+1). You might be
+    wondering why the 16bit address isn't stored in memory as '7108' instead of '0871'. The 65x and
+    it's variants (in our case the 6280) are little endian processors.
+    
+    This means any 'WORD' or 16bit values read/written by the processor have the two halves reversed
+    in memory. The lower byte is always stored first, followed by the second byte. It's the same with
+    'reading' a WORD. Being an 8bit processor, there isn't much reading/writing of WORDs or 16bit values
+    as a single element, but when it does happen it's in little endian format. 
+
+    As the programmer, you must be careful to align the indirect instruction's operand address to the
+    low byte. If you don't and you align with the high byte, the processor will interpret the address
+    in memory differently that what you have in mind. It's common to have the address(es) already
+    loaded into memory before hand, because you're more than likely going to be reading or writting
+    to that address quite often and usually by multiple subroutines. Let's take one more look at
+    indirect addressing in action.
+    
+        ; here the values prep'd in memory for the current state
+    
+        $2000/$2001 = 08 71 (7108)
+        $2002/$2003 = 93 ff (ff93)
+        $2004/$2005 = 00 28 (2800)
+        $2006/$2007 = 00 30 (3000)
+
+        ; the values at memory location before the code manipulation
+
+        $7108 = $FF
+        $FF93 = $1f
+        $2800 = $00
+        $3000 = $01
+        
+        lda [$2000]     ; $2000/2001 = $7108. $7108 = $ff. load byte from $7108 and store in Acc
+                        ; A = $ff
+        sta [$2004]     ; $2004/2005 = $2800. $2800 = 00. store $ff to $2800. $2800 = $ff
+        
+        lda [$2002]     ; $2002/2003 = $ff93. $ff93 = $1f. load byte from $ff93 and store in Acc
+                        ; A = $1f
+        sta [$2006]     ; $2006/2007 = $3000. $3000 = $01. store $1f to $3000. $3000 = $1f
+
+
+    If that doesn't clear things up, then I don't know. Here's hoping you at least partially understand
+    all that. We need to make *one* alteration. For the sake of simplifying the example and making things 
+    a little more clear, I used the incorrect instruction format. If you remember, $2000-20ff is the
+    address range of ZEROPAGE. In the intro I stated that the PCE has 128 16bit memory registers (that
+    can also be treated as 256 8bit general/data registers). They are permanenteley mapped to that address
+    range. They are also the *only* way the processor can perform 'indirect addressing'. The instruction
+    for indirect addressing doesn't need the *whole* 16bit operand/address. Since the upper half of the 
+    address is fixed to '$20', there's no need for the processor to waste cycles and 'fetch' it. So the
+    instruction looks like this:
+    
+        lda [$00]
+        sta [$04]
+        lda [$02]
+        sta [$06]
+        
+    See? The upper '$20' part had been dropped. This saves one byte and 1 cycle for the instruction. If
+    you're going to use any of the ZP(zeropage) registers as 8bit 'general' registers, you need to use
+    the proper 'symbol' so that the assembler knows that you are using ZP 8bit registers. 
+    
+        lda <$00  ; loads a byte from direct address $2000 or ZP reg #00
+        
+    Loading and storing of ZP registers is faster than standard memory. You can also perform shifting and
+    some other 'bit' performing instructions that you can't do in X or Y or even Acc. There's even a mode
+    to disable Acc and replace it with any one of 256 8bit general registers. For more information, you'll
+    need to read a proper document on the 6280 ;). This tutorial is mostly for coding in ASM for the PCE.
+    
+    
+    
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''    
+    

@@ -1,0 +1,42 @@
+# HUC LINUX MAKEFILE
+#
+
+RM       = rm
+CC       = gcc
+
+CFLAGS   = -O2 -Wall
+
+OBJS     = code.o const.o data.o error.o expr.o function.o gen.o io.o lex.o\
+         main.o optimize.o pragma.o preproc.o primary.o pseudo.o stmt.o\
+         sym.o while.o
+
+EXEDIR   = ../../bin
+
+TARGHUC  = $(EXEDIR)/huc
+TARGETS  = $(TARGHUC)
+
+#
+#
+
+all: $(TARGETS)
+
+# CLEAN
+#
+
+clean:
+	$(RM) *.o
+	$(RM) ..\..\bin\huc
+
+# HUC
+#
+
+$(OBJS)  : defs.h data.h
+
+%.o : %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+# EXE
+#
+
+$(TARGHUC) : $(OBJS)
+	$(CC) -o $(TARGHUC) -s $(OBJS)

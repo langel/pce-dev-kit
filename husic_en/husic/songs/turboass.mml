@@ -1,0 +1,132 @@
+#TITLE		TURBOASS
+#COMPOSER	B-KNOX
+#PROGRAMER	PUKE7
+
+
+/* fat sine /
+@WT1={
+$01,$01,$02,$02,$04,$06,$08,$0b,
+$0d,$14,$19,$1b,$1c,$1d,$1e,$1f,
+$1f,$1f,$1f,$1f,$1f,$1e,$1c,$19,
+$17,$15,$11,$08,$05,$03,$02,$01
+}
+
+/* triangle */
+@WT2={
+$00,$02,$04,$05,$08,$0a,$0c,$0e,
+$10,$12,$13,$15,$16,$18,$1b,$1d,
+$1f,$1c,$1a,$18,$16,$14,$12,$10,
+$0f,$0d,$0b,$09,$07,$06,$04,$02
+}
+
+
+@EP0={0}  /* kick */
+@EP1={-127}
+@EP2={-1}
+
+
+@v0 = { 17 8 5 3 2 0 }
+@v1 = { 25 20 19 18 17 15 12 7 5 3 2 1 0 }
+@v2 = { 19 22 7 17 18 4 6 2 1 0 }
+@v3 = { 12 21 30 27 26 23 }
+@v4 = { 0 0 1 1 1 1 1 2 2 2 2 2 3 3 3 4 4 4 4 5 5 5 5 6 6 7 7 7 7 7 8 8 8 9 9 9 9 10 10 10 11 }
+@v5 = { 30 26 23 22 21 20 19 18 16 15 14 13 12 11 }
+
+ABCDEF t110 l8 v31
+
+A W7 o0 @v3
+BCDE W8 @v2 o2
+E W2 @v5 o1
+F N1 @v0 o2
+
+
+/* A bass, BCD chords, E lead, F hats */
+
+
+
+
+
+/* kick 
+F	EP1 N0 W2 @v1 o2 e
+*/
+
+/* snare 
+F	EP2 N1 @v2 o1 d
+*/
+
+/* hat 
+F	EP0 N1 @v0 o1 b
+*/
+
+
+
+/* INTRO */
+
+F	[[EP1 N0 W2 @v1 o2 c
+F	EP0 N1 @v0 o1 b16 b16
+F	EP2 N1 @v2 o1 d
+F	EP0 N1 @v0 o1 b]3
+F	[EP2 N1 @v2 o1 d
+F	EP0 N1 @v0 o1 b16 b16]2]2
+
+F	[EP1 N0 W2 @v1 o2 c
+F	EP0 N1 @v0 o1 b16 b16
+F	EP2 N1 @v2 o1 d
+F	EP0 N1 @v0 o1 b]3
+F	[EP1 N0 W2 @v1 o2 c
+F	EP0 N1 @v0 o1 b16 b16]2
+
+F	[EP1 N0 W2 @v1 o2 c
+F	EP0 N1 @v0 o1 b16 b16
+F	EP2 N1 @v2 o1 d
+F	EP0 N1 @v0 o1 b]3
+F	EP1 N0 W2 @v1 o2 c
+F	EP0 N1 @v0 o1 b16 b16
+F	EP1 N0 W2 @v1 o2 c16 c16 c8
+
+F l1 EP1 N0 W2 @v1 o2 c
+
+F l1 [r]6 l2 r l8
+F	EP1 N0 W2 @v1 o2 e
+F	EP0 N1 @v0 o1 [b]3
+
+
+ABCD l1 @v4 o3
+
+A d e a b
+B f g c d
+C a b e f
+D r r r r
+A d e a g
+B f g c < b 
+C a b e < d2 c2
+D r r r r
+A d e a b
+B f g c d
+C a b e f
+D r r r r
+A d e a g
+B f g c > b <
+C a b e > d <
+D r r b
+
+E l1 [r]10 l8 
+E a a r a a r b
+E b r g g r g g
+E d d r d f r g
+E e r e e r g e
+
+E l1 {eee} r l2 c
+
+
+/* PART II WHY NOT?!?!? */
+
+
+
+ABCDEF l1
+A a
+B c
+C e
+D b
+E c
+F EP1 N0 W2 @v1 o2 e

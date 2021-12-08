@@ -1,0 +1,90 @@
+.TRACK  Cathedral
+.CHANNEL 0  Setup
+T35 V31 L1 ^D0
+
+.CHANNEL 1  Organ
+O4 P13,13 @09 @E09 L16 ^ME0 ^MD1
+r1f1&f8&f32r4r.c2.r4.r32c.f2g2g+2a+8g4.g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+
+c<a+g+gg+8>f8c8f8c+d+fc+d+fgc+efgc>c<a+g+gfgfg
+g+32g32g+g+fg+4a4a+4>c+4<<gg+a+g+a+g+ga+g+4>c4<fgg+gg+gfg+gg+a+g
+g+a+>c<g+>c+c<a+g+>c+c+<a+g+ggf+gg+gf+grgf+gg+8g>d32e32f2
+g2g+2a+8g4.g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+c<a+g+gg+8>f8c8f8c+d+fc+
+d+fgc+efgc>c<a+g+gfgfgg+32g32g+g+fg+4a4a+4>c+4<<gg+a+g+a+g+ga+g+4
+>c4<fgg+gg+gfg+gg+a+g
+g+a+>c<g+>c+c<a+g+>c+c+<a+g+ggf+gg+gf+grgf+gg+8g8fg+ga+
+g+>c<a+gg+8fg8eg8fg+ga+g+>c<a+gg+8fg8eg8>>f4.r2r8g2e4d4<a4
+b4>dc+dc+dc+<b>c+d1<b1>g2&g8a8b8g8e4&ere8b8g8e8c+8a4.f+8d4dc+dc+dc+
+<b>c+r32d2.
+
+.CHANNEL 2 Violin
+O3 P14,14 @09 @E09 L16 ^ME0 ^MD1
+r1r8.>g+8.&g+32r8r32f8&f32r32f4&f.r32e4.f2.r4.r32ce32f2g4&gr8.g+2a+8g8e8c8g+gfd+
+c+c<a+g+a+8>g+8f8c+8gfd+c+c<a+g+gg+8>f8c8f8c+d+fc+d+fgc+efgc>c<a+g+gfgfgg+32g32g+g+fg+4a4a+4
+>c+4<<gg+a+g+a+g+ga+g+4>c4<fgg+gg+gfg+gg+a+gg+a+>c<g+>c+c<a+g+>c+c+<a+g+ggf+gg+gf+grgf+gg+8g>d32e32f2
+g4&gr8.g+2a+8g8e8c8g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+c<a+g+gg+8>f8c8f8c+d+fc+d+fgc+efgc>c<a+g+gfgfg
+g+32g32g+g+fg+4a4a+4>c+4<<gg+a+g+a+g+ga+g+4>c4<fgg+gg+gfg+gg+a+g
+g+a+>c<g+>c+c<a+g+>c+c+<a+g+ggf+gg+gf+grgf+gg+8g8<fg+ga+g+>c<a+gg+8fg8eg8fg+ga+
+g+>c<a+gg+8fg8eg8
+
+.CHANNEL 3 Cello
+O3 P11,11 @37 @E01 L32
+r1r1r1r2.o2frgrg+rfr
+>cr<g+rgrfrgrg+ra+rgr>cr<g+rgrerg+ra+r>cr<g+r
+>cr<g+rgrfrercrercrergrg+r>gr<fr>cr<g+r>cr
+frcrcr<g+ra+r>frc+rfrg+rfrfrc+r<d+ra+rgra+r
+>d+r<a+ra+rgrfr>cr<g+r>crfrcrfrg+rfrgrg+16.r
+grg+ra+16.rg+ra+r>c16.rcr<a+rg+rgrfrerfrgr
+>g+<gg+16g+gfgg+16.r<g+16.ra16.ra16.ra+16.ra+16.r
+>c+16r16<a+16.r>grg+ra+rg+r<a+r>d+r<gr>d+r<crg+rfrg+r
+>cr<g+rfrg+rc+rfrg+rfrg+r>fr<c+r>g+r<grg+ra+16.r
+g+ra+r>c16.rc+rcr<a+rg+r>frfr<gr>g+r<grgrf+16gr
+g+16r16>c+16r16<grgrf+rgrg+r16.gr16.frgrg+rfr
+>cr<g+rgrfrgrg+ra+rgr>cr<g+rgrerg+ra+r>cr<g+r
+>cr<g+rgrfrercrercrergrg+r>gr<fr>cr<g+r>cr
+frcrcr<g+ra+r>frc+rfrg+rfrfrc+r<d+ra+rgra+r
+>d+r<a+ra+rgrfr>cr<g+r>crfrcrfrg+rfrgrg+16.r
+grg+ra+16.rg+ra+r>c16.rcr<a+rg+rgrfrerfrgr
+>g+<gg+16g+gfgg+16.r<g+16.ra16.ra16.ra+16.ra+16.r>c+16r16<a+16.r>gr
+g+ra+rg+r<a+r>d+r<gr>d+r<crg+rfrg+r
+>cr<g+rfrg+rc+rfrg+rfrg+r>fr<c+r>g+r<grg+ra+16.r
+g+ra+r>c16.rc+rcr<a+rg+r>frfr<gr>g+r<grgrf+16gr
+g+16r16>c+16r16<grgrf+rgrg+r16.gr16.f16>c16<g16>c+16
+<g+16>c16<g16>c16<f16>c16<g+16>c16<g16>c16<g16c16f16>c16<g16>c+16
+<g+16>c16<g16>c16<f16>c16<g+16>c16<g16>c16<g16>c16f4.
+
+.CHANNEL 4 Harpsichord
+O3 P12,12 @26 @E01 L16
+r1r1r1
+r2r8r32>cr32e32f2g4&gr8.g+2a+8g8e8c8g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+c<a+g+gg+8>f8c8f8c+d+fc+
+d+fgc+efgc>c<a+g+gfgfgg+32g32g+32g32g+32g32f32g32g+4a4a+4>c+4<<gg+a+g+a+g+ga+g+4
+>c4<fgg+gg+gfg+gg+a+gg+a+>c<g+>c+c<a+g+>c+c+<a+g+ggf+gg+gf+grgf+gg+8gr32>e32f2
+g4&gr8.g+2a+8g8e8c8g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+c<a+g+gg+8>f8c8f8c+d+fc+
+d+fgc+efgc>c<a+g+gfgfgg+32g32g+32g32g+32g32f32g32g+4a4a+4>c+4<<gg+a+g+a+g+ga+g+4
+>c4<fgg+gg+gfg+gg+a+gg+a+>c<g+>c+c<a+g+>c+c+<a+g+ggf+gg+gf+grgf+gg+8g8<fg+ga+
+g+>c<a+gg+8fg8eg8fg+ga+g+>c<a+gg+8fg8eg8
+
+.CHANNEL 5 Strings
+O4 P14,14 @12 @E01
+r1r1r1r2.<f2a+2>g+2c2c2<g+2>g2g+2c+4c+4e4>c4<c1c+2a+2g+2c+2a+4>c4<g2>g4
+e4e4e4<<f2a+2>g+2c2c2<g+2>g2g+2c+4c+4e4>c4<c1c+2a+2g+2c+2a+4>c4<g2>g4e4e4e4g+2>c+4<g4g+2
+e4>e4f4.
+
+
+.CHANNEL 6 Pizzicato
+O4 P13,13 @19 @E01 L32
+r1r1r1r2.o2frgrg+rfr>cr<g+rgrfrgrg+ra+rgr>cr<g+rgrerg+ra+r>cr<g+r>cr<g+rgrfrercrercrergrg+r
+>gr<fr>cr<g+r>crfrcrcr<g+ra+r>frc+rfrg+rfrfrc+r<d+ra+rgra+r>d+r<a+ra+rgrfr>cr<g+r>crfrcr
+frg+rfrgrg+r>fr<grg+ra+r>gr<g+ra+r>cr<g+r>cr<a+rg+rgrfrerfrgr>g+<gg+16g+gfgg+16.r<g+16.ra16.ra16.ra+16.ra+16.
+r>c+16r16<a+16.r>grg+ra+rg+r<a+r>d+r<gr>d+r<crg+rfrg+r>cr<g+rfrg+rc+rfrg+rfrg+r>fr
+<c+r>g+r<grg+ra+16.rg+ra+r>c16.rc+rcr<a+rg+rfrfrgrg+rgrgrf+16grg+16r16>c+16r16<grgrf+rgrg+r16.gr16.frgr
+g+rfr>cr<g+rgrfrgrg+ra+rgr>cr<g+rgrerg+ra+r>cr<g+r>cr<g+rgrfrercrercrergrg+r>gr<fr>cr<g+r>cr
+frcrcr<g+ra+r>frc+rfrg+rfrfrc+r<d+ra+rgra+r>d+r<a+ra+rgrfr>cr<g+r>crfrcr
+frg+rfrgrg+r>fr<grg+ra+r>gr<g+ra+r>cr<g+r>cr<a+rg+rgrfrerfrgr>g+<gg+16g+gfgg+16.r<g+16.ra16.ra16.ra+16.ra+16.
+r>c+16r16<a+16.r>grg+ra+rg+r<a+r>d+r<gr>d+r<crg+rfrg+r>cr<g+rfrg+rc+rfrg+rfrg+r>fr<c+r>g+r<grg+ra+16.r
+g+ra+r>c16.rc+rcr<a+rg+rfrfrgrg+rgrgrf+16grg+16r16>c+16r16<grgrf+rgrg+r16.gr16.f16>c16<g16>c+16
+<g+16>c16<g16>c16<f16>c16<g+16>c16<g16>c16<g16c16f16>c16<g16>c+16<g+16>c16<g16>c16<f16>c16<g+16>c16<g16>c16<g16c16f16
+
+
+.Envelope
+     .mod 0 wiggle
+     0,0,1,1,2,2,3,3,2,2,1,1,0,0,-1,-1,-2,-2,-3,-3,-2,-2,-1,-1

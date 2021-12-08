@@ -1,0 +1,45 @@
+;----------------------------------------------------------------------------------------------------------
+; GNOP music.  by Andrew 'Arkhan' Darovich
+; Don't steal this and say you did it all yourself.  If you borrow from it, just say you borrowed from it!
+; Especially the drums.  I like the drums.
+;----------------------------------------------------------------------------------------------------------
+
+.TRACK 0 GNOP
+
+.CHANNEL 0 setup
+T70 V31 L8 ^D0 
+bass1=a+>a+<a+>a+<g+>g+<g+>g+c+>c+<c+>c+<c>c<c+>c<<'
+bass2=f>f<f>f<g+>g+<g+>g+c+>c+<c+>c+<c>c<c+g+<'
+bass3=L16f>f<f>f<f>f<f>f<g+>g+<g+>g+<g+>g+<g+>g+c+>c+<c+>c+<c+>c+<c+>c+<c>c<c>c<cc+cg+<'
+lead1=c+16r16<a+16r16g+16f16d+16r16c+16r16d+16r16f16g+16>d+16c+2&c+16c4<g+4'
+lead2=d+16r16d+16r16c+16r16c+16r16<g+16r16g+16r16a+16r16>d+16c+16d+4c+4<a+4g+4>>'
+lead3=L16<frfr8.ff>cr<fr8.ff>c+c+cc<a+a+g+g+a+a+>ccc+c+<g+g+frfr8.ff>cr<fr8.ffg+>c<g+a+>c<g+fa+>c+<g+>c<fa+>c+<g+a+>'
+lead4=L16<fg+a+>c+fc+<a+g+fg+a+>c+f+c+<a+g+fg+a+>c+g+c+<a+g+a+>c+ff+g+f+fc+'
+drum1=L8 @M0 O4 ^SC127 ^ST255 CR@M1C#R @M0CR@M1C#R @M0CR@M1C#R @M0CC@M1C#@M0C'
+drum2=L8 @M0 O4 ^SC127 ^ST255 c @M1c# @M0c @M1c# @M0c @M1c# @M0c16c16 @M1c# @M0c @M1c# @M0c @M1c# @M0c16c16 @M1c# @M0c16c16 @M1c#'
+
+.CHANNEL 1 TheBass
+O1 P14,14 @0 @E00
+[4(bass1)][4(bass2)][4(bass1)][4(bass3)]r32/TheBass/
+
+.CHANNEL 2 leadA
+O5 P11,15 @5 @E07 
+[2(lead1)(lead2)][2(lead3)][2(lead1)>][<2(lead2)][4(lead4)]r32/leadA/
+
+.CHANNEL 3 leadAecho
+O5 P15,11 @24 @E07 
+R32[2(lead1)(lead2)][2(lead3)][2(lead1)>][<2(lead2)][4(lead4)]/leadAecho/
+
+.CHANNEL 4 leadB
+O4 P11,15 @5 @E07 
+[2(lead1)(lead2)][2(lead3)][2(lead1)>][<2(lead2)][4(lead4)]r32/leadB/
+
+.CHANNEL 5 leadBecho
+O4 P15,11 @24 @E07 
+R32[2(lead1)(lead2)][2(lead3)][2(lead1)>][<2(lead2)][4(lead4)]/leadBecho/
+
+
+.CHANNEL 6 DRUM
+O5 P15,15 @M0 L16 
+[2[4(drum1)][4(drum2)]]R32/DRUM/
+.include "mml/gnopfx.mml"

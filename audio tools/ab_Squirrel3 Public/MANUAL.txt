@@ -1,0 +1,1043 @@
+                                                                :?I     ,       
+                                                                I?7I    =+      
+                                                                ?$I$?+?7??      
+                                             ,:::~:=~==+?      ,IO???IZ+$+=?,   
+                                          =~~,~~~==+===++++?+~+=+=?++DNZI+??=   
+                                        ===+::++~====+II?==II??I++?IZ$ZIII7I+7  
+                                      +?~=+====++?=?+?+?++??===?+=?7??II$7?+$I= 
+                                    +===?+=I+++++I?II~+I?+?==7I$??=+I77I?I?,Z  
+                                   :??+?++??=+??+??+?+???==77I777O77?7777$O$:   
+                                  $+II+++~+++?=+I=II7?+==?I?$+II$77777+         
+                  = ,             I++==:?=~=+??7???7III7$+$7+I7?7III?:          
+            ???==++?~~=+,:       +??I?=$==?I$I?7I77$I77?777I$Z=?+++=~~          
+         I?I=+=?++~=?==+++:     ,??I777I+IIII+?+$$7I7Z??IZI77++++====           
+      ~=~=~=I+=++~??I+=I~++:    +I$$$7I??????+I$Z777O7I+7777?I+++=~             
+     7=+?==++I?+I+IIII+=???+=   +I$77I?I$?77?~+I$Z?7II7ZI7?++++?+~=             
+    I7?+I??++I?IZIZ7I$I77II+I+~+IIIII?7I77$I+++I?$ZOI77777==+?7II=I             
+   :I+7?+??$?77$7I7II7?$II?$II??I$77$7I7I$$I+?I7$$ZOIIII7I=+I$777~              
+ :??+7++7II$7Z77ZZ77?7ZIII$7I$+$?Z7Z?I$77OZI+IZOO7$$$77I7=  ,777?~,             
+ ~=?I+?I7I7II$Z$ZO$O77$$777$Z$$$$$Z7IZZOOO$+IZO$Z777$$7II,   ~77I~,             
+,~==I?77Z$$Z$ZOZZ7Z$Z$$$$7ZO778$ZIO7$OZZO7?7O8O777I?+7II?     +?$+              
+,~+$?IZ?$I$OZO8DOOZ7I+=~~=??77$7I?IIZZZO77Z7+=:~+II+~=I?+      +OI?~,:          
+,:+7I$II7ZZ7$OOOZZI++,     ,,,,,  ,:~?+?++?ZI?+=+++I?7?+~:,     , ,??~:         
+,=?$7III$O$Z$$ZOZO++:                         ,:     ~7?=~~,        ~?7         
+,~?7$II77$77Z$7$$7I~,                                  +Z+?~$~       ~=         
+:=+7IIZ7ZZOO77$$7$7+:                                   :II7+:                                      
+:+?777$77ZZ8$$77I7II+~,                                                         
+,=+I$$77Z$$ZZ$77?I7I?++:,                                                       
+,~+IO7I?$$$7$$$7IIII+?+==~:,                                                    
+ ~?IOZZ$IZ7$7$7$7I??++?==+==~:                                                  
+ ,+I7$OO?I$777I7$$7I??++???++==:,                                               
+  ,+?7OOO7IIZ7III777?77I?==+=++?+=,    _________               .__                         .__.
+   ,~?7$OOZ7I$$77I?7I???+++++I?7II~   /   _____/  ______ __ __ |__|_______ _______   ____  |  |
+   :+?$Z7ZZIIIII77??II???II?I7I+:     \_____  \  / ____/|  |  \|  |\_  __ \\_  __ \_/ __ \ |  |
+       :+=?77$$77IIII$I?II77?+=:,     /        \< <_|  ||  |  /|  | |  | \/ |  | \/\  ___/ |  |
+         ,,~~+=++??II??+?++~:        /_______  / \__   ||____/ |__| |__|    |__|    \___  >|____/
+                  ,,,,                       \/     |__|                                \/     
+   
+
+            A simple PC-Engine WSG system. VERSION 3. Complete with SOUND EFFECTS and HuCard Support!
+            
+                        By: Arkhan and OldMan of Aetherbyte
+                                    with assistance from:
+										The New Image (tni.nl)
+										Coca Cola (www.bestpopever.com)
+										
+					Seriously though, without OldMan, this program would blow.
+
+        
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	 
+CHANGENOTES: 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is a summary of the changes that have been made to the manual.  If this is your first time
+reading this manual, you can ignore them.
+
+If you have read the manual before, give this log a check, and see what has changed!
+
+Also if you find any confusing stuff or errors, please let me know so they can be fixed!
+
+
+~~~~~[4/09/2012]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Newest Release.  Sound Effects (subtracks) are in for all of you to use.
+Bugfixes for things like fast-waveform changing
+HUCARD SUPPORT.  No more CDs.
+
+
+~~~~~[2/15 & 5/22]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	* Fixed an error in the explanation of volume command.   *Each* channel has a volume value
+ranging from 0-31, AND panning.   And THEN there is a global volume for the entire sound circuit.
+
+the V in .channel 0 is global for the entire sound circuit.  The V in .channel 1 thru .channel 6
+is local to that channel.  If you don't set it, it defaults to max.
+
+Also, I typoed the value of the volume.  32 is invalid.  Sorry! It should be 31.
+
+Slight oversight there.  Oops.  You will find it corrected / clarified in the places where it is
+mentioned!	
+
+~~~~~[5/22]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * Added new files to the contents of Squirrel section. Namely, it is all stuff you don't need
+	to touch or worry about.  Just leave them be!
+     * Turns out you can't do individual channel tempos like originally thought.  Bummer.
+     
+     * I read something wrong.  The drum tone values are limited to 4095.  If you happened to use
+	large values, it was being truncated by the compiler anyways, so it shouldn't ruin any of your
+	current drum sounds.  Just know that 4095 is the limit!
+	
+	
+	   
+                                    
+#####################                              
+##TABLE OF CONTENTS##
+####################################################################################################
+
+1) What is Squirrel?  [WIS]
+2) Contents           [CON]      
+3) How To Use         [H2U]
+4) Example in detail  [EXP]
+5) Macros/Loops       [MAC]    vs    [PC]     <<< lol
+6) Waves & Envelopes  [WAV]
+7) Drums              [DRM]
+8) COMMAND REFERENCE  [CMD]
+9) Preset Reference   [PRE]
+10) Sound effects!	  [SFX]
+11) Other Stuff		  [OST]
+
+If you are wondering, yes I put some nerdy D&D references in the "search" functions.  TSR 4 LIFE
+
+####################################################################################################
+
+
+
+
+
+############
+##1) [WIS]##      
+####################################################################################################      
+      
+WHAT IS SQUIRREL?
+	Simply put, it is a simple MML library to create music for the PC-Engine.  It utilizes the
+	library designed by Hudson for Hu7 & Develo.  It is fully featured.  You have complete control
+	over everything sound-wise including waveforms, envelopes, percussion, and effects!  
+
+	If you don't know MML, don't worry.  MML is easy.  So easy a caveman could do it!
+
+	Squirrels are awesome.      Hating Squirrels is wrong and absurd.
+
+	If you do use this in a game ever, all we ask is that you credit us for it, AND SPREAD THE WORD
+
+
+
+.......and send me half the money!  maybe?
+
+####################################################################################################      
+      
+     
+	
+      
+      
+############      
+##2) [CON]##            
+####################################################################################################      
+
+-----------------------------------------------------------------------------------------
+CONTENTS OF SQUIRREL:
+-----------------------------------------------------------------------------------------
+	mml2pce.exe:     The compiler.  This is what does all the magic.
+	squirrel.c:      test program source.  Everything needed to compile a song is here!
+	make.bat:		 run this to autobuild and get a .pce rom to run and listen to.
+	
+	/data/
+		important files that you need not concern yourself with. 
+
+	/Main/
+		More important files that you need not concern yourself with.
+
+	/mml/
+		a bunch of MML files for you to experiment with, including one showing some SFX
+
+	/SongLib/
+		ignore this stuff.  I hope you are seeing the pattern here
+
+	/Sound/
+		ignore it.
+
+	/Sub/
+		Sound Effect stuff.  Ignore it.  
+	  
+	MANUAL.txt:       You are currently reading this.  I hope.  If you're reading this
+					  but aren't reading the manual, I would like to borrow whatever
+					  dimension hopping warp device you are using to screw with reality!
+					  
+	HuCINSTALL.txt    Explains how to install HuC on your computer if you are new to that.
+	
+	You can also ignore psg_bios.asm, startup.asm, sound.asm and sound.inc.  Don't touch them.
+	
+* note you really only need to worry about the executable, and squirrel.c
+	
+------------------------------------------------------------------------------------------
+
+####################################################################################################
+
+
+
+
+
+############
+##3) [H2U]##
+####################################################################################################
+
+====================
+HOW TO USE SQUIRREL:
+--------------------
+First, some information regarding WSG. or PSG.  Whatever you want to call it.  I call it God's gift
+to chiptunes.  I've also called it "the chirpy thing" and "the chirpinator".  
+
+*It has SIX channels numbered 1 thru 6. (or 0-5, depending who you ask or what you read!)
+
+*Channels 5 and 6 (the last two), may be set to white noise mode, thus generating 
+white noise, aka drums, with the proper enveloping.  
+
+*Each channel has a left and right panning volume.  This is awesome.  It is one of the
+key reasons the PCE has such great music!  Stereo panning!
+=======================================================================================
+
+--------------------
+CRASH COURSE IN MML:
+--------------------
+MML is a very simple language which allows even the most computer-challenged musician
+to make music for it.  Translating sheet-music to MML is a cinch.  You could type in some Vivaldi!
+
+Here are the basic, "essential" MML commands which are within Squirrel:
+
+----------------------------------------------------------------------------------------------------
+NAME| Description           | SYNTAX
+----------------------------------------------------------------------------------------------------
+T   | Tempo                 | T# where # = (0-255).  Be reasonable.  Its music!
+L   | Length                | L# where # = 1,2,3,4,5,6,8,12,16,24,32,48,64,128  
+O   | Octave                | O# where # = 1 - 7
+V   | Volume                | V# where # = 0 - 31  There is a global volume AND per-channel volume
+R   | Rest                  | R# where # = 1,2,3,4,5,6,8,12,16,24,32,48,64,128
+>   | shift octave up       | >   (each successive > will continue shifting the octave)
+<   | shift octave down     | <       (each successive < will continue shifting the octave)
+.   | dot extender          | NOTE(#).   Adding in a numerical length is optional
+#/+ | sharp note            | NOTE#/+    raises note one step. The # here doesn't mean number
+    |                       |            it literally means use the pound sign
+-   | flat note             | NOTE-      lowers note one step.
+&   | note tie              | NOTE&NEXT NOTE.  Use this for extending note lengths, or for legato
+
+Musical notes: CDEFGAB
+----------------------------------------------------------------------------------------------------
+
+NOTE: The PCE is usually defaulted to "fast mode".  If your song is playing 2x faster than planned,
+divide your Tempo (T) values in half.  So if you meant to have T120 and it's too fast, do T60.
+By default, you will want to do this.
+
+Example string of MML:
+T60 V31 O4 L4 ABCDEFGA C# C8 G > DEFG
+
+-------------------
+Breakdown of this: 
+-------------------
+*Sets tempo to 60 (In reality, will play at 120) 
+*set volume to 31.  Note, this is the GLOBAL volume for this channel.  You will want to
+use P#,# to set the panning for each channel.  More on this later.
+*set current octave to 4
+*default note length to 4.  If a note length is not specified after a note, this value is used.
+*Play the notes listed
+
+Special notes: Note the #, the 8, and the >, in that order:
+
+*The # is to make that note, C, sharp.
+*The 8 following the C makes JUST that note have a length of 8, rather than the default of 4
+*The > then shifts the octave to 5 instead of the originally set 4.  It will stay there until you
+shift it again, or place an octave command in.  What this means is, that > can also be written as an
+O5, to set the current octave to 5.  Shifts are just easier to read and use, especially for things 
+like octave bouncing bass lines.  Think Blue Monday.
+
+Also, as far as "length" is concerned, these numbers are read as fractions just like sheet music, so:
+4 = 1/4th note.  A "quarter note"
+8 = 1/8th note.  An "eighth note"
+etc. etc.  For all the lengths.   
+
+Most of this MML nonsense seems strange and overwhelming at first.  Don't worry!  Just experiment 
+with tiny little riffs at first, and you will quickly see that this basic rundown I have just given 
+you is all you need to make music!  The rest of the more advanced options will fall into place as
+you become more accustomed to MML.  Once that happens, you will be making songs that look as scary
+as some of the examples, but are in reality, quite simple!
+
+Also note, all of these commands affect only the channel in which you are using them on.
+You will see how to break the song up into it's respective channels later, and also in the example 
+file.  It's very easy!
+
+There are some more command useable in Squirrel.  These will be explained shortly, with an 
+accompanying example.  A full table reference is available at the end of this document for your 
+viewing pleasure...
+
+the V in .channel 0 is global for the entire sound circuit.  The V in .channel 1 thru .channel 6
+is local to that channel.  If you don't set it, it defaults to max.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.......................................................................................
+_______________________________________________________________________________________
+
+Now that that is out of the way...........^_^
+
+Using Squirrel is easy.  Follow these 3 simple steps, and you are on your way.
+
+NOTE: The included test files (squirrel.c, and one of the files in /mml/) can be used as a 
+skeleton for your music, and I strongly suggest you use them to familiarize yourself with how to use
+this in projects!
+
+This music system is exactly what I use at Aetherbyte for all of my music.
+
+The test file (squirrel.c) also is setup to play test sound effects.
+
+Button I:  Plays subtrack 1
+Button II: Plays subtrack 2
+
+You may be confused beyond all belief right now. (What is a subtrack!?).
+
+Don't worry. Check the Sound Effect (SFX) section at the end of the manual.
+
+========
+Step 1:
+========
+Make a file containing your MML song.  You can have as many songs in one file as you want.  More on
+this when the example song is examined in detail below.
+
+file extension doesn't matter either.  You could name it MySongs.Rule if you want.
+
+
+========
+Step 2:
+========
+Send the file through mml2pce.exe on the command line (cmd.exe).  YOU MUST USE THE COMMAND LINE!!!!
+DO NOT DRAG AND DROP THE FILE ONTO THE EXECUTABLE.  THIS WILL PRODUCE GARBAGE NONSENSE THAT DOES NOT
+WORK.
+
+Usage:
+mml2pce input_file
+
+If there is a problem, It will tell you!
+
+Also, the converter ignores whitespace, and case sensitivity.  Use this to make
+your files readable! :)
+
+
+=======
+Step 3:
+=======
+The compiler (assuming all went well), will spit out an .ASM file or 2, depending how long your song
+turned out.  It will also have a snginit.c.  From here you are able to use the squirrel.c program
+and play the song!  You need not actually open the .asm or snginit.c files.  They are generated and
+fully functional automagically.  Leave all the hard stuff up to Squirrel!  The ASM files will be 
+made in the same directory as your .mml file.
+
+----------------
+Compile it with:
+----------------
+huc -scd squirrel.c  (for CD-ROM projects)
+OR
+huc squirrel.c       (for HuCard projects)
+
+You'll get an .iso or a .pce!  run it in an emulator and rejoice at your glorious music.
+
+A make file (make.bat) is included.  It runs on Windows environments.  You can edit it with Notepad 
+to change which file it will build.  
+
+Thats it!  No fiddling with ASM, or having to program anything.  This is designed for musicians, not
+programmers!  If you are both, well then lucky you! ^_^
+  
+####################################################################################################
+
+
+
+
+
+###########
+#4) [EXP]##
+####################################################################################################
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+||                                                                                                ||
+||    EXAMPLE SONG EXAMINED IN DETAIL, COMPLETE WITH EXPLANATION OF SQUIRREL SPECIFIC COMMANDS!   ||
+||                                                                                                ||
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NOTE: I CUT MOST OF THE SONG OUT, AS IT IS IRRELEVANT TO THE EXPLANATION!!!!!
+
+First, the Squirrel Specific Commands that will appear here.  (See the full table at the end of the
+doc for EVERYTHING in one quick reference location!)
+
+----------------------------------------------------------------------------------------------------
+NAME| Description           | SYNTAX
+----------------------------------------------------------------------------------------------------
+@   | Change Waveform       | @# where # is a waveform number! (See waveform section)
+@E  | Change Envelope       | @E# where # is an envelope number! (See envelope section)  
+P   | Channel Panning       | P#,# where L,R volume are defined (0-15)
+----------------------------------------------------------------------------------------------------
+
+--Please reference the included file (/mmlsongs/Cathedral.mml) where needed!
+
+**You use .TRACK to section off each individual song.  The name following it is up to you.
+You can have more than one .TRACK in a file.  Insanity's soundtrack is all in one single file.
+
+Each one is played in code with psgPlay(track#).
+
+.TRACK  Cathedral
+
+**Next, you define each .CHANNEL's data.  Channel 0 is your setup channel where you can define
+global, entire song specific stuff.  Anything in Channel 0 will effect the ENTIRE song, but is 
+over-ridden by anything a specific channel does (Such as change it's tempo).  Macros get defined in
+channel 0 also.  You will get to learn about macros in a little bit.
+
+Also note, the volume that is set in channel 0 is the global volume for the ENTIRE sound circuit.
+You can give each channel its own volume, and panning along with this.
+
+Think of it like this, a stereo mixer board:
+
+Channel 0: MASTER VOLUME (V)
+
+Channel 1 thru 6: CHANNEL VOLUME (V) and PANNING (P#,#)
+
+imagine the volume command being a knob, and you have one for each channel, and then you have one 
+more, a very large one, which then increases the entire thing in unison. :)
+
+
+Channels 1 through 6 are your actual song channels.  Define them as shown, and give a name if you
+would like.  
+
+.CHANNEL 0  Setup
+T35 V31 ^D0
+
+.CHANNEL 1  Organ
+O4 P13,13 L1 @12 @E01
+r1f1l2&fc1&c8&c32c16.fgg+a+8g4.l16g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+c<
+
+.CHANNEL 2 Violin
+O3 P13,13 L1 @09 @E01
+r1r8.>g+.f8.f.e.f1&f8l32&fc16el2fgg+l8a+gecl16g+gfd+c+c<a+g+a+8>g+8f8
+
+.CHANNEL 3 Cello
+O3 P15,0 L1 @01 @E01
+r1r4r16r32r1r1r1.rl16o2fgg+fb+g+gfgg+a+gb+g+geg+a+b+g+b+g+gfececegg+>g<fb+g+>cfc
+
+.CHANNEL 4 Harpsichord
+O3 P12,12 L1 @26 @E01
+l1rrr4r16rr.r8l32r>c16.el2fgg+l8a+gecl16g+gfd+c+c<a+g+a+8>g+8f8c+8gfd+c+c<
+
+.CHANNEL 5 TremoloStrings
+O4 P13,13 L1 @09 @E01
+r1r4r16r32r1r1r1.rl2<fa+>g+cc<g+>gg+l4c+c+eb+c1l2c+a+g+c+l4a+b+g2>geeel2<<fa+>g+c
+
+.CHANNEL 6 Pizzicato
+O4 P0,13 L1 @30 @E01
+r1r4r16r32r1r1r1.rl16o3fgg+fb+g+gfgg+a+gb+g+geg+a+b+g+b+g+gfececegg+>g<fb+g+>cfc
+
+Also note that each channel has it's own initial parameters set up in regards to octaves, 
+selected waveforms and envelopes, and its own channel panning (left and right volumes).  These
+override anything that appears in Channel 0's setup.  If you leave out the volume command, it defaults
+to 31 (max).
+
+Also, ^D0 sets the time base.  You can ignore this unless you are doing something crazy.  Leave it
+as ^D0 and always use that for just about any song.  If enough people are curious and ask about the
+various time-base information, I promise I will make a second document with the details on that. 
+
+There you have it.  That is one entire song (assuming you view the actual file, rather than the
+bastardized excerpt shown here).
+
+BUT WAIT!  These channels are a mess!  It's just a bunch of notes smeared together!  Are all files
+this messy looking?  
+
+NO!
+
+That is what macro and repeats are for!!!!!
+
+####################################################################################################
+
+
+
+
+
+############
+##5) [MAC]##
+####################################################################################################
+
+MACROS AND LOOPS!
+
+Macro: Basically, mapping a shorter name to a longer input sequence.  
+
+Macros and loops are what make's Squirrel pretty awesome.  You can define macros (patterns for all 
+you tracker-folk), and repeatedly use them, thus saving space.  It also makes it much easier to
+read, work with, and plan!  Reduce, reuse, recycle! 
+
+You can also use loops (repeats) to save you from typing, and reduce clutter as well. 
+
+You also have the option to use segno and del segno, if you are used to that style from sheet music.
+
+Someone who is classically trained will appreciate it's presence for sure! 
+
+------------------
+To define a macro:
+------------------
+
+In the setup channel (.CHANNEL 0 in your file):
+
+MACRONAME=MML STRING'
+
+MACRONAME can only be used one time!  Use a new one for each different macro.
+
+Also, the syntax MUST be "MACRONAME="  no space between the end of the macro name and the =.
+Spacing after the equal sign does not matter.
+
+Macros have a maximum length of 255, and you must put a ' at the end of the string.  This signifies
+the end of that macro.  If you forget it, a bunch of macros will all bleed together into a glorious 
+trainwreck.
+
+
+~~~~~~~~
+example:
+~~~~~~~~
+
+bass=c>c<c>c<c>c<c>c< d>d<d>d<d>d<d>d<'
+
+Again, You must place the ' at the end of the string to denote the end of that macro!
+
+...And again, you define macros in .CHANNEL 0, after any initial paramters are set up.
+
+~~~~~~~~
+example:
+~~~~~~~~
+
+.CHANNEL 0 Setup
+T120 O4 L4 ^D0
+bass=c>c<c>c<c>c<c>c< d>d<d>d<d>d<d>d<'
+
+That's it!  
+
+----------------
+To call a macro:
+----------------
+
+This is my favorite part.
+
+(MACRONAME)
+
+That's it.  Oh man.  It doesn't get much easier.
+
+~~~~~~~~
+example:
+~~~~~~~~
+.CHANNEL 1 bassline
+P15,15 @01 @E01
+(bass)
+
+There you go.  it will play your bass macro one time on that channel.  Woo!
+
+"But..... I want to play that bass line for the entire song!  Do I copy paste it 35893 times?
+ That seems kind of crazy!"
+ 
+That's because it is.  Use repeats/loops!  They're great!
+
+---------------------
+To use a repeat/loop:
+---------------------
+[# MMLSTRING] or [#(MACRONAME)]
+
+~~~~~~~~
+example:
+~~~~~~~~
+.CHANNEL 1 bassline
+P15,15 @01 @E01
+[58(bass)]
+
+BAM!  That bassline will play a whopping 58 times, with that one little bit of typing.
+
+Segno / Del Segno work's identically, but you use {}'s instead and it only works one time.
+
+So you see, you can use macros and loops together to organize your songs in a very nice, orderly, 
+easy to use manner.
+
+####################################################################################################
+
+
+
+
+
+############
+##6) [WAV]##
+####################################################################################################
+
+Waves and Envelopes!
+
+If you don't like the built in waveforms (0-44), or the built in volume-envelopes (0-16), 
+you may define your own!  Novice users should find plenty of sound options with the presets to get
+started, so don't worry if this part seems strange.
+
+You may also define pitch envelopes, and modulation envelopes to do some other interesting things..
+
+Waveforms are formed of 32-byte values.  They are 5-bit. Basically, The value of each
+byte ranges from 0-31.
+
+----------------------------
+To define your own waveform:
+----------------------------
+
+.WAVE # NAME
+	*data goes here*
+
+Note, # ranges from 45 to 127      
+      
+~~~~~~~~      
+Example:
+~~~~~~~~
+
+.WAVE 45 Chirp
+	0x10, 0x1E, 0x1A, 0x14, 0x1A, 0x1E, 0x16, 0x10 
+	0x1A, 0x1F, 0x1C, 0x12, 0x16, 0x18, 0x10, 0x06 
+	0x12, 0x1C, 0x10, 0x0C, 0x0E, 0x10, 0x06, 0x02 
+	0x08, 0x12, 0x0C, 0x04, 0x08, 0x0E, 0x08, 0x04  
+      
+You may then use @45 to select this wave with your song.
+
+Also you have to define the new waveforms in order.  So your first user-made wave starts at 45.
+The next one is at 46, etc.  
+
+Envelopes are an interesting concept.  You use a sequence of attack (rise towards max volume), 
+decay (time from max volume to sustain level), sustain (volume for the majority of the sound output)
+, and release (time for sound to go from sustain to nothing after note-off)
+
+It is best visualized as a graph:
+
+  / -----   -----  \
+ /                  \
+/                    \
+A      D      S       R
+
+
+This for example is a graph where the sound will slowly rise to the max volume, sustain at that
+same volume, and then slowly release after ending the note.
+
+The envelopes in Squirrel CAN be done as such if you are used to synthesizers. The only difference
+is you are not limited to one Attack, Decay, Sustain and Release.  You can chain different 
+sequences together. 
+
+----------------------------
+To define your own envelope:
+----------------------------
+
+For Volume Envelopes:
+
+.adsr # NAME
+	* data goes here * 
+
+for OTHER envelopes	
+
+.ENVELOPE
+      .TYPE # NAME
+            *data goes here*
+
+Where .TYPE is .pitch (pitch envelope), or .mod (Frequency Modulation envelope)            
+            
+	# is limited to 16 - 127 when a .adsr envelope is used, and 0-127 for pitch and FM envelopes.
+	This is because regular ADSR envelopes already have 16 presets.  Be sure to start your user
+	made .adsr envelopes at 16 and follow in sequence, just like with custom waveforms.
+      
+The # you assign to a custom envelope is also what you use to USE that envelope with each specific
+command. (@E, @ME, @PE respectively.  See command table for more details).
+
+Aside from setting a specific envelope #, you may also set the delay at which they occur. Use
+@MD and @PD for this.  Refer to the chart at the end of this document for the details!
+      
+---------------
+ADSR ENVELOPES:
+---------------
+These commands are used to form ADSR envelopes:
+R: Release.  Also functions as attack.  Values range from -31744 to 31744.  Negative values are 
+treated as RELEASE, and positive are treated as ATTACK
+
+L: Level, defines the level of the envelope, from 0 to 31744.  Experiment with this to achieve 
+nice sounds.
+
+D: Decay, Also functions as Sustain.  Values range from -31744 to 31744.  Positive values are
+treated as DECAY.  Negative are SUSTAIN.
+
+From there you just string these commands together to form envelopes which achieve the sound you 
+want.  Like all synthesizer-like environments, the only true way to get the sound you want is by
+experimenting.  Once you have a feel for how the envelopes shape sounds, you will be able to use
+these ADSR envelopes to their fullest potential!
+      
+~~~~~~~~      
+Example:
+~~~~~~~~
+.adsr 16 sample
+	r 32  L 31744 d 200 L 16384 d 20
+
+	There is no rhyme/reason to the order in which you define values.  You literally do whatever
+	you want, and see what happens!  Experiment!  Generally, if you try to keep an ADSR pattern
+	(positive r, negative d, positive d, negative r), you should come out OK.
+	
+I have experimented with the adsr envelopes quite a bit, but if anyone finds them to be functioning
+differently than what has been described here, please feel free to inform me asap.  I will be more
+than happy to update this explanation.	It is probably the strangest part of the entire Squirrel
+system.
+        
+----------------
+Pitch Envelopes:
+----------------
+Pitch envelopes are to change the pitch of the notes.  This is good for slide effects.  Along with
+a ton of other strange things.
+
+There is not much to it.  You simply string together step-changing values similar to how you would
+detune with the command @D.  Values range from -127 to 128
+
+~~~~~~~~
+Example:
+~~~~~~~~
+.Envelope
+	.Pitch 0 sample
+	0, 1, 4, 6, 8, 12, 16
+      
+      
+      
+---------------------
+Modulation Envelopes:
+---------------------
+Use these for vibrato effects, and other strange effects.  They work similarly to the pitch envelope
+in reality.  You want to put in enough data for one full waveform cycle (32 numbers), but do not
+need to.  You just may not get as good of a result without it.
+
+~~~~~~~~
+Example:
+~~~~~~~~
+.Envelope
+	 .Mod 0 sample
+	0,0,1,1,2,2,3,3,2,2,1,1,0,0,-1,-1,-2,-2,-3,-3,-2,-2,-1,-1
+      
+Modulation envelope values range from -127 to 127.
+
+NOTE: This envelope can also be used to make race-car noises.  You will notice this as soon as you 
+start experimenting!  
+         
+####################################################################################################
+
+
+
+
+
+############
+##7) [DRM]##
+####################################################################################################
+
+What song is complete without drums?  You may define and tweak drums using the white noise/tone
+generation of the PSG.
+
+Drums are defined somewhat like an envelope.  You may have up to 12 drum sounds defined.  One for
+each note of the musical scale (C C# D D# E F F# G G# A A# B).  
+
+It is best to show with an example.  This will define 12 drums, 9 of which all sound identical.
+
+.Perc 0 
+       C:  E01 W00 P13,13 T4095 T4095 T3000         
+       C#: E01 W00 P15,15  T200  T400  T800 N15 N20 T1000 T750 N15 N20 T1000 T2000 T3000 T4095 N9 N15  
+       D:  E00 W00 P14,0  T90 T90 T110    N31 n30 n30 n29
+       D#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       E:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       F:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       F#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       G:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       G#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       A:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       A#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       B:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       
+Explanation of commands:
+
+E: Envelope!  The very same "ADSR" envelopes we have been discussing.  Use any of the presets, or
+perhaps one you defined on your own.  These are the same as the ones you use for waveforms!!
+
+W: Waveform!  Again, the same waveforms as we have been explaining.  Use the presets, or custom ones
+
+P: Panning.  Set the L/R panning.  This is ideal for if you want stereo tom-rolling.  Define a 
+few toms with different panning values that work from L to R or R to L, and play them in sequence!
+
+Note though, that this panning value changes the panning of that channel.  It will not reset it to
+whatever it was before the panning change.
+
+
+T: Sound interval number.  Experiment with this value.  It is the tonal frequency for the drum sound
+	low numbers are high pitched and big numbers are lowpitched.  String them together for more
+	thicker drums.  A bunch of large #'d T's with no noise can produce some nice kicks.
+	
+	The value of T can range from 0-4095
+
+N: Noise value, again experiment with values between 0 and 31.  Low #s are low noise, High #s are not
+	again string these together to get nice effects.  Mix tone + noise for killer snares!
+
+Drums are probably the most experimental aspect of this music system.  You will really have to 
+experiment and see what sounds best for your tastes.  In the future, I hope to have some drumkits
+available, and perhaps others will do the same.  Open Source Drums! :D 
+
+Once you have drums defined, all you need to do is put that channel into percussion mode, and
+string MML together as always. Only now, instead of generating musical tones, you will generate
+percussive effects based off of the data you entered for that note.
+
+Note, you can set ANY channel to percussion mode (using the @M command), but only channels 5 and 6 
+will be able to generate any white noise.  Using white-noise based drums on other channels may 
+produce undesirable, and even annoying effects.
+
+@M1 enters a channel into percussion mode. 
+
+####################################################################################################
+
+
+
+
+
+############
+##8) [CMD]##
+####################################################################################################
+
+Command Table for Hu7/Develo style MML for use with Squirrel!
+
+Musical notes: CDEFGAB
+----------------------------------------------------------------------------------------------------
+NAME| Description           | SYNTAX
+----------------------------------------------------------------------------------------------------
+^D# | Set Timebase          | ^D#  where # is 0-15.  1-15 are to change timebase.  0 is default.
+L   | Length                | L#   where # = 1,2,3,4,5,6,8,12,16,24,32,64,128  
+O   | Octave                | O#   where # = 0 - 7
+>   | shift octave up       | >    (each successive > will continue shifting the octave)
+<   | shift octave down     | <    (each successive < will continue shifting the octave)
+&   | note tie              | NOTE&NEXT NOTE
+T   | Tempo                 | T#   where # = (0-255).  Be reasonable.  Its music!
+V   | Volume                | V#   where # = 0 - 31
+P   | Channel Panning       | P#,# where L,R volume are defined (0-15)
+Q   | Sound Ratio           | Q#   where # - 1-8.  default value is 8.
+@V  | Relative volume       | @V#  where # is from -31 to 31.  
+R   | Rest                  | R#   where # = 1,2,3,4,5,6,8,12,16,24,32,64,128
+.   | dot extender          | NOTE(#). Adding in a numerical length is optional
+#/+ | sharp note            | NOTE#/+  raises note one step. The # in this case does NOT mean number
+    |                       |          it literally means use the pound sign
+-   | flat note             | NOTE-    lowers note one step.
+@   | Change Waveform       | @#   where # is a waveform number!  (See waveform section)
+@E  | Change Envelope       | @E#  where # is an envelope number! (See envelope section)  
+}   | Dal Segno             | Returns to point defined by Segno
+{   | Segno                 | Set point for return when Dal Segno is used
+[]  | Repeat Braces         | [# mml string] where # is number of repeats.]
+()  | Macro Call            | (macro name)
+^ME | FM Set                | ^ME# where # is 0-127.     Sets FM envelope number
+^MD | FM Delay              | ^MD# where # is 0-255.     Set's delay for FM
+^MC | FM Correct            | ^MC# where # is 0-8.       Specify an octave for FM correction
+^PE | Pitch Env.            | ^PE# where # is 0-127.     Sets Pitch Envelope #
+^PD | Pitch Env. Delay      | ^PD# where # is 0-255.     Sets delay speed for pitch envelope
+@D  | Detune                | @D#  where # is -128-127.  Defines detune step!
+^SC | Sweep                 | ^SC# where # is -128-127.  0 turns sweep off, negative values
+    |                       |                            send interval up, and vice versa
+^ST | Sweep Time            | ^ST# where # is 0-255.     Specifies sweep time.
+/   | JUMP                  | /TRACKNAME.                Used to jump to a different track entirely
+^T  | Absolute Transpose    | ^T#  where # is -128-127.  Similar to detune.
+^TR | Relative Transpose    | ^TR# where # is -128-127.  Relative means transpose from current pitch
+^TA | All Transpose         | ^TA# where # is -128-127.  Like ^T but effects every channel.
+^FV | Volume Fade           | ^FV# where # is -128-127.  Gradually increase/decrease volume
+^FR | R. Volume Fade        | ^FR# where # is -128-127.  Gradually increase/decrease right volume
+^FL | L. Volume Fade        | ^FL# where # is -128-127.  Gradually increase/decrease left volume
+@M  | Mode Change           | @M#  where # is 0-2.       0 is normal mode, 1 is percussion mode 
+    |                       |                            (see drums), and 2 is noise mode.
+^FO | Fade Out (cadence)    | ^FO# where # is 1-127.     gradually slow tempo with given speed
+----------------------------------------------------------------------------------------------------
+
+These are all of the commands available to you.  Some are somewhat difficult to explain via text
+and are best left for experimentation, as one needs to hear what they do with given values to really
+get a feel for how to use them.  Experiment with different sweeps, and modulation tables to get 
+interesting vibrato effects, and slides.  Practice makes perfect!  It's almost like having a 
+synthesizer full of knobs, sliders, and switches, in computer-text form for PCE!
+
+Also note:  Many of these commands are more advanced, and are not important for beginning to use
+and understand MML.  The most important commands to focus on if you are a novice are the ones that 
+were mentioned in the mini-tables in Chapters 3 and 4.  Once you are familiar with the basics, and
+are able to get a song playing, working in the advanced effects should come fairly easily!
+
+If any of these are unclear, please feel free to email aetherbyte@gmail.com to ask for clarification
+
+####################################################################################################
+
+
+
+
+
+############
+##9) [WAV]##
+####################################################################################################
+Waveform and Envelope Preset Reference.
+
+These never had names.  What you see here is what I have decided to call them all.
+
+----------
+WAVEFORMS:
+----------
+0:  SQUARE
+1:  SINE
+2:  SAW
+3:  BANJO LIKE SAW (GORGLE)
+4:  QUIETER VERSION OF 3
+5:  FLATSAW
+6:  SOFT SQUARE
+7:  JETSAW
+8:  SINE2
+9:  CHIRPY (NEUTOPIA STYLE)
+10: SQUARE/SAW?
+11: FLAT AS HELL SAW
+12: ANOTHER CHIRP (EVEN BETTER!)
+13: SQUARECRUNCHY
+14: CRUNCHY SAW
+15: FM ORGAN LIKE
+16: BELLS OF ST. MARY
+17: TRUE GORGLE DOOM
+18: SINE GORGLE
+19: SWEET BASS.
+20: SOFTER SWEET BASS
+21: SEGA BELLS
+22: MORE SEGA BELLS
+23: SAWFART
+24: SAW OF SOME KIND
+25: NICE SQUARE
+26: HARPSICHORD
+27: HARPSICHORD 2
+28: MELLOW BELL
+29: BELL!
+30: QUIETER BELL!
+31: PLAIN OLD BASS
+32: CHIRPY GORGLE
+33: SQUARE
+34: KEITH COURAGE GORGLE.
+35: I DONT EVEN KNOW.  SOUNDS LIKE A BUG
+36: SMOOTH GORGLE
+37: SAWTHING
+38: MELLOW GORGLE
+39: SQUARESAWTHUD
+40: ANOTHER KEITH COURAGE GORGLE
+41: STATICKY SQUARE
+42: FARTSAW
+43: FARTSINE
+44: OPEN GORGLEBELL
+
+**The term Gorgle is compliments of the SCC by Konami.  
+
+----------
+Envelopes:
+----------
+00: Nothing.  Un-enveloped glory.
+01: plucky.  Great for bass stuff
+02: quiet
+03: a little filtered and punchy
+04: actual fadeout release of note (slowish)
+05: like 4 only way more fade outty
+06: Like 5 only WAY more fade outty.
+07: slight attack rise, with fade out
+08: like 7 only a bit softer volume wise
+09: Volume swell.  I like this one alot!
+10: Volume clip.  Quiets the waveform a bit.
+11: long sustain/release :)  Pretty pad-like! 
+12: same as 11, but softer
+13: quiet, plucky, long release
+14: same as 13 with less sustain
+15: interesting tremolo with soft tone and some sustain/release.  
+
+####################################################################################################
+
+
+
+#############
+##10) [SFX]##
+####################################################################################################
+Sound Effects
+
+The holy grail.  Chiptune sound effects.  This is your new secret weapon.
+
+Sound effects are achieved via subtracks.  They play on various channels, toggling off the music
+momentarily.  You've heard this many times in video games.  You shoot stuff and you notice the 
+bassline, or the drums cutout for a second, but pickup right where they left off.
+
+That's a sound effect done as a subtrack.
+
+Sound effects are done just like any other riff in an MML song.  No special skills required.
+
+However, the best sound effects will be achieved by experimenting with all of the effects
+that you can use with Squirrel (Sweeps, etc.)
+
+
+All you need to do to create a subtrack is the following:
+
+.SUBTRACK  1   Beep
+.channel   0   
+V31 O1 @M0 P15,15 L16 @16 
+.channel 	6
+c
+
+
+Note, this is basically a brand new song.  You setup channel 0 as mentioned previously, and then
+setup any channels you want THIS sound effect to play on.
+
+Also note that it is .SUBTRACK 1.   Your sound effects are numbered based off of all of the other
+tracks you have made.  So if you've made 3 .TRACKs already, (0, 1, and 2), your SUBTRACKs must
+begin at 3.  
+
+Once you've made a subtrack, you play it in the test program just like any other song (psgPlay(#))
+
+The sound effect will overtake the main .TRACK on any channels it uses, finish its stuff, and
+pass the baton back to the main .TRACK without skipping a beat.
+
+Awesome, right? :)
+
+I've included the GNOP.mml file, and accompanying sound effect file (gnopfx.mml) for you to use to 
+begin your sound effect adventure.
+
+So all you get is a dumb "beep" and "boop" sound.
+
+...and an awesome song!
+
+
+#############
+##11) [OST]##
+####################################################################################################
+Other Stuff
+
+You can include files within files using Squirrel.  This is great for keeping soundeffects in a 
+separate file, and your main music in another.
+
+You use this feature just like this:
+
+.include "filename"
+
+You will achieve best results by .including the stuff at the bottom of your mainfile.  
+
+I typically use this for drums and sound effects that I want to reuse alot, so I can just keep
+including the file where I want it. :)
+
+You'll see it used in gnop.mml
+
+
+If you are using this for a game project and have a more specific question about the library
+and using it within code, please let us know.  I have tried to omit that here, as this is more of an
+MML tutorial than a library/programming tutorial.
+
+We will be more than happy to explain.
+
+####################################################################################################
+
+Well, there you have it!  Squirrel!   I hope this is not too overwhelming, and I hope everyone is 
+able to understand this manual and produce some songs. 
+
+If you have any problems, this manual makes no sense to you, or you discover a bug, please let Arkhan 
+know at Aetherbyte@gmail.com!  I am happy to answer any questions regarding confusion! 
+
+Post on the forums at aetherbyte.com/forum as well!  That way others can learn from what you may
+be doing.
+
+Bugs will be fixed with the utmost of speed!
+
+Also please feel free to share your MML files with others, and show your playing tunes to others
+as well!
+
+Thanks for trying Squirrel out, and enjoy!
+
+--Arkhan

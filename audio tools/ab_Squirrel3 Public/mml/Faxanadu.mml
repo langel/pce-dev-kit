@@ -1,0 +1,67 @@
+.TRACK  FAX
+.CHANNEL 0  Setup
+T60 V31 L16 ^D0
+
+.CHANNEL 1  
+O3 P15,0 @09 @E09 ^ME0 ^MD1
+l8e.r16d+ef+rbg.r.f+gar>d<b.r4r16gb+baga.r.f+bagf+e.r16d+ef+rbg.r.
+f+gar>d<b.r4r16gb+baga.r.f+bagf+e.r16d+ef+rbg.r.f+gar>d<b.r4r16gb+bag
+a.r.f+bagf+e.r16d+ef+rbg.r.f+gar>d<b.r4r16gb+bagagf+b.r.c-.l16rbrbrbrbr
+b8.r>drc4&cr4rcr<brargrf+8.r>e8.rd8.r<a8.r>c4&cr<b8.rbr>crdre4r8<gr
+g4&gr8.>d8.rc8.r<g8.ra8.rb4&br4r2r4bb8.rargrf+
+
+.CHANNEL 2
+O3 P0,15 @09 @E09 ^ME0 ^MD1
+l1rrrrl8g.r16f+garf+b.r.ab>crf+d.r4r16c-edcc-e.r.c+d+c+<bag.r16f+g
+arf+b.r.ab>crf+d.r4r16c-edcc-e.r.c+d+c+<bagef+gaf+abdgabb+a>f+d<gbgb>e
+dcc-c+ec+d+.r16<gf+.l16r>g+rg+rg+rg+rg+8.rbra4&ar4rargrf+rerd8.rb+8.r
+a8.rf+8.rg+4r8g8.rgrarbrb+4r8ere8.rdrf+rardrarcrer<gr>er<ar>e4&er4.f+8
+e8rd+r4bb8.rargrf+
+
+
+.CHANNEL 3
+O2 P11,11 @19 @E01
+l16er>er<brgrf+r>erd+r<brer>er<brgrar>grer<f+rgr>grdr<brcrb+rgrcr
+f+r>f+rc+r<f+rbr>d+rf+r<brer>er<brgrf+r>erd+r<brer>er<brgrar>grer<f+rg
+r>grdr<brcrb+rgrcrf+r>f+rc+r<f+rbr>d+rf+r<br<er>er<brgrf+r>erd+r<brer>e
+r<brgrar>grer<f+rgr>grdr<brcrb+rgrcrf+r>f+rc+r<f+rbr>brf+r<brer>er<brg
+rf+r>erd+r<brer>er<brgrar>grer<f+rgr>grdr<brcrb+rgrcrf+r>c+rer<b8.rbr
+b+rbr>erbr>er<brerg+rbrer<ar>crarer<ar>crerar<drar>dr<ardrf+rar>drd+rcr
+<g+rg8.r>drgrdrcrergrb+rgrercr<grar>crerararercr<arf+rar>c+rerf+8re8c+
+8rc-r4bb8.rargrf+
+
+.CHANNEL 4  
+O3 P12,0 @12 @E09 ^ME0 ^MD1
+r32l8e.r16d+ef+rbg.r.f+gar>d<b.r4r16gb+baga.r.f+bagf+e.r16d+ef+rbg.r.
+f+gar>d<b.r4r16gb+baga.r.f+bagf+e.r16d+ef+rbg.r.f+gar>d<b.r4r16gb+bag
+a.r.f+bagf+e.r16d+ef+rbg.r.f+gar>d<b.r4r16gb+bagagf+b.r.c-.l16rbrbrbrbr
+b8.r>drc4&cr4rcr<brargrf+8.r>e8.rd8.r<a8.r>c4&cr<b8.rbr>crdre4r8<gr
+g4&gr8.>d8.rc8.r<g8.ra8.rb4&br4r2r4bb8.rargrf+
+
+.CHANNEL 5
+O3 P0,12 @12 @E09 ^ME0 ^MD1
+r32l1rrrrl8g.r16f+garf+b.r.ab>crf+d.r4r16c-edcc-e.r.c+d+c+<bag.r16f+g
+arf+b.r.ab>crf+d.r4r16c-edcc-e.r.c+d+c+<bagef+gaf+abdgabb+a>f+d<gbgb>e
+dcc-c+ec+d+.r16<gf+.l16r>g+rg+rg+rg+rg+8.rbra4&ar4rargrf+rerd8.rb+8.r
+a8.rf+8.rg+4r8g8.rgrarbrb+4r8ere8.rdrf+rardrarcrer<gr>er<ar>e4&er4.f+8
+e8rd+r4bb8.rargrf+
+
+
+.CHANNEL 6
+O2 P10,10 @19 @E01
+r32l16er>er<brgrf+r>erd+r<brer>er<brgrar>grer<f+rgr>grdr<brcrb+rgrcr
+f+r>f+rc+r<f+rbr>d+rf+r<brer>er<brgrf+r>erd+r<brer>er<brgrar>grer<f+rg
+r>grdr<brcrb+rgrcrf+r>f+rc+r<f+rbr>d+rf+r<br<er>er<brgrf+r>erd+r<brer>e
+r<brgrar>grer<f+rgr>grdr<brcrb+rgrcrf+r>f+rc+r<f+rbr>brf+r<brer>er<brg
+rf+r>erd+r<brer>er<brgrar>grer<f+rgr>grdr<brcrb+rgrcrf+r>c+rer<b8.rbr
+b+rbr>erbr>er<brerg+rbrer<ar>crarer<ar>crerar<drar>dr<ardrf+rar>drd+rcr
+<g+rg8.r>drgrdrcrergrb+rgrercr<grar>crerararercr<arf+rar>c+rerf+8re8
+c+8rc-r4bb8.rargrf+
+
+
+.Envelope
+     .mod 0 wiggle
+     0,0,1,1,2,2,3,3,2,2,1,1,0,0,-1,-1,-2,-2,-3,-3,-2,-2,-1,-1
+
+     .mod 1 wiggle2
+     0,0,2,2,4,4,6,6,4,4,2,2,0,0,-2,-2,-4,-4,-6,-6,-4,-4,-2,-2     

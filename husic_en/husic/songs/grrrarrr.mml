@@ -1,0 +1,190 @@
+#TITLE		GRRRARRR
+#COMPOSER	B-KNOX
+#PROGRAMER	PUKE7
+
+
+/* WT1 square, WT2 25 pulse, WT3 12 pulse, WT4 saw,  */
+/* WT5 triangle, WT6 almost sine */
+
+
+@WT1={
+	$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	}
+
+@WT2={
+	$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	}
+
+@WT3={
+	$1f,$1f,$1f,$1f,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	}
+
+@WT4={
+	$1f,$1e,$1d,$1c,$1b,$1a,$19,$18,$17,$16,$15,$14,$13,$12,$11,$10,$0f,$0e,$0d,$0c,$0b,$0a,$09,$08,$07,$06,$05,$04,$03,$02,$01,$00
+	}
+
+@WT5={
+	$11,$13,$15,$17,$19,$1b,$1d,$1f,$1f,$1d,$1b,$19,$17,$15,$13,$11,$0f,$0d,$0b,$09,$07,$05,$03,$01,$01,$03,$05,$07,$09,$0b,$0d,$0f
+	}
+
+/*  SINE */
+@WT6={$12,$14,$16,$17,$19,$19,$1a,$1b,$1b,$1a,$1a,$19,$18,$17,$14,$12,$0f,$0a,$09,$07,$07,$06,$05,$05,$05,$05,$06,$07,$08,$09,$0b,$0f
+	}
+/*  SAW */
+@WT7={$1f,$1e,$1d,$1c,$1b,$1a,$19,$18,$17,$16,$15,$14,$13,$12,$12,$11,$10,$0f,$0e,$0d,$0c,$0b,$0b,$0a,$09,$08,$07,$06,$05,$04,$02,$01}
+
+/*  NASTY */
+@WT8={$1d,$00,$18,$00,$14,$00,$10,$00,$0e,$00,$00,$0b,$00,$09,$00,$00,$1a,$00,$12,$00,$0d,$00,$00,$09,$00,$00,$0a,$00,$00,$0e,$00,$00}
+
+@EP0={-127}  /* kick */
+@EP1={1}
+
+
+
+@v0 = { 17 8 5 3 2 0 }
+@v1 = { 12 5 3 2 0 }
+@v2 = { 9 19 15 13  }
+@v3 = { 12 21 30 27 26 23 }
+
+/*
+#BANK-CHANGE 1,6
+*/
+
+ABCDEF t190 l8 q6 v31
+
+A W7 o0 @v3
+BCDE W8 @v2 o2
+E o3
+F N1 @v0 o2
+
+
+/* A bass, BCD chords, E lead, F hats */
+
+
+
+/* first section  */
+
+A  [
+A   [e4 r8 e4 r8 e8 r8]3
+A   e8 r8 e8 r8 >f+4 g4<
+A   e4 r8 b4 r4 g8
+A   [e4 r8 e4 r8 e8 r8]2
+A   [a16. r32]3 r8 >f+4 g4<
+A  ]2
+
+BCD [
+B   [r4 e4 r4 {v5 e v10 e v15 e}4]4
+C   [r4 g4 r4 {v5g v10 g v15 g}4]4
+D   [r4 b4 r4 {v5b v10 b v15 b}4]4
+BCD ]4
+
+E  [r1]3
+E  [r2. {v5e v10 d v15 d}4]2
+E  [r4 d4 r4 {v5 e v10 d v15 d}4]2
+E  r4 e4 r4 {v5 e v10 e @v0 W1 e}4
+E  [{b g e b b g g e r e}1]3
+E  {b g d b g > d r d}2 @v2 W8 {e e e}4 <
+E  {e e e}4 r2 {v5e v10 d v15 d}4
+E  d2 r4 {v5 e v10 f+ v15 g}4
+E  e2 r4 {v5 d v10 e v15 e}4
+E  g16 f+16 g2 {e e e}8 {v10 e v12 g v15 b}2
+
+F  [
+F   [N0 W6 EP0 {v31 c v20 c v15 c}4 N1 @v0 c8 c8 r4 {v5 e v10 c @v0 c}4]3
+F   N0 v31 [c8 r8]2 N1 @v0 c4 r8 {c @v1c c}8
+F   [N0 W6 EP0 {v31 c v20 c v15 c}4 N1 @v0 c8 c8 r4 {v5 e v10 c @v0 c}4]3
+F   N0 v31 [c16 r16]3 r8 N1 @v0 [c16 r16]3 {c @v1c c}8
+F  ]2
+
+/* second section, extra funk chords and hats */
+
+ABCDF [
+A  [r8 [a8]6 r8 a4 r8 [a8]4 r8]2
+A  d8 [a8]6 r8 e8 e8 r8 [b8]4 r8
+A  g8 [e8]6 r8 b8 b8 r4 {b b b}2
+
+B  [[a8. r16]3 r4 a4 r8 a2 r8]2
+C  [[c8. r16]3 r4 c4 r8 c2 r8]2
+D  [[e8. r16]3 r4 e4 r8 e2 r8]2
+
+B  [a8. r16]3 r4 e4 r8 b2 r8
+C  [c8. r16]3 r4 g4 r8 d2 r8
+D  [e8. r16]3 r4 b4 r8 e2 r8
+
+B  [e8. r16]3 r4 b4 r8 b2 r8
+C  [g8. r16]3 r4 d4 r8 d2 r8
+D  [b8. r16]3 r4 f4 r8 f2 r8
+
+F  EP0 r2. N1 @v0 c8 r8
+F  N0 W6 EP0 v31 c8 r8 N1 @v0 c8 N0 v31 c8 r4 N1 @v0 c8 r8
+F  [
+F    N0 W6 EP0 v31 c8 r8 N1 @v0 c8 N0 v31 c8 r4 N1 @v0 c8 r8
+F  ]6
+ABCDF]2
+
+
+E  W7 v17 [r1]4 >
+E  r1 d4 r8 a2 r8
+E  {d d d e d}1 a4 r8 EP1 a2 EPOF r8
+E  @v2 W2 [{g e c a c a}2]2
+E  {e > g a < g a c}1 {g e c a c a}2
+E  {> a < e c a c a}2 [{> a < e b d e b}2]2
+E  EP1 a1 e2 b2 EPOF
+E  < e1 {b d f}1 >
+
+
+
+
+/* section 3 */
+
+F N0 W6 EP0 v31 c8 r8
+
+BCD[
+B  [d4 r8 d2 r8]4
+C  [f4 r8 f2 r8]4
+D  [a4 r8 a2 r8]4
+
+B  [e4 r8 e2 r8]2
+C  [g4 r8 g2 r8]2
+D  [b4 r8 b2 r8]2
+B  [e8]3 r8 e8 r8 [e8]2
+C  [g8]3 r8 g8 r8 [g8]2
+D  [b8]3 r8 > d8 r8 [d8]2 <
+
+B  b4 r8 a+2 r8
+C  d4 r8 c+2 r8
+D  f4 r8 e2 r8
+
+BCD]2
+
+
+A  d4. r8 d4. r8 d2 e4 r8 d8
+A  [[d8]3 r8 r4 < d8 > r8]2
+
+A  [e8]3 r8 r4 > e8 < r8
+A  [e8]3 r8 r8 > e4 < r8
+A  [e8]3 r8 r4 > e4 <
+
+A  [b8]2 r8 a+2 r8
+
+A  d4. r8 f4. r8 d2 a4 r8 f8
+A  [d8]3 r8 r4 < d8 > r8
+A  [d8]3 r8 > {d f a}2 <
+
+A  e4. r8 r4 > e8 < r8
+A  [e8]3 r8 r4 > e8 < e8
+A  [e8]3 r8 r4 > e8 d8
+
+A  < b4 r8 a+2 r8
+
+A  W8 @v2 o3
+A  e2 {e g b}2 e4 d4.  {b g e}2^e2
+B  e1^1 r8 e2   d1
+C  g1^1 r8 g2   f1
+D  b1^1 r8 a+2  a+1
+/*
+F [
+F N0 W6 EP0 v31 c8 r8 N1 @v0 c8 c8 N0 v31 c8 N1 @v0 [c8]3
+F N0 W6 EP0 {v31 c v20 c v15 c}4 N1 @v0 c8 c8 N0 v31 c8 N1 @v0 c8 {@v1 c c c}4 
+F ]8
+*/

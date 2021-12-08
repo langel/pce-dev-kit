@@ -1,0 +1,64 @@
+.TRACK
+.CHANNEL 0 Setup
+T60 V31 L4
+songA=RFGAFRRRRFGAFRRRR>C<B->C2RRR2>D<B->C2RRR2C8>D8<C8<B-8A8F.RRRRC8>D8<C8<B-8A8F.RRRRFCF2RRRRFCF.R8FCF2'
+songB=RRRRRFGAFRRRRFGAFRRR2>C<B->C2RRR2>D<B->C2RRRRC8>D8<C8<B-8A8F.RRRRC8>D8<C8<B-8A8F.RRRRFCF.R8FCF.R8FCF2'
+bass=RCRRRCRRRFRRRFRRRCRRRCRRRFRRRFRRRCCFCRRRRCCFCRRRRCFC.R8CFC.R8FCFC8R8FCFC'
+drum1= c+32 r... d+32 r...'
+drum2= d32 r8.. c+32 r8.. c32 r8.. c+32 r8..'
+drum3= c32 r... c32 r...'
+drum4= c32 r8.. c+32 r8.. d32 r8.. c+32 r8..'
+
+.CHANNEL 1 Call
+O4 P10,0 @8 ^ME0 ^MD100
+(songA) @E16 (songA)  (songA)  (songA)
+
+.CHANNEL 2 Echo
+O3 P0,8 @45
+(songB)  @E1 (songB)  @E16 (songB) @e17 (songB)
+
+.CHANNEL 3 accomp1
+O3 P8,0 @11 @E6
+^TR-5 (songA) (songA) (songA) (songA)
+
+.CHANNEL 4 accomp2
+O3 P0,8 @15
+^TR-5(songB) (songB) (songB) (songB)
+
+.CHANNEL 5 Bass
+O2 P8,8 @1 @e2
+(bass) (bass) (bass) (bass)
+
+.Channel 6  Drums
+@M1
+[8(drum1)] [4(drum2)] [3(drum1)] (drum2) 
+[8(drum3)] [4(drum4)] [3(drum3)] (drum4)
+[8(drum1)] [4(drum2)] [3(drum1)] (drum2) 
+[8(drum3)] [4(drum4)] [3(drum3)] (drum4)
+
+.Wave 45 pacman1
+    ; 16 values per line => exactly enough
+      0, 2, 4, 6,   8, 10, 12, 14,    16, 18, 20, 22,    24, 26, 28, 30,
+      0, 2, 4, 6,   8, 10, 12, 14,    16, 18, 20, 22,    24, 26, 28, 30	  
+
+.Perc 0 
+     C:  E17 W45 P15,15 T940  T1036 T956 T1052 N31 N27 N29 N26
+	 C+: E1  W15 P15,15 T1148 T1036 T950 
+	 D:  E5  W6  P15,15 T940  T1036 T956 T1042 N31 N27 N29 N26
+	 D+: E1  W15 P15,15 T1148 N31 N27 T1036 N29 N26 T950 N31 N250
+
+.Envelope
+  .Freq 16 alpha
+      r 32  L 31744 d 200 128 L 16384 d 20 60 d 30 40
+
+  .Freq 17 beta
+      r -100 L 32700 d 100, 5 L 16384 d 20 400 d 255 50
+
+  .Pitch  0  One
+     ; not enough to fill line
+     0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -2
+
+  .Mod  0 Eine
+     ; not enough to fill line
+     0, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 
+     5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5

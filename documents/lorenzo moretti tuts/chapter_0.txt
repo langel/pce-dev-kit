@@ -1,0 +1,641 @@
+
+
+
+ Chapter 0: General Overview
+ ===========================
+ 
+
+
+  What is covered in this tutorial?
+  ================================
+
+ 
+    *Basic overview of the PC Engine architecture (PCE)
+
+    *An intro to the HuC6280 (CPU), HuC6270 (VDC), & HuC6260 (VCE)
+
+    *Getting familiar with the PCE Assembler (PCEAS)
+
+
+
+
+  The PC Engine
+  =============
+
+    The PCE contains a custom 65CS02 8bit processor, 16bit Video Display Controller (VDC),
+    and a Video generation/Color Encoder processor (VCE), 8k of RAM, and a 7bit Timer.
+
+    Also included on the CPU dye is the PCM playback controller.
+
+    The CPU is responsible for distributing data to the VDC, VCE, PCM unit as well as game
+    logic and collision detection. The CPU clocks at 7.16mhz or 1.79mhz
+
+    The VDC is responsible for generating the graphics onscreen from the tiles & sprites.
+    The VDC can run at a number of resolutions from 256x242 to 512x242. The VDC is
+    port based and doesn't not share memory directly with the CPU.
+
+    The VCE handles the color palettes for tiles and sprites and generating the video
+    signal: RF, composite, and RGB. The VCE works on a 9bit color system (512 colors).  
+
+    The PCM controller handles PCM playback on 6 different channels. Each channel is 
+    able to take direct streaming(CPU feed) or play back from a channels sample buffer. The 
+    PCM format is unsigned 5bit and the frequency ranges from 0hz to 111khz for one complete
+    cycle of a 32 sample PCM buffer. 
+
+    The Timer holds up to a 7bit number and is decremented once every 1024cycles. An
+    interrupt is issued on rollover. 
+
+
+    The PCE also has external I/O port for joypad and an external rear expansion bus for
+    attaching a CDROM base unit or other peripherals.
+
+
+
+
+  HuC6280 intro
+  =============
+
+    The CPU is a custom 8bit processor made by Hudson based on the 65CS02 processor.
+
+
+    The CPU runs at two speeds: 1.79mhz and 7.16mhz. The processor has a number of custom
+    instructions for accessing the additional hardware, i.e. block transfer instructions 
+    (DMA operations). The CPU is almost always run at 7.16mhz unless it needs to access
+    BRAM (backup save ram), in which Hudson recommends accessing it at a slower rate.
+
+    Since the processor is based on the 65CS02, and not the 65C02, it therefore contains
+    most of these newer instructions not found on the 65C02 or its successor the 65816
+    (with exception to the new WDC 658x releases). These are mostly bitwise and test
+    instructions.
+
+    For addressing memory, the HuC6280 uses a 16bit program counter(PC) for addressing
+    up to 64k ($0000-FFFF)internally and a 21bit/2048k external bus ($00000-1FFFFF).
+    The lower half of the 21bit external bus is reserved for the cartridge port and the
+    upper half to the internal hardware and rear expansion bus. The external address bus
+    is divided into 8k segments and mapped into any 1 of 8 internal map registers - MPRi.
+  
+    These registers swap in/out the 8k segments in the CPUs 64k logical address space.
+
+    MPR0 maps $0000-1FFF
+    MPR1 maps $2000-3FFF
+    MPR2 maps $4000-5FFF
+    MPR3 maps $6000-7FFF
+    MPR4 maps $8000-9FFF
+    MPR5 maps $A000-BFFF
+    MPR6 maps $C000-DFFF
+    MPR7 maps $E000-FFFF
+
+    Each segment is referred to as a PAGE and maps in a BANK ranging from $00 to $FF.
+    Some BANKs have a special association with the hardware. A BANK # represents $2000
+    byte segment of the external address range. BANK $00 is $0000-$1FFF of the address
+    bus and BANK $01 is $2000-$3FFF. Here are some special bank #'s:
+
+    Bank $00 - This first bank is mapped to $E000 (MPR7) on startup. Startup code must
+        reside in this bank. This bank is usually kept in MPR7 because of the 
+        irq vector map, but it can be changed once the system boots up.
+
+    Bank $F8 - This is the base RAM for the PCE unit. If this is the only RAM used for
+        the cartridge layout, then it must be mapped to MPR1 for Zeropage and
+        the stack to function correctly.
+
+    Bank $FF - This is the hardware bank. The VDC,VCE,PCM and other I/O (hardware) are
+        mapped to this address range. This should/must be mapped to MPR0.
+
+
+    The CPU contains 5 interrupts of which only 4 are usable. These are: IRQ2 BRK/EXT_BUS,
+    IRQ 1 (VDC), TIMER, NMI (not used), and RESET (for the PC). The interrupts can be
+    diabled via the interrupt controller ( @ $1402), or delayed/held via disabling the 
+    CPUs interrupt flag. These five interrupt vectors are fixed and located at address
+    range $FFF6-FFFE. Each entry is a 16bit absolute address. 
+
+    A common practice is to have a small interrupt handler in the bank mapped to MPR7
+    that jumps to an indirect address located in RAM (ZP). This allows the user to 
+    change a specific interrupt routine without having to remap a different bank to 
+    MPR7.
+
+  
+  CPU registers 
+  -------------
+
+    The HuC6280 contains six 8bit registers: 3 general regisers (A,X,Y), 1 stack pointer 
+    register (SP), 1 program counter register (PC), and 1 CPU flag/status register (S).
+
+    The 3 general registers are divided into 2 groups; the ACC register A, and the two
+    index registers X & Y. The accumulator register, or A register, is used for 
+    arithmetic and bitwise operations such as add, subtract, shift, AND, OR, etc.
+
+    The X & Y registers are used for index addressing. The X register is also used to
+    transfer to and from the stack poiner register.
+
+    The stack pointer is used for subroutine and interrupt calls. When a subroutine or
+    interrupt is issued, the PC and the flag register(for INT call) are push onto the
+    stack, pointed by the stack pointer register + address $2100. The stack pointer is
+    then decremented. Upon returning from the call, the PC and flag register are popped
+    from the stack and the SP register is incremented. The SP register works from the
+    top down, from $FF to $00.
+
+
+  Zeropage
+  --------
+
+    When I said that the 6280 had six registers, I lied. The CPU also has 128 16bit wide
+    memory registers. These registers were originally placed in RAM to save dye cost on
+    the 6500**. Some 65x variants, these block of registers can be relocated through the
+    PC address range, but on the 6280 they are fixed at logical address location $2000.
+    The 128 16bit registers can also be accessed as 256 single 8bit registers.
+    
+    Zeropage (ZP) has two functions. First, using ZP for 8bit variables is faster than an
+    absolute address (ABS) because the because the upper byte (MSB) of the 16 bit address
+    is already calculated ($20). This saves a few cycles and reduces the size of the
+    instruction by one byte. 
+
+    Second, ZP is the (only) method for indirect addressing modes. Since the ZP registers are
+    located in ram, you can index them with the X and Y regs. Either indexing which register
+    pairs to use, or indexing after the 16bit address is obtained from the reg.
+
+    A few examples:
+    
+      lda [ZP]      ;load value from indirect ZP/ZP+1
+      lda [ZP],Y    ;load value from indirect ZP/ZP+1 that is indexed by Y
+      lda [ZP,X]    ;load value from indirect ZP+X/ZP+X+1
+
+
+
+    ** - Exophase respectfully disagrees with the 6500's designer/grandfather's description
+         of these registers, being located in memory, as processor registers and my blatant
+         association as such ;)
+
+
+
+
+ HuC6270 VDC intro
+ =================
+
+    The VDC is the display processor that builds the output image. The VDC contains
+    the tiles, sprites, tilemaps, and sprite table. The VDC is also responsible for
+    setting IRQ1 interrupt based on the internal Hsync, Vsync, or other VDC flags.
+
+    There are 3 video planes generated by the VDC; the sprite plane, the BG plane,
+    and the background color plane. The BG color plane is a solid plane with its
+    color defined by color slot 0 of the 512 indexed palette. This plane has the
+    lowest priority and no tile or sprite can be placed behind it. The CG plane
+    has a fixed priority (above the BG 0 plane). The sprite plane can have each of
+    its sprite's priority individually set above or behind the BG plane.
+
+
+   
+    |***********| <-- BG color 0 plane
+    |           |
+    |  |***********| <-- low priority sprites
+    |  |           |
+    |  |  |***********| <-- BG plane
+    |  |  |           |
+    |  |  |  |***********| <-- high priority sprites
+    |**|  |  |           |
+       |  |  |           |
+       |**|  |           |
+          |  |           |
+          |**|           |
+             |           |
+             |***********|
+
+
+
+
+    The VDC is equiped with 64k of vram, although it can address up to 128k. The VDC
+    is a 16bit processor and all addressing is done by words, not bytes. The 
+    address range of vram is $0000-7FFF (words).
+
+    Each tile is 8x8 in size, can access up to 16 colors. The tile is stored in
+    planar format. This means there are four 1bit 8x8 planes. The planes combined
+    together allow for a pixel value from $0-F. The bit planes are not stored in
+    linear order. The first two bit planes are interleaved, followed by the last 
+    two bit planes which are also stored interleaved. This is known as composite
+    planar.
+
+    Here's a visual (ascii) example:
+
+    0=plane 0, 1=plane 1, etc.
+
+      00000000
+      11111111
+      00000000
+      11111111
+      00000000
+      11111111
+      00000000
+      11111111
+      00000000
+      11111111
+      00000000
+      11111111
+      00000000
+      11111111
+      00000000
+      11111111
+
+      22222222
+      33333333
+      22222222
+      33333333
+      22222222
+      33333333
+      22222222
+      33333333
+      22222222
+      33333333
+      22222222
+      33333333
+      22222222
+      33333333
+      22222222
+      33333333
+
+
+    Each tile in vram takes up $10 words. A tile can be placed anywhere in vram,
+    even in the sprite, sprite table, and tile map area.
+
+    A tile can only access up to 16 colors, so this is where the tilemap comes
+    in. The tilemap for the VDC is referred to as the Background Attribute Table
+    or BAT for short.
+
+    In the BAT, a palette is assigned to a tile. This allows which 16 colors the
+    tile is referring to. For the background image/map, there are 16 different
+    definable palettes to choose from. Color 0 of any tile will only show color #0 
+    of palette #0. This is because color 0 in all tiles is used for transparency.
+    This allows sprites to shown behind and peek through the gaps in the tiles. 
+
+    A single BAT entry is one 8x8 tile. The BAT map size is definable in 32x32
+    segments up to 128x64 max. This means a 128x64 map size is a 1024x512 virtual
+    map - pixel measurement. 
+
+    A tile defined in the BAT entry can exist anywhere in VRAM, including in the
+    BAT itself. The BAT entry is word size and the BAT starting point is fixed 
+    at $0000.
+
+
+    Sprites are stored in cells of 16x16 pixels. The format is planar, but not
+    composite as with tiles. Each entire bitplane is stored in sequence. Each
+    row of 16 pixels in a bitplane is stored as a word. There are a total of 4
+    bitplanes. Like tiles, each sprite pixel ranges from $0-F and uses a palette
+    index to map one of those 16 colors. The palette index for a sprite is 
+    stored in the sprite table and also, like tiles, the color 0 is used for 
+    transparency.
+
+    The sprite table is known as the Sprite Attribute Table Buffer(SATB). The
+    SATB can placed anywhere in VRAM and its location defined by the VDCs
+    SATB pointer register.
+
+
+    The SATB is copied(DMA) from VRAM source to an internal buffer. This happens
+    a few lines after the active display ends. Any changes made to the SATB in
+    VRAM will not take effect until the next SATB DMA. 
+
+
+    The total size of the SATB is 256 words. Each sprite entry in the SATB takes
+    up 4 words: x position, y position, sprites address(or number), and flip X&Y
+    /priority/palette number/sprite size. The SATB holds 64 entrys for 64
+    sprites. This is the maximum allowable sprites onscreen at a single time. 
+
+    *Note* it's possible to have two SATB DMAs in a single frame when using a split
+    screen effect.
+
+    The sprite size ranges from 16x16 up to 32x64. At Hblank, the VDC copies
+    the sprite attributes from the internal buffer to a series of sprite
+    registers. There are only 16 sets of these registers. 
+
+    If more than 256 pixels or 16 sprites are on any given scanline, the
+    remaining sprites will not be displayed. Even though a sprite can be defined
+    as 32x64, the internal sprite registers segment each entry into 16x16 cells.
+    If 15 sprite cells already exist on a scanline and a 32x64 sprite is placed on 
+    that same scanline, all horizontal cells after the first cell of that sprite
+    will not be displayed for that *scanline*.
+
+
+
+
+  VDC registers
+  -------------
+
+    The VDC registers range from $00 to $13 ($03 and $04 are not used). For this
+    tutorial, I will only cover the basic registers.
+
+    The VDC has 3 ports that the CPU uses to access the VDC. These ports are mapped
+    to BANK $FF.
+
+  
+    $0000 - This is the register(AR) port. You write the register you want to use for
+            the VDC here. Reading from this port will get the VDCs status register. It
+            is extremely important to remember to read from this register for VDC INT
+            calls. Otherwise you'll go into an infinite IRQ1 call loop.
+
+    $0002 - This is the data port. After selecting a register from port $0000, you 
+            can read or write from this port. Since the VDC can only access words
+            at time and not bytes, this is the lower half of the 16bit port (LSB).
+  
+    $0003 - This is the MSB of the data port. This port also contains the latch for
+            auto incrementing, for either use of reading or writing to vram.
+
+
+
+   Register list:
+
+      $00 - (Status Reg) Reading from port $0000 will obtain this registers 
+            contents. This register contains the internal FLAG states of the
+            VDC.
+
+      $00 - (MAWR) This register is used to set the VRAM write address.
+
+      $01 - (MARR) This register is used to set the VRAM read address.
+
+      $02 - (VRR/VWR) Setting this register tells the VDC you are ready to
+            read/write to VRAM via the data port.
+
+      $05 - (CR) The control register is used to enable/disabled BG or sprites,
+            auto incrementor, Vblank/hblank/sprite overflow/collision flags.
+
+      $06 - (RCR) Raster control register. writing the scanline number+$40 to
+            this register enables the Hsync interrupt for that line.
+
+      $07 - (BXR) The Background X scroll register. It takes a 9bit value.
+
+      $08 - (BYR) The Background Y scroll register. It also takes a 9bit value.
+
+      $09 - (MWR) Memory Access Width Register. Used to set the size of the BAT.
+
+      $0A - (HSR) Screen setting. (Explained later)
+  
+      $0B - (HDR) Screen setting. (Explained later)
+
+      $0C - (VPR) Screen setting. (Explained later)
+
+      $0D - (VDW) Screen setting. (Explained later)
+      
+      $0E - (VCR) Screen setting. (Explained later)
+ 
+      $0F - (DCR) DMA Control Register. Control flags for the VRAM DMA options.
+            This also has the SATB-DMA auto flag which will cause the VDC to
+            do a SATB-DMA at the end of active display everytime.
+
+      $10 - (SOUR) VRAM-VRAM source address.
+      
+      $11 - (DESR) VRAM-VRAM destination address.
+      
+      $12 - (LENR) VRAM-VRAM length (in WORDs).   
+
+
+      $13 - (DVSSR)** VRAM-SATB Source Address Register. This is the pointer
+            used by the SATB-DMA. This points to the beginning of the SATB
+            in VRAM. Writing to this register automatically requests the
+            SATB-DMA. If the SATB-DMA auto flag is set, then the DMA will
+            always perform a SATB-DMA from this vram pointer. 
+            
+      ** - "Direct memory access video random access memory-sprite attribute table buffer source address register"
+            
+
+
+
+
+ HuC6260 VCE intro
+ =================
+ 
+    The VCE handle the display signal timings as well as the palette entries. The VCE
+    can operate in three different horizontal pixel resolutions: 5.37mhz, 7.16mhz, and
+    10.7mhz. The VCE allows for a maximum of 288, 384, and 576 pixels per scanline.
+    The VDC actually controls the viewable pixels, borders and blank lines. The VCE's
+    resolution clock is tied with the VDC, so any changes to the VCE's clock effects
+    the VDC's clock/pixel rate as well.
+    
+    The VCE has 512 R/G/B color slots. The VDC reads out tile/sprite data to the VCE via
+    a 9bit pixel bus that corresponds to these color slots. When the VDC is sending sprite
+    data/pixels, the 8th bit is set and when sending tile data/pixels the 8th bit is cleared.
+    This effectively splits the 512 slots into two sets of 256 color slot groups. The BG
+    uses the lower set and the sprites use the upper set.
+    
+      The RGB format:
+    
+       (16bit entry)
+       0000000G GGRRRBBB
+     
+     
+    Color slot 0 is used for the BG color layer. Regarding tiles and sprites, the VCE
+    doesn't separate the 256 color into separate 16 color segments. This is actually
+    an effect of the VDC. The VDC fetches a tile pixel then fetches palette number
+    and multiplies them. This means you can't access colors 16,32,48,64,etc because
+    of multiplying by pixel color 0. The same with sprites. This allows sprites to
+    appear behind the BG tiles, but in front of BG color 0. This is why I referenced
+    BG color 0 as its own GFX plane.
+    
+    The VCE is accessed from memory mapped ports $400-407. The color ram ports are
+    auto incrementing on the latch write.
+    
+      $400 - VDC register set.
+      $401 - not used
+      $402 - LSB color slot # 
+      $403 - MSB color slot # 
+      $404 - LSB write port
+      $405 - MSB write port (latch)
+      $406 - not used
+      $407 - not used
+
+
+    I'll not go into detail about the VCE regs here but just say that it controls the 
+    screen filter, horizontal resolutions, and B&W mode.
+
+
+
+
+
+ PSGPCM intro
+ ============
+
+    The PCM audio unit handles 6 channels and is controlled via a block of memory mapped 
+    registers. The audio unit has six independant 5bit DACs that pass through two volume
+    control mechanisms: channel volume and channel pan volume. All the channels are then
+    passed through a master pan volume. Each channel output is roughly equivilant of 12bit
+    sampled resolution (non linear of course).
+    
+    Each channel has a 32byte unsigned linear PCM buffer. The playback buffer is forward
+    looping only. The rate of playback of a channel buffer is based on a period system.
+    The rate for a single buffer played as a single pass is: 
+    
+       3579545 Mhz
+      ------------- = 32sample segments per second
+      (period * 32)
+      
+    The octave range is from 1 to 7 with some slight inaccuracy in the last octive notes
+    due to the period divider. The frequency can be changed at any time during playback.
+    Changing the volume, pan volume, or frequency doesn't not reset the playback pointer
+    of a channel's buffer, allowing for amplitude and frequency modulation.
+    
+    Alternately each channel can be independantly switch into DDA mode. In this mode the
+    channel buffer is disabled and any PCM data written to the data port is used instead.
+    All six channels can be set to DDA mode without limitation. DDA mode allows for sample
+    playback. The audio unit does not have a timer or interrupt so the PCM data has to be
+    streamed manually by the CPU.
+    
+    The most common method is to use the TIMER interrupt at its maximum setting of 7khz
+    to stream sample data. Alternatively, you can use a   scanline interrupt for 15.7khz
+    or a just a loop with a fixed delay.
+    
+    Each channel volume register takes a 5bit value and corresponds to an internal LOG
+    table. Pan volume is also LOG. 4bit for the left stereo volume and 4bit for right.
+    By using two channels in DDA mode, it's possible to output a 10bit PCM sample by
+    setting one channel volume at $1F and the other at $0B. Splitting up the sample data
+    into upper and lower parts and sending them to the corresponding pair of channels.
+    This only works because each channel has its own DAC and volume mixer. This might
+    not work on some emulators. It currently works in mednafen.
+    
+    Besides buffer and DDA mode, some channels have other modes. Channels 5 and 6 can
+    independently be set to noise generation output. The noise data is two elements per
+    equiv buffer cycle. Think of this as 16 bytes of one element and 16byte of the next
+    element. An element is either $1f or $00 PCM. This gives a square tone noise pattern.
+    
+    Channel 1 can be set to LFO mode. This is somewhat inaccurate of a description because
+    channel 1 can modulate channel 2's frequency at higher audio ranges than LFOs sub 120hz
+    frequencies. The data in channel one is treated as *signed* when added to channel 2's 
+    frequency. For low freq modulation, this mode isn't used much because it's easy to use
+    the CPU to handle 60hz modulation(vibrato) and without losing a channel.
+
+    There are some other interesting things that can be done with the audio that I've not
+    seen done in any games as of yet. Using the 7khz TIMER and using a series of fixed point
+    counters, you can create 'operators' that change frequecy and amplitude(volume)at high
+    frequencies of the playback buffer. You can also 'sync' or reset the playback buffer
+    pointer without turning off the channel. Using sync and some amplitude modulation, you
+    can make some interesting filter type effects.  
+    
+    
+  Audio registers
+  ---------------
+    
+    The audio registers are located in the hardware bank $FF.
+  
+  
+      $800 - Value 0 to 5. Selects a channel to update.
+      
+      $801 - Master pan volume (byte). Upper nibble is left volume, lower nibble is right volume.
+      
+      $802 - Frequency for playback buffer. This is the lower 8bits of the 12bit period value.
+      
+      $803 - Upper 4bits for the period value. (There's no latch system)
+      
+      $804 - Channel control:
+      
+              D0-4  channel volume
+              D5    unused
+              D6-7  channel mode
+              
+                    D7 D6
+                    -----
+                     0  0  disabled playback and allow buffer update
+                     0  1  resets the write/playback pointer of the buffer to zero
+                     1  0  enables playback buffer
+                     1  1  enabled DDA mode. Writes to $806 will automatically be outputted
+    
+    
+      $805 - Channel pan volume. Upper 4bits for left stereo volume level and lower 4bits for right.
+    
+      $806 - Data port. Writing to this port updates the buffer. Pointer auto increments and 
+             wraps after value 31. If DDA mode is enabled, then PCM data written to this port
+             will automatically be passed to the DAC for output.
+             
+      $807 - Noise mode. This is for channels 5 & 6.
+      
+             D0-4 noise frequency
+             D5-6 unused
+             D7   0=noise mode off, 1=on
+    
+      $808 - LFO register (frequency). (D0-7). This value is multiplied to (32 X 12bit Period) to set
+             channel 1's frequency. 3579545mhz / (32 x Period x LFO freq) 
+      
+      $809 - LFO control
+      
+             D0-1 LFO operating mode
+             
+                  00=LFO stop/pause, channel 2 keeps playing without modification
+                  01=data in channel 1 is added to channel 2's frequency
+                  10=data in channel 1 * 16, added to channel 2's frequency
+                  11=data in channel 1 *256, added to channel 2's frequency
+    
+             D2-6 unused
+             
+             D7   1=LFO mode on, 0=off
+    
+    
+      Note: $806 write pointer and the channels playback pointer are shared. You must manually reset
+            the playback pointer if you write more or less than 32 bytes to the buffer (unless you
+            want this as a desired effect).
+    
+    
+  
+  
+  TIMER, I/O, INT
+  ===============
+  
+    The TIMER generates an interrupt on a single clock roll over. One clock revolution
+    is 1023 cycles of 7.159mhz source input. The fast setting is therefore 6.999khz.
+    
+    The TIMER is interfaced through the hardware bank at address $C00. The TIMER speed is
+    set by a 7bit value. This value is multiplied by 1023 cycles (0=1023cycles).
+    
+     $C00 7bit time value (7bit value * 1023cycles).
+     $C01 0=disabled, 1=enabled
+     
+    When an interrupt is signaled by the TIMER unit, you must write to $1403 to reset the
+    interrupt call or you give go into an infinite interrupt call loop. Writing any value
+    to $1403 clears the interrupt state of the TIMER. The TIMER automatically resets on
+    roll over and not upon writing to $1403.
+    
+    
+   Interrupt mask
+   --------------
+   
+    The interrupt mask enables the programmer to ignore a specific interrupt call. This does
+    not *cancel* the interrupt. It just ignores whatever interrupt is set. The INT mask is
+    located in the hardware bank at address $1402. Setting an IRQ bit to 1 disables the INT
+    call, 0 enables it. Reading from $1403 gives the status of pending IRQs. Bit 1=pending
+    IRQ, 0=no IRQ pending.
+    
+     $1402/3
+     -------
+     
+            D0 IRQ2 (BREAK/CD UNIT/CART PORT)
+            D1 IRQ1 (VDC)
+            D2 TIRQ (TIMER)
+            D3-7 unused
+            
+   I/O
+   ---
+    
+    The I/O port is the front game port. The register is located in the hardware back at address
+    $1000. The gamepad uses 4bit multiplexed data. A/B/START/SELECT are on the lower set and
+    UP/DOWN/LEFT/RIGHT are on the upper set. This register is also used for the region detection.
+    
+     $1000
+     -----
+           (Write)
+           D0   1=selects upper 4bits, 0=selects lower 4bits
+           D1   resets the multiplexed buffer/counter (needed for TAP reading)
+           
+           (Read)
+           D0-3 4bit controller values
+           D4-5 unused
+           D6   Region code. 0=Japan,1=US/other
+           D7   unused
+    
+
+
+  Misc
+  ====
+  
+    The Arcade card, CD base unit, Modem, and Booster Plus are all mapped to the hardware bank.
+    The Street Fighter 2 mapper is located at external address $1ff0-1fff. These are not included
+    in the tutorial.
+
+
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''    

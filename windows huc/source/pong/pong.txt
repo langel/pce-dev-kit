@@ -1,0 +1,42 @@
+---[ PONG DEMO ]-------------------------------------------------------------
+                                                                 15 Jul '00
+
+---[ CONTENT ]---------------------------------------------------------------
+pong.c              main source file
+pong.txt            this explanation file
+digits.pcx          picture for the digits sprites
+racketleft.pcx      picture for the left racket sprite
+racketright.pcx     picture for the right racket sprite
+ball.pcx            picture for the ball sprite
+special.pcx         picture for the background
+
+---[ AUTHOR ]----------------------------------------------------------------
+Zeograd commited this
+
+---[ INTEREST ]--------------------------------------------------------------
+This program is quite a big sample program for huc 1.2 that shows how to
+handle a lots of thing.
+One can see how to read joypad for multi players.
+Sprites are widely used for ball, rackets and score displaying.
+Background is displayed with a pseudo C instruction.
+
+---[ REQUIREMENT ]-----------------------------------------------------------
+Correctly installed HuC release i.e.
+binaries of the C compiler and assembler
+include files for the C compiler ('debug.c' and 'huc.h')
+include files for the assembler and PCE_INCLUDE set to point to them
+
+---[ INSTALLATION ]----------------------------------------------------------
+Content of this sample must be placed in a direct subdirectory of the one
+which contains 'debug.c' and 'huc.h' (DEMO subdirectory of the main install
+one by default)
+
+---[ USE ]-------------------------------------------------------------------
+'huc -O2 pong.c'
+then use an emulator or send the generated 'bomb.pce' file to a true console
+to play it.
+hmm, I bet you'll easily find the controls.
+
+---[ CONTACT ]---------------------------------------------------------------
+author : Zeograd <zeograd@caramail.com>
+huc homepage : http://utopia.consolemul.com

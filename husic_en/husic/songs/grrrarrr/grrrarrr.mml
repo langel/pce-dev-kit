@@ -1,0 +1,148 @@
+#TITLE		UNFINISHEDSONG
+#COMPOSER	ANT1
+#PROGRAMER	ANT1
+
+
+/* WT1 square, WT2 25 pulse, WT3 12 pulse, WT4 saw,  */
+/* WT5 triangle, WT6 almost sine */
+
+
+@WT1={
+	$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	}
+
+@WT2={
+	$1f,$1f,$1f,$1f,$1f,$1f,$1f,$1f,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	}
+
+@WT3={
+	$1f,$1f,$1f,$1f,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	}
+
+@WT4={
+	$1f,$1e,$1d,$1c,$1b,$1a,$19,$18,$17,$16,$15,$14,$13,$12,$11,$10,$0f,$0e,$0d,$0c,$0b,$0a,$09,$08,$07,$06,$05,$04,$03,$02,$01,$00
+	}
+
+@WT5={
+	$11,$13,$15,$17,$19,$1b,$1d,$1f,$1f,$1d,$1b,$19,$17,$15,$13,$11,$0f,$0d,$0b,$09,$07,$05,$03,$01,$01,$03,$05,$07,$09,$0b,$0d,$0f
+	}
+
+@WT6={
+	$12,$14,$16,$17,$19,$19,$1a,$1b,$1b,$1a,$1a,$19,$18,$17,$14,$12,$0f,$0a,$09,$07,$07,$06,$05,$05,$05,$05,$06,$07,$08,$09,$0b,$0f
+	}
+
+
+
+@v0 = { 15 10 5 0 }
+@v1 = { 15 0 }
+@v2 = { 15 15 15 14 14 14 13 13 13 12 12 12 11 11 11 10 10 10 9 9 9 8 8 8 7 7 7 6 6 6 5 5 5 4 4 4 3 3 3 2 2 2 1 1 1 0 }
+
+
+
+
+ABCDEF t115 l8 q6 v15
+
+A W5
+BCD W4 o3
+E W1 v10
+F N1 @v0
+
+/* A bass, BCD chords, E lead, F hats */
+
+/* first section  */
+
+ABCDE [
+
+A   e8 r4 e16 r16 e16 r16 >g16 r8 g8< r16
+A   r4 r8 >>e8 r8 c8<< r4
+A   e8 r4 e16 r16 e16 r16 >g16 r8 g8< r16
+A   r4 >g16 r16 g8< r8 >>e16 r16 d16 r16 r8<<
+
+B   e8 r8 r4 r4 r4
+B   c8 r8 r4 r4 r4
+B   e8 r8 r4 r4 r4
+B   e8 r8 r4 r8 e16 r16 d16 r16 r8
+
+C   g8 r8 r4 r4 r4
+C   e8 r8 r4 r4 r4
+C   d8 r8 r4 r4 r4
+C   g8 r8 r4 r8 g16 r16 g16 r16 r8
+
+D   a8 r8 r4 r4 r4
+D   g8 r8 r4 r4 r4
+D   g8 r8 r4 r4 r4
+D   d8 r8 r4 r8 d16 r16 d16 r16 r8
+
+E   [r4 r4 r4 r4]4
+
+F   [r4 c4 r4 c4]7
+F    r4 c4 r4 c16 r16 c16 r16
+
+ABCDE ]2
+
+/* second section, extra funk chords and hats */
+
+ABCDE [
+
+A   e8 r4 e16 r16 e16 r16 >g16 r8 g8< r16
+A   r4 r8 >>e8 r8 c8<< r4
+A   e8 r4 e16 r16 e16 r16 >g16 r8 g8< r16
+A   r4 >g16 r16 g8< r8 >>e16 r16 d16 r16 r8<<
+
+B   e8 r8 r4 r4 r4
+B   c8 r8 r4 r4 r4
+B   e8 r8 r4 r4 r4
+B   e8 r8 r4 r8 >e16 r16 d16 r16 r8<
+
+C   g8 r8 r4 r4 r4
+C   e8 r8 r4 r4 r4
+C   d8 r8 r4 r4 r4
+C   g8 r8 r4 r8 >g16 r16 g16 r16 r8<
+
+D   a8 r8 r4 r4 r4
+D   g8 r8 r4 r4 r4
+D   g8 r8 r4 r4 r4
+D   d8 r8 r4 r8 >d16 r16 d16 r16 r8<
+
+E   [r4 r4 r4 r4]4
+
+F   [r4 c16 r8 c16 r4 c16 r8 c16]7
+F    r4 c16 r8 c16 r4 c16 c16 c16 c16
+
+ABCDE ]2
+
+/* new section, sustained chords, lead maybe one day */
+
+BCD @v2
+
+ABCDE [
+
+A   e8 r4 e16 r16 e16 r16 >g16 r8 g8< r16
+A   r4 r8 >>e8 r8 c8< < r4
+A   e8 r4 e16 r16 e16 r16 >g16 r8 g8< r16
+A   r4 >g16 r16 g8< r8 >>e16 r16 d16 r16 r8<<
+
+B   e1
+B   c1
+B   e1
+B   e2 r8 >e16 r16 d16 r16 r8<
+
+C   g1
+C   e1
+C   d1
+C   g2 r8 >g16 r16 g16 r16 r8<
+
+D   a1
+D   g1
+D   g1
+D   d2 r8 >d16 r16 d16 r16 r8<
+
+E   e8 g8 r4 r4 r4
+E   a8 g8 r4 r4 r8 r16 d16
+E   e8 g8 r4 r4 r4
+E   e4 r4 d4 r4
+
+F   [r8 @v1 c16 @v0 r16 c16 r8 c16 r8 @v1 c16 @v0 c16 r8 c16 r16]7
+F    r8 @v1 c16 @v0 c16 r8 c16 r8 @v1 c16 @v0 c16 c16 c16 c16
+
+ABCDE ]2

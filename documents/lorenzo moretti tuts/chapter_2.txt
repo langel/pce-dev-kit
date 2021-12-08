@@ -1,0 +1,557 @@
+
+
+
+ Chapter 2: Assembler Basics
+ ===========================
+ 
+ 
+  BANK & ORG
+  ----------
+  
+      Now that we've had a little overview of the system, let's take a look assembler directives.
+      The first two we'll look at are BANK and ORG. Each of these directives effect how/where the 
+      data or code is placed into the ROM file. Not only where in the rom the code or data is to be
+      stored, but also the logical address relation. First up is BANK.
+      
+       If you remember from the overview, a bank is an 8k section of the external memory range.
+      Dividing the external address by $2000 nets you the BANK number. Lets see an example.
+      
+              .bank #$00
+            startup:
+                jmp startup
+                
+              .bank #$01
+            some_routine:
+                lda <$01
+                rts
+                
+       Ok, so we have two manaully defined banks. Bank $00 is $000000 and bank $01 is $002000 in the 
+      external address range. Bank $00 is the first bank mapped on startup. Actually, it's the only
+      bank mapped on startup by reset/power on. For most of our examples, we're going to leave that
+      bank mapped into MPR7 (the $e000-ffff logical address range).
+      
+       The bank directive tells the assembler where the code or data is going to be located within
+      the rom. The ORG directive tells the assembler where to expect the data to be in the logical
+      address range. Just to refresh our memories, the external address range is the whole ROM from
+      start to end. The logical address range is the 64k addressable internally by the CPU. We map
+      parts of the external address range into the logical address range so that the CPU can access
+      this memory - be it ram, rom, or mapped ports.              
+
+        
+          An ORG example:
+          
+              .bank $00
+              .org $E010  
+              
+            startup:
+              
+                jmp startup
+                
+       
+       The ORG directive tells the assembler where the code/data in the bank should be recognised 
+      in the logical range. Since "startup" is the first label created after the ORG define, it
+      contains the logical address of $E010. And since this bank is mapped automatically by the cpu
+      on startup, it will be in the correct $e000-ffff range and this "startup" will equal $e010.
+      But the ORG directive has a side effect. The ORG define also effects where in the bank the 
+      code/data is going to be located. How is this possible? Let's take a closer look..
+       
+              .Bank $00  = rom address $000000
+              .org $e010 = 10 bytes into the bank which is rom address $000010
+
+       
+       Logically, you only have an 8k range within the bank so if you defined an address like $c010,
+      you'd still end up with the same offset into the bank itself. Another way to look at it is:
+       
+              (org_address & $1fff) = bank offset
+              
+              or 
+              
+              $e010 & $1fff = $0010       
+
+       The ORG directive is more important for code than it is for data. It's also important to note
+      that if you define a bank and a logical address, that it will expand into the next bank and 
+      page (logical 8k block) without any intervention on the programmers part. You might be wondering
+      how can you know the bank of a label if it runs into some other unknown bank? I'll tell you, but
+      lets look at the ORG directive one more time ;)
+       
+       Now that we know the ORG directive effects where in the bank the code/data/label offset is 
+      going to be. We could in practice avoid using the logical address and use just the internal range
+      of the bank directly.
+        
+              .Bank $13
+              .org $1e00
+            my_data:
+                
+                ;etc
+                
+       This has the same effect as if we used $FE00, if we need to be specific in the offset into the
+      bank. This makes things more clearer for origanizing data or special code. Just because we define
+      a different logical address to the code/data, doesn't mean we *have* to access in that are of 
+      the PAGE map. Although, it makes things a little more complicated for setting up and accessing, 
+      but that's what advance discussions/tutorials are for ;) 
+       
+       Now before I reveal the great secrets on finding out that random bank number of some label, let's
+      look at the INCLUDE set of directives. INCBIN will be our first example. This stands for "include
+      binary file" or something close. The parameters are simple; incbin "mydata.bin". Sounds good so 
+      far. Lets put this in an example.
+      
+              .bank $05
+              .org $0000
+            my_data:
+              .incbin "mydata.bin"
+            next_data:
+              .incbin "moredata.bin"
+              
+       Let's assume the first binary file is larger than 8k. Let's put it at 50k. This would mean the 
+      next label, "next_data", would be in some far down the road bank. Now, we could sit there and 
+      manually calculate where the next label begins. But what if the data through out your project 
+      changes size? It then becomes a pain to constantly recalculate however many labels you have 
+      defined in a row. Meet the bank assist function "BANK". Wait..? Didn't we just use that already
+      to define a bank? Yup. But this one is different. Check it out.
+      
+      
+                lda #BANK(my_data)
+                tam #$04 
+      
+                
+       See how easy that was? Amazing, isn't it? Yeah, it's that easy to grab any old bank number of a
+      label. The assembler turns the above instruction into a LDA immediate instruction. It's just too
+      bad that doing the same for the logical address isn't as easy. I can tell you right now that the
+      logical address of that label will not match up. If you try this:
+      
+      
+                lda #BANK(my_data)
+                tam #$04
+                lda my_data,y
+      
+                
+       You'll more than likely end up with the wrong address. This is the problem with data includes 
+      that are larger than the bank size - the logical page number the assembler assigns for it is going
+      to be off. Not to fret, there are multiple ways around this. First is the assembler logic method.
+      We effectively use the assembler to precalculate the address for us at assemble time and have it 
+      load as an immediate or absolute address.
+       
+       
+                lda (my_data & $1fff)+$8000,y
+       
+                
+       It's a bit much to write out, but it gets the job done. You must pay careful attention to get the
+      page offset correct. Since the data is mapped to MPR4, the page offset starts at $8000 location. 
+      The assembler takes the above logic, calculates it, then passes it off to the second pass as 
+      "absolute" operand of the instruction. Just remember that "(" and ")" are not 'indirect' brackets.
+      Those are "[" and "]". If you know you'll be accessing this data at this specific page range all
+      or most of the time, then you can easily create an equate to make the instruction look cleaner. 
+      More on EQUATES later.
+      
+       The other methods I mentioned involve doing the same logic but on the cpu side. This is rarely
+      needed, but if you did do this then it would more than likely be *special* case scenario.
+      
+       Next up is the PAGE function. BANK is to BANK as PAGE is to ORG. That's right, it grabs the 
+      logical address of a label. So in this situation let's pretend you have the code/data in the proper
+      bank with the proper label.
+      
+                lda #BANK(some_code)
+                tam #PAGE(some_code)
+      
+      
+       Notice something strange about that? You thought we were going to grab the logical address didn't
+      you? Nope. The PAGE function helps you put the BANK number into the correct MPR, so you can access
+      the data in the *correct* logical range. We calculated the BANK number by taking the external 
+      address and dividing by $2000 and we do the same with the logical address. Divide by $2000 to get 
+      the PAGE number (MPR slot). Since we mapped the correct bank with the correct page area, everything
+      aligns up nicely and we can load/call/whatever based on the logical address defined by the ORG 
+      directive.
+      
+      
+      
+       These are very important directives and functions that you need to be familiar with. Let's put 
+      this into a complete example.
+       
+       
+          ;listing3.asm
+          ;------------
+            
+            .bank $00
+            .org $e000
+            
+          startup:
+              
+              sei                       ;disable interrupts
+              cld                       ;clear the decimal flag. Left over 6502 habit ;)
+              csh                       ;Set CPU to 7.16mhz mode
+              ldx #$ff
+              txs                       ;initialize the stack
+              lda #$ff
+              tam #$00                  ;mapped hardware bank
+              lda #$f8
+              tam #$01                  ;map scratchpad ram
+              
+              stz $2000                 ;zero out the first byte of ram
+              tii $2000,$2001,$2000     ;clear ram
+              
+              lda #bank(far_sub1)       ;Our example in action :D
+              tam #page(far_sub1)
+              jsr far_sub1              ;call our subroutine
+              
+          wait_loop:                    ;The best wait loop e-v-e-r
+              jmp wait_loop
+       
+          ;//interupt handlers          ;Some vector labels just in case ;)
+          ;//-----------------
+          _timer:
+              stz $1403
+             rti
+              
+          _irq2:
+             rti
+          
+          _vdc:
+              pha
+              lda $0000
+              pla
+             rti
+              
+          _nmi:
+             rti
+       
+            .org $fff6                  ;The interrupt vector 
+            
+            .dw _irq2
+            .dw _vdc
+            .dw _timer
+            .dw _nmi
+            .dw startup
+
+          ;//Our far code
+          ;//------------
+            
+            .bank #$01                  ;Our routine. In bank 1, at $c000
+            .org $c000
+            
+          far_sub1:                     ;Do some fancy stuff
+              lda $2000
+              clc
+              adc #$01
+              sta $2000
+             rts                       ;return from the call
+              
+          ;end of file                  
+
+
+
+
+       Looking over the listing, we have our startup code which initializes the processor: stack,
+      hardware bank, scratchpad ram, and clears memory. We use the BANK function for LDA to grab out
+      source bank and use the PAGE function for that label to assign the BANK into the correct MPRi 
+      register. The label has already been given an address by the ORG directive and since everything is
+      in the correct place, we can simply call our subroutine.
+
+
+
+  DATA & VAR defines
+  ------------------
+
+       I assume you know what a 'label' is. Let's quickly go over data defines. A data define is either
+      a BYTE or a WORD. We use ".dw" for data word and ".db" for data byte. The parameter following the 
+      define can be a label (if .dw is used) or a direct value. You can also use the assembler to pre-
+      calculate the logic. You can define multiple instances of word/bytes in sequence by separating them
+      with a ",". In the above listing, I chose to give a more clear listing. You can place a data define
+      anywhere, including between instructions, except bank $F8. Bank $F8 is scratch pad, the internal 8k
+      ram of the 'base' system. 
+
+
+          A quick example of creating a string of data defines:
+          
+            my_string:
+              .db $01,$01,$02,$00,$02,$ff,$fe,$23,$00
+              
+            func_table:
+              .dw get_ptr, calc_offset, check_pos_x, clear_screen
+              
+              
+              
+       The first string is easy enough to understand, but take a look at the second one. I used nothing
+      but labels in that group. The label name should give hint as what it's for. The 6280 has a JMP 
+      function that is indexed by the X register. It allows you to call a function based solely on the 
+      value in the X register. We'll not go into now, but there is something to remember.
+
+       On to RAM variables. Yes, PCEAS facilitates the accessing of scratchpad ram via labels. How nice 
+      of the assembler. Although you can use EQUATEs to setup label to RAM, it lacks some automated 
+      features of the specialize directives that we're going to cover. Meet ZP & BSS. The BANK directive
+      doesn't apply here since this is fixed to the internal ram bank. The ORG directive does apply, 
+      though not really need unless you need specific align arrays, etc. There really isn't any *area*
+      you need to define these other than within the '.data' directive. I tend to put them at the end of
+      the main assembly listing.
+      
+       ZP directive stands for Zero Page and BSS... well I don't know what it stands for, but its local
+      range is $2200-3fff. ZP's range is $2000-$20ff. As with other labels, the assembler will increment
+      the internal counter for label assignment so you don't have to worry about using an ORG directive 
+      before each define. Neither of the two directives will cross into the stack area. If you want a 
+      label pointing into the stack area, you'll have to do it manually with an equate. This might not be
+      for the average coder, but something more towards a hacking project.
+      
+       The ZP and BSS directive themselves are not use like .db or .dw. There more akin to BANK. Matter 
+      of fact, the assembler will label ZP variables as being in the $F0 bank and BSS variables in the 
+      $F8 bank, when you look at the symbol output file. Please don't try to map bank $F0, it's just an
+      internal thing to the assembler to keep track. So we use ZP or BSS to define which bank we are
+      creating out labels in. We use '.ds' directive to define the size of the variable (or label). The
+      size is in bytes. Remember- since this is ram, you can't define a ram variable with predefined 
+      value. This isn't some higher language like C/C++ here ;)
+      
+      
+              .data
+              .zp
+              
+                R0: .ds 1
+                R1: .ds 1
+                A0: .ds 2
+                A1: .ds 2
+              
+              .bss
+                level: .ds 1
+                track: .ds 1
+                array: .ds 256
+                bffr: .ds 1024
+                
+              .org $3e00
+                align_array: .ds 512
+                
+                
+                
+       First thing we see is '.data'. If it wasn't obvious, this tells the assembler that were are 
+      working with data and not code. Then we have some ZP defines. If you remember back, ZP registers
+      are only method of loading/storing indirectly. It requires a 16bit address and so two 8bit ZP 
+      registers act as a single 16bit wide register. In the above example I reserver two bytes for A0 and
+      A1. These are my two 'address' registers. R0 and R1 are just general purpose data registers. You 
+      can define an array in the ZP area, but since it's more limited in space I setup the arrays in BSS.
+      
+       Level and track are just some single byte examples. Array and bffr are examples of how you can 
+      create large arrays in ram. The last is an example of force aligning an array for speed 
+      optimization ;) You have to be careful when using the ORG directive inside the RAM bank. You could
+      accidentally overlap other existing defined variables. The assembler assumes you want to do this 
+      and doesn't complain. And who knows, you might actually want to do that.
+      
+       You *might* be wondering what if I want to map in different ram banks into $2000-3fff PAEG range? 
+      You can and that's an advanced topic not covered in this chapter ;)
+      
+    
+    
+   EQUATEs
+   -------
+      
+       Let's see.... we've covered BANK, ORG, PAGE, ZP, BSS, .db, .dw, .ds, and labels. I guess it's onto
+      EQUATE and then a more in depth looks at the INCLUDE directives.
+      
+       Ahhhh, EQUATEs. I can equate. Ok, that was just bad. Equates are symbols that 'equate' or equal / 
+      represent a specific value. You can think of them as static defines. You can also place them in 
+      .code and .data areas. You can define labels, ram locations, pre calculated logic, etc. Let's assume 
+      you have a game and the player starts off with a predefined number of lives. Let's say 3 lives.
+      
+      
+            start_lives .equ $03
+            
+            
+                  
+       Start_lives is now a symbol representing $03. Two things you must be careful of about equates. 1)
+      is that they are case sensitive and 2) they are only numbers. If you want to use the equate as an 
+      immediate value, you need to put the immediate value sign '#' prefixing the symbol name.
+      
+      
+                lda #start_lives
+                sta num_lives
+      
+                
+                
+       The same is true if you need to use the symbol as a ZP value, prefix it with a '<'. A few more 
+       examples of equate defines.
+       
+       
+            _ax .equ $20f8
+            _al .equ $20f8
+            _ah .equ $20f9
+            _bx .equ $20fa
+            _bl .equ $20fa
+            _bh .equ $20fb
+            a_offset .equ some_label+$233
+            init_stack .equ $ff
+            scratchpad .equ $f8
+            hardware_bank .equ $ff
+            lose_hitpoint = $03
+            page0 = $00
+            page1 = $01
+            
+            .
+            .
+            .
+            
+                lda #$00
+                sta <_al
+                ld #$24
+                sta <_ah
+                lda [_ax]
+                sta _bl
+            
+            .
+            .
+            
+                lda a_offset
+                sta <_bh
+            
+            .
+            .
+            
+                ldx #init_stack
+                txs
+                lda #hardware_bank
+                tam #page0
+                lda #scratchpad
+                tam #page1
+            
+
+
+      These are some shining examples of using the equate symbols. Let's go over them real quick-like.
+    The pseudo x86 regs where given the full address, but using the ZP operator drops the '$20' part. If
+    you omit the ZP operator, then it will treat the symbol as an absolute/direct address. Next up, we 
+    have a precalculated value based on a label and a immediate addition. This symbol assembles into an 
+    absolute/direct address for an operand. The next few examples are treating the symbol as an immediate
+    8bit value with the '#'. It was used for the stack position and the bank number. Noticed how the 'equ'
+    was changed to an '='. That's the shortcut version.
+    
+     Equate is a value attached to a symbol. An eqaute is *not* a macro. The BANK and ORG directives have
+    no effect on defining the equates.
+    
+    
+    
+   INCLUDEs
+   --------
+     
+      The INCLUDE directives. There are quite a few and I'm not going to cover all of them (mainly because 
+     I don't use all of them). I show one example of how to include a binary file, 'incbin'. Let's look at
+     how to include an assembly file.
+     
+     
+            new_subs:
+              .include "some_subs.asm"
+     
+              
+      Fairly straight forward. The 'include' directive is looking for a text file, something that has 6280
+     assembly syntax. Be it code, data, defines, equates, macros, or variables. Care needs to be taken when
+     including code of different banks defines. If you put them in the wrong order, you'll over write 
+     previous code/data/etc. If you omit a bank directive in the include, it will assume a place from the 
+     exact point you included it. That means address (internal counter) and bank number.
+     
+      Next up are some graphic includes. They can be handy especially if you don't have any/much external
+     tools for graphic encoding. These graphic includes work with PCX files only. Palettized PCX images.
+     INCPAL converts the 256 color palette of the PCX file into PCE 16bit RGB format. Be weary that PCEAS
+     swaps the colors in a single 16 color section of the palette. This means in your graphic editing app, 
+     you'll need to treat color 15 as transparent and not color 0. Yes, this is bizarre. It wasn't my design,
+     but it's not so bad once you remember the rules. INCPAL can also take two arguments.
+     
+     
+            pal1:    
+              .incpal "my.pcx"              ;//convert the whole 256 colors
+              .incpal "my.pcx",1            ;//start from subpalette 1 and only convert 16 colors
+              .incpal "my.pcx",2,3          ;//start from subpalette 2 and convert 3*16 colors or 3 subpalettes
+     
+              
+              
+       And there you have it. Just so we are on the same page; the 256 colors of the palette are divided
+      into groups of 16 colors which we refer to as subpalettes. All you have to do is copy the string of 
+      bytes to the appropriate location of the color ram (VCE). Btw, a block transfer instruction can easily
+      take care of this in one instruction.
+      
+      
+       Palettes are great, but so are tilemaps. 'INCBAT' takes the pcx file and divides it up into an 8x8
+      segment map. The dimensions of the pcx make up the map size (x/8 and y/8). The bad news about INCBAT
+      is that it doesn't remove redundant tiles from the map nor does it try to figure out what tile belongs
+      to what palette. You're going to have to do that *manually* and on the fly. Yeah, not fun. Let's look
+      at some arguments for INCBAT.
+       
+       
+            tilemap1:
+              .incbat "my.pcx", $1000            ;//build a BAT from the whole pic. Tile address starts at $1000
+              .incbat "my,pcx", $1000,32,29      ;//built a BAT size of 32x29 cells. Start from 0,0 upper corner
+              .incbat "my.pcx", $1000,1,1,32,29  ;//Save as above, but start at 1,1 from the upper left corner
+
+
+
+       Self explanatory. But really, for any serious dev you'll need to seek some external tools/utils. 
+      Anyway, you can't really have a tilemap without some tiles :D
+
+      
+            tiles1:
+              .incchr "my.pcx"              ;//convert all the tiles of the pic
+              .incchr "my.pcx", 32,29       ;//convert up to 32x29 tiles of the pic
+              .incchr "my.pcx",1,1,32,29    ;//same as above, but with a starting offset of 1,1
+
+              
+       Remember when I said that PCEAS will reverse the color order in the sub palette of an incpal
+      directive? Not to worry too much if your source tiles are created from INCCHR. The colors will match
+      up just fine (why wouldn't they?). But you still have to take note that color 15 of the subpalette 
+      in the graphic editor will become color 0 and used for tile/sprite transparency. Sprites are in the 
+      same situation (color 15->0). The syntax for including sprites it just like tiles.
+      
+
+            sprite1:
+              .incspr "my.pcx"              ;//convert all the tiles of the pic
+              .incspr "my.pcx", 32,29       ;//convert up to 32x29 tiles of the pic
+              .incspr "my.pcx",1,1,32,29    ;//same as above, but with a starting offset of 1,1
+
+              
+       Matter of fact, they're so similar that I just copy+pasted those few lines of text. Ehm. The only
+      difference being that sprites are 16x16 in cell size while tiles are 8x8 in cell size.
+
+
+       That's it for the INCLUDE directives. As I've said previously, the graphic includes are limited in
+      some ways and lack any sort of compression for a large project.
+   
+   
+   
+   LABELs
+   ------
+      
+       I wanted to cover one more thing before ending this chapter. It's LABEL's little brother, local 
+      label. A local label works just like a regular, except that it can only be seen in between two 
+      labels. You can't jump or load from that label if you're outside the boundry.
+      
+
+
+              some_sub:               ;//first regular label
+                
+                  clx
+              .loop                   ;//local label
+                  lda $3000,x
+                  sta $3450,x
+                  inx
+                  cpx #$17
+                  bcc .loop
+                rts
+                
+              some_sub_2:             ;//second regular label
+
+
+              
+       With a local label you don't have any label naming conflicts to worry about, for repeat label names.
+      Unless it's within two regular labels. As you can see from above, this makes it perfect for loops 
+      and logic branching within a subroutine. Local labels are also able to be used inside an EQUATE 
+      define. Think of local labels as private, and regular labels as public. With an equate, you can make
+      a private label, public. This makes it convenient for self modifying code projects. But that's for 
+      an advance topic.
+
+       A quick note about labels and equates. Due to some fantastical bug in PCEAS's parser, you can't have
+      any spaces leading into the label or equate define. Sorry. Not only that, but you *need* to have at
+      least one leading space for almost anything else. Especially instructions. Sorry, again.
+    
+    
+    
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''    
+    
+    
+    
+    
+
+

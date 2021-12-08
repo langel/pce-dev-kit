@@ -1,0 +1,75 @@
+  xpce version 0.12beta2 (PC-Engine emulator)
+
+xpceはbero氏制作のfpce 0.0の Windows(DirectX使用)への移植版です。 
+
+実行に際しては、ハングアップや強制リセット等の問題が起こることがあるかもしれ
+ないので バックアップを取る等対策をとっておいてください。 このプログラムが原
+因で起こる問題に対して私は責任を取れません。 ただ、問題点等の報告は歓迎します。
+
+zip圧縮イメージを読み込むにはunzip32.dllが必要です。
+lzh圧縮イメージを読み込むにはunlhz32.dllが必要です。
+
+ポピュラスは、populous.pceで。
+
+使い方 
+     エクスプローラ等からxpceを起動しメニューのファイルから開くか、 アイコン
+     にカートリッジイメージファイルをD&Dします。
+キー 
+     RUN                      Enter
+     SELECT                   TAB
+     I                        Z
+     II                       X
+     I (rensya)               A
+     II (rensya)              S
+     (toggle auto frame skip) F2
+     (down frame skip rate)   F3
+     (up frame skip rate)     F4
+     (save)                   F5
+     (load)                   F6
+     (toggle FPS)             F7
+     (pause)                  ESC
+     (exit)                   Alt+F4
+
+     方向キーはカーソルキーです。オートフレームスキップはうまく動かないことが
+     あるので動作が不自然なときはオフにしてください。
+     操作にはジョイスティックも使えます。どのボタンが何に対応しているかは実際
+     に押して試してください。
+     初期値はフレームスキップ0、自動フレームスキップ、解像度320x240です。
+
+その他
+     セーブファイルはデフォルトでカートリッジイメージファイルと同じディレク
+     トリに作られます。このディレクトリは変更可能です。ファイル名はカートリ
+     ッジファイル名の拡張子を.st0に変えたものになります。
+
+未対応の機能
+     CD-ROM
+     SuperGrafx
+     などなど
+
+ソースについて
+     コンパイルするにはMicrosoft Visual C++ 6.0とDirectX SDKが必要です。
+
+バージョン履歴
+     0.12beta2
+         ジョイスティックをサポート
+         バグ修正
+
+     0.12beta1
+         UIソースの書き直し
+         マルチタップ
+         ダイアログでのカスタマイズ
+         高速化
+         キー入力が遅れるバグを修正
+         lzh圧縮ファイルを読めるようにした
+         MRUをつけた
+
+このソフトはフリーウェアです。非商用なら自由に利用できます。
+PC-EngineはNEC-HEの登録商標です。
+
+fpce:
+   Console/Emulator Programming Page
+   http://www.geocities.co.jp/Playtown/2004/
+
+hmmx:
+   mailto: hmmx@geocities.co.jp
+   web page: http://www.geocities.co.jp/SiliconValley/7052

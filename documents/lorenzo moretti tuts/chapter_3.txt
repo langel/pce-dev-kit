@@ -1,0 +1,605 @@
+
+
+
+ Chapter 3: The Video Hardware
+ =============================
+ 
+ 
+  VDC
+  ---
+  
+       Oh boy. Here we go. Where to start? The simplest registers I guess. The VDC has 3 ports mapped to
+      the hardware bank. The first port is the register select port. Writing to this port selects which
+      register you want to access. The other two ports are DATA ports. When you select a register, these
+      ports are what you use to write to those registers. Now, the VDC is a 16bit device and takes 16bit
+      values for parameters. The first data port is the LSB or lower 8bit and the second data port is the
+      MSB or the upper 8bit half. The second port also contains the latch. When the second port is written
+      to, the latch is activated and both 8bit value are paired as a 16bit value and sent to whatever 
+      internal place it's supposed to go in the VDC. Here are the addresses for the ports:
+      
+      
+              $0000 = Register select port
+              $0001 = upper have of the register select port, but the VDC doesn't have that many registers
+              $0002 = Data port: lower 8bit/LSB
+              $0003 = Data port: upper 8bit/MSB + latch
+      
+              
+       You can safely ignore $0001 as it has no purpose in this revision of the VDC. The VDC is a 16bit
+      device and can operate in a 16bit data bus mode, but since the main CPU has an 8bit data bus, the
+      is in split bus mode. Yeah, I made that 'split bus' term up 'cause I don't remember the real name
+      of the term off hand, so deal with it ;) Anyway, so the data ports are both readable and writeable.
+      But that doesn't mean you'll actually be able to read the data from every register. Very little
+      number of registers have read functionality, actually. Let's go down the register list order.
+       
+       Register $00 is the VRAM write pointer register. You need to tell the VDC where in VRAM you want
+      to write to, so this register needs to be setup first before doing so.
+        
+        
+                lda #$00
+                sta $0000
+                
+      There. Now we have selected the register. Let's assign an address to the pointer.
+       
+                lda #$00
+                sta $0002
+                lda #$10
+                sta $0003
+                
+       We wrote $00 and then $10 for a combined address of $1000. That's great. The vram pointer register
+      is setup and all ready to go. Now we need to tell the VDC we want to actually read to *write* to
+      VRAM. We use the $02 register.
+       
+                lda #$02
+                sta $0000
+                
+       Now we can write to the data ports and it will transfer that content to VRAM. The VDC will also
+      automatically 'increment' the VRAM pointer for us, so we don't have to keep putting in a new VRAM
+      address after every write. How thoughtful. Thanks, VDC ;) 
+        
+      
+                lda #$ff
+                sta $0002
+                lda #$ee
+                sta $0003
+            
+       We wrote our first 'WORD' to vram. Yeah! Feels good, don't it? I bet you have dreams of grandeur
+      already, don't you? Put those on hold, we've got lots more to cover. 
+       
+       
+       We setup the vram write pointer and wrote to vram, now let's try and read from vram. The vram read
+      register is $01. 
+      
+      
+                lda #$01
+                sta $0000
+                lda #$00
+                sta $0002
+                lda #$10
+                sta $0003
+                
+       $01 selected the vram read pointer and we changed it to $1000. Now to select the register to we can
+       actually read from that address.
+       
+        
+                lda #$02
+                sta $0000
+  
+                
+       Now you might be thinking, "Didn't we already use register $02 so we could write to vram?". Correct.
+      It's the same register if we want to read *or* write vram. You see, reading from the vram interface
+      register has a separate internal read pointer then writing to it. Register $02 is a read / write
+      register the interfaces with VRAM. Example:
+  
+      
+                lda #$00      ;//select the write pointer register
+                sta $0000
+                lda #$00
+                sta $0002
+                lda #$10  
+                sta $0003     ;//write $1000 to the pointer
+                lda #$01      ;//select the read pointer register
+                sta $0000
+                lda #$20
+                sta $0002
+                lda #$33
+                sta $0003     ;//write $3320 to the pointer
+                lda #$02      ;//select vram interface register
+                sta $0000
+                
+                lda #$ff
+                sta $0002
+                lda #$ee
+                sta $0003     ;//write $eeff to $1000, now write pointer is $1001
+                
+                lda $0002
+                sta $3f00
+                lda $0003
+                sta $3f01     ;//read some 16bit value from $3320, now read pointer is $3321
+  
+                
+       The read and write pointers are independent of each other and register $02 is a read/write register.
+      If you look closely, you'll see that we wrote two bytes but the pointer was only incremented by 1.
+      Like I said previously, the VDC is a 16bit device. This also means the smallest data element is 16bit
+      wide. And the address range? It's given in WORDS, not bytes. The VDC might indeed have 64kbyte, but
+      as far as its concerned, it has 32kwords. Haha.
+      
+       Not bad. We covered 3 registers to far; 00-02. Registers 03 and 04 are reserved so we'll skip past
+      them. So that leaves us on register 05. Oh, lucky you ;)
+      
+      
+       Register $05 is the 'control' register. This is where to you turn on and off the BG layer, the sprite
+      layer, and all 4 interrupts generated by the VDC. This register isn't simple to configure because
+      we need to set or clear certain bits for these features. This is a write only register, so you'll need
+      to keep a spare copy of what you wrote in cpu ram.
+      
+          A layout of the CONTROL register:
+              
+                bit 15-13: N/A (set to zero)
+                bit 12-11: VRAM pointer increment amount
+                
+                            00 = +1 word
+                            01 = +32 words
+                            10 = +64 words
+                            11 = +128 words
+                            
+                bit 10-08:  Reserved (set to zero)
+                bit    07:  BG enable (1=enable)
+                bit    06:  Sprite enable (1=enable)
+                bit 03-00:  Interrupt flags
+                            
+                            bit 03: vertical blanking (1=enable)
+                            bit 02: horizontal blanking (1=enable)
+                            bit 01: sprite overflow (1=enable)
+                            bit 00: sprite #0 collision (1=enable)
+  
+                            
+       Some things are self explanatory like BG and sprite bits. Bits 12-11 set the auto-increment value
+      for the vram interface register ($02). If enabled, the vertical blanking flag will trigger once the
+      screen has reached end of active display. Normally this happens 60 times a second, but the VDC allows
+      you to setup 'multiple screens' within a single frame. If you do, this will trigger more often. That
+      is not to be confused with Hsync interrupts. The horizontal blanking flag happens at whatever line
+      you assign it to (with another register). Any scanline can be assigned an hsync interrupt regardless
+      of the screen status or even if the scanline is *not* in active display. That's definitely a plus.
+      
+       The sprite overflow flag happens, if enabled, when more than 256 sprite pixels are on a *scanline*.
+      Now, just note that this doesn't mean 'active' scanline. This mean the whole damn thing till the end
+      of the internal BAT width. Like with other systems, it doesn't matter if the pixels are opaque or not.
+      Those invisible pixels still count. This interrupt is used for when the program needs to know if there
+      are too many sprites to be shown on that *scanline*. The program can then shift the order to create
+      'flicker'. Flicker is an alternative to *not* seeing the sprites at all. You can see in some games
+      where the programmers took no measure against this, and the sprites just simply disappear. Definitely
+      not good when they're small bullets coming straight at you. I'm looking at you, Rtype!
+      
+       Finally, the last flag. The collision flag. An interrupt is generated when an opaque pixel (any
+      pixel other than color slot 0) collides with any other opaque pixel of any other sprite. This might
+      sound pretty good. Let me put those hopes to rest right now. One, you have no idea *what* sprite
+      collided with sprite 0, and second you almost-always-never want a collision box as the same shape
+      as the sprite. Imagine of the sprite 0 was the player ship. If an enemy or bullet grazes just one
+      pixel of the outside of the ship? People will be more than angry with you. It has a limited use.
+      
+       Let's see some control register action in... action:
+       
+                lda #$05          ;//select the control register
+                sta $0000
+                lda #$c0          ;// enable bits 7 and 8 only
+                sta $0002
+                lda #$00
+                sta $0003
+                
+       
+       The sprites and BG tiles are now viewable. I should inform you of something now that we're not
+      dealing with the vram read/write register(02). Only a few register actually have a latch on the MSB
+      access. Each 'register' had its own buffer for the data ports. And registers that don't have a latch,
+      you can freely update just one half if you want. This will become clearer later on (the buffer part).
+      
+      
+       Register $06. The RCR reg-ist-er. This is where magic happens. This little register is where you define
+      which scanline you're going to attach an hsync interrupt to. What's so good about that? Well, for one
+      thing you can change some VDC registers for that line. You could change the X and Y scroll registers,
+      the BG or Sprite enable flags for clipping, the horizontal resolution, the palette, etc. All sorts of
+      stuff. You can also use it to drive a finer resolution timer than the 7khz one. I.e. play some 16khz
+      samples jitter free ;)
+
+
+                lda #$06          ;//select the RCR register
+                sta $0000
+                lda #$43
+                sta $0002
+                lda #$01
+                sta $0003         ;//write $143 to the register
+   
+                
+       Two things to note here. 1) You have to add $40 to the scanline number before writing it to the reg-
+      ister ports. Scanline 0 starts at $40. If you write something smaller than $40, it will never trigger.
+      If you write something larger than than what a frame is capable of displaying**, it won't trigger. 2)
+      If you want to trigger on more than one scanline in a frame, then you need to reupdate the register
+      with the next scanline number (don't forget the +$40). If you're doing it for *every* scanline, then
+      you might want to optimize that routine ;) This register has no latch.
+      
+        
+       
+       Register $07, the BXR register. Sets of the X position of the BAT. The value ranges from 0-1023 
+      regardless of the map size.
+      
+
+                lda #$07          ;//Select the BXR register
+                sta $0000
+                lda #$22
+                sta $0002
+                lda #$00
+                sta $0003         ;//Update the BAT X position
+
+                
+       The register is pretty straight foreward. The BXR register has no write latch.
+       
+       
+       Register $08, the BYR register. Same as BXR, except it sets the Y position of the BAT. The range is
+      0-512.
+       
+  
+                lda #$08          ;//Select the BYR register
+                sta $0000
+                lda #$22
+                sta $0002
+                lda #$00
+                sta $0003         ;//Update the BAT Y position
+
+      
+       As with the BXR register, this has no write latch. Both registers you can write either the upper port
+      or the lower port without worrying about a latch system. The VDC reads the contents of the both register
+      buffers at a specific point every scanline. This only happens once. This eases up timing requirements for
+      scanline interrupt changes to either regs. But this also means you *can't* do 'column' scrolling. Another
+      important thing to note, is that changes made on the currently scaline interrupt will take effect on the 
+      *next* scanline. This is true for a lot of register changes. With some registers, the VDC will reread 
+      from register buffer every scanline, and other registers the VDC will read once an 'internal frame'. I say
+      internal frame because the VDC can have several display frames within a single NTSC frame. It's pretty
+      non standard game wise, but it's good to know.
+
+
+      MAWR! No, it's not a sound. It's the Memory Access Width Register. Totally misleading name. This register
+      (for what we need to know at the moment) only controls the BAT size.
+      
+      
+                Bit 15-07: Set to zero
+                Bit 06-04: BG map size
+                
+                           000 =  32x32
+                           001 =  64x32
+                           010 = 128x32
+                           011 = 128x32
+                           100 =  32x64
+                           101 =  64x64
+                           110 = 128x64
+                           111 = 128x64
+                
+                Bit 03-00: Set to zero
+                
+                
+       Setting the size of the BAT also effects how the BAT format is laid out in vram. In 32 width mode,
+      you have a row of 32 words before the next row begins. In 64 width mode, you have 64 words per row.
+      And 128 width for 128 words per row. If you have the BAT formatted as 64x32 in vram, but the MAWR
+      register is setup for 32x32 BAT size, then you'll see a vertical interleave of both halves of the 
+      map, because it's interpreting the second half of the 64 words as the next row. Like so
+      
+      
+          BAT reg set to 32x32 and BAT setup as 64x32:
+          
+              screen output      BAT in VRAM
+              ____________      ________________
+              | 00000000 |      0000000011111111
+              | 11111111 |      2222222233333333
+              | 22222222 |      4444444455555555
+              | 33333333 |      6666666677777777
+              ------------
+              
+              
+       From the ascii graphics, you can see that the second half of the 64 wide tilemap is being interpreted
+      as the next row because the BAT was set to the incorrect size. '0' is the first line, but '2' *should*
+      be the second line, not '1'. Not much more to say about that. 
+      
+       If you're clever, you can switch between a 64x32 setting and a 32x32 setting without reformatting the
+      BAT in vram, if you reposition the BG on the appropriate scanlines but that'll only work for vertical
+      scrolling. The MAWR register has no latch and is read once per 'VDC' frame.
+      
+      
+       These next few registers are for setting up the VDC display frame that's inside the VCE frame (NTSC).
+      I'm not going to go into much detail about these at this time. I'll give a brief description and the
+      default values for 256x240 display mode.
+      
+       Register $0A (HSR): 
+       
+                            Bit 14-08 is the HDS reg. Default is $02
+                              Horizontal active start position (value-1)
+                            
+                            Bit 04-00 is the HSW reg. Default is $02
+                              Horizontal sync width (value-1)
+                            
+                            Note: both values represent increments of 8 pixels.
+      
+        Register $0B (HDR):
+        
+                            Bit 14-08 is the HDE reg. Default is $03
+                              Horizontal active end position (value-1)
+                              
+                            Bit 06-00 is the HDW reg. Default is $1f
+                              Horizontal active width (value-1)
+        
+                            Note: both values represent increments of 8 pixels.
+                                  
+
+       Register $0C (VPR): 
+       
+                            Bit 14-08 is the VDS reg. Default is $0f
+                              Vertical active start position (value-2)
+                            
+                            Bit 04-00 is the VSW reg. Default is $02
+                              Vertical sync width 
+                            
+                            Note: both values represent increments of 1 pixel.
+
+
+        Register $0D (VDW):
+        
+                            Bit 08-00 is the VDW reg. Default is $ef
+                              Vertical active width (value-1)
+                              
+                            Note: value represent increments of 1 pixel.
+
+
+
+        Register $0E (VCR):
+        
+                            Bit 07-00 is the VCR reg. Default is $03
+                              Vertical active end position 
+                              
+                            Note: value represent increments of 1 pixel.
+
+
+       The horizontal registers are updated once per scanline, while the vertical registers are updated
+      once per VDC frame. The default values given are for a 256x240 window setup. The VDC doesn't define
+      the output resolution, only the displayable frame within the final output. The VCE handles the 
+      actual resolution settings. A side note, the VDC is capable of creating the display signal all by
+      itselft, but for the PCE it is setup to work in conjunction with the VCE.
+      
+      
+       Now onto the last set of registers. The DMA control registers. These registers, as you guessed it,
+      control the DMA of the VDC. What does that exactly mean? The VDC has a number of DMA channels, but
+      only two are available to the interfacer (you). The first is VRAM to VRAM DMA. It copies blocks of
+      data, in words lengths, to and frow. The second DMA is the SATB DMA. The SATB DMA updates the sprite
+      attributes. We'll get to more on that near the end of this section.
+      
+        Register $0F (DCR):
+        
+                            Bit 15-05: N/A
+                            Bit    04: SATB auto-DMA flag (1=on)
+                            Bit    03: VDMA destination increment flag (1=dec, 0=inc)
+                            Bit    02: VDMA source increment flag (1=dec, 0=inc)
+                            Bit    01: VDMA 'complete' interrupt flag (1=enable)
+                            Bit    00: SATB DMA 'complete' interrupt flag (1=enable)
+
+
+       Bit 04. When this is set, the VDC will update the sprite attributes every VDC frame. That's why it
+      has the word 'auto' in there ;)
+      
+       Bit 03. When doing a VRAM to VRAM DMA copy, you can select whether the to increment or decrement
+      the destination address. Upon every word copy, the desitination address will be updated.
+      
+       Bit 02. Same as above, but this effect the source address.
+       
+       Bit 01. If you enable this flag, the VDC will generate an interrupt when the transfer is complete.
+       
+       Bit 00. Same as above, but for the SATB DMA. 
+       
+       Remember the register select port, $0000? We've covered writing to the port to select which register
+      we wanted to use, but at any time you can read from the port to get the status of the VDC. This is
+      how you would check which DMA complete flag as set by the VDC. We'll cover that in a littel bit. You
+      are also probably wondering about the SATB DMA. We'll also go over that shortly.
+
+
+       Registers $10, $11, and $12 are for the VMDA controller. Register $10 is the source address in VRAM.
+      Register $11 is the destination address in VRAM. And finally register $12 is the copy legnth. We can
+      write to registers $10 and $11 as much as we want, but the DMA won't trigger until we write to the 
+      length register.
+      
+ 
+                lda #$10
+                sta $0000                 ;//select the VDMA source register
+                lda #$11
+                sta $0002
+                lda #$50
+                sta $0003                 ;//change the source address to $5011
+
+                lda #$11
+                sta $0000                 ;//select the VDMA destination register
+                lda #$00
+                sta $0002
+                lda #$05
+                sta $0003                 ;//change the destination address to $0500
+
+                lda #$12                  
+                sta $0000                 ;//select the VDMA length register
+                lda #$00
+                sta $0002
+                lda #$02
+                sta $0003                 ;//change the length to $0200
+                
+    
+       Writing to the upper port for the length register triggers the VDMA. The VDMA can only run during
+      'vblank' (not to be confused with vsync). Vblank is the non active scanlines of the VDC. And that's
+      vblank of a VDC frame, not necessarily a VCE frame. If the VDMA is happening while the VDC goes into
+      active display, it will be halted.
+
+
+       Register $13. The SATB-DMA register. This register holds the source address of the SATB in VRAM. Now,
+      you can make as many changes as you like to the SATB(Sprite attribute table buffer), but it will
+      only take effect when the SATB in VRAM is *copied* to the internal SAT (sprite attribute table). Not
+      so great if you want to make changes to sprite positions mid-screen, because you can't within a VDC
+      frame. The SATB DMA auto flag in the DCR register effects whether the SATB is fetch on every VDC frame
+      or not. If the flag is enabled, SATB DMA happens immediately when active display ends on the VDC. If
+      you have the flag disabled but you write to register $13, it will update the SATB only once on the 
+      first encountered 'end of active display' state.
+      
+       The good side to having a two buffer sprite table system is that you can make changes to the sprite's
+      attributes during active display without worrying about causing graphical glitches onscreen. The VDC
+      allows you to write and read from VRAM during active display. The SATB itself is $100 WORDs in length.
+      This allows for 64 different sprite entries.
+      
+       Now for the last register. The VDC status register. Reading from port $0000 will always give you the 
+      status of the VDC, regardless of which register you currently have selected.
+       
+        Register $0000 (r): The VDC status reg.
+        
+                          Bit 15-07: N/A
+                          Bit:   06: VDMA or SATB DMA in progress flag (1=true)
+                          Bit:   05: Vertical blanking flag (1=true)
+                          Bit:   04: VDMA complete flag (1=true)
+                          Bit:   03: SATB DMA complete flag (1=true)
+                          Bit:   02: Horizontal blanking flag (1=true)
+                          Bit:   01: Sprite overflow flat (1=true)
+                          Bit:   00: Sprite #0 collision flag (1=true)
+                          
+                          
+       And there you have it. All the status flags. When the VDC generates an interrupt for the CPU, it 
+      must be acknowledged by reading the VDC status register. If you don't, you'll go into an endless
+      interrupt call loop. This isn't a bug, this is so you don't miss an interrupt if multple happen at
+      the same time from other devices, etc. Another thing: DON'T POLL THE STATUS PORT. If you poll the 
+      the status port looking for 1 or 2 flag states in particular, you can cause an interrupt call miss
+      for another VDC flag. It's best to have the interrupt handler pass the status of the port to a 
+      variable in ram and poll that variable if need be.
+                          
+
+
+  VCE
+  ---
+  
+       The VCE's job is to generate an NTSC frame and output pixels. The VCE also houses the palette ram.
+      The VCE generates an NTSC frame of 242 active scanlines high out of 262(or 263) total scanlines,
+      provides the hsync and vsync signals, and converts the incomming pixels from the VDC to the output
+      signal. The VCE is driven by the 21mhz master clock and divides this downwards to feed to the VDC.
+      The VCE controls the speed of the VDC. This in effect changes the size of the pixels because the VDC
+      can write more pixels in a give active scanline width, the faster it operates.
+      
+       On the technical side, the VDC sends pixel information in a 9bit format to the VCE via the pixel bus.
+      The VCE takes this pixel bus data and uses it for the palette lookup table, then outputs that color's
+      RGB value. Since the VDC is working in passive mode, the VCE sends the vsync and hsync triggers that 
+      the VDC needs to keep it in sync with the VCE.
+      
+       Meet the VCE control register (CR), port $400. Let's take a look at a break down, shall we?
+       
+          
+                      Bit:  15-08: Unused and/or reserved
+                      Bit:     07: Color busrt enable/disable
+                      Bit:  06-03: Unused and/or reserved
+                      Bit:     02: The filter Bit
+                      Bit:  01-00: Frequency clock to the VDC
+                      
+                                    00= 5.369mhz
+                                    01= 7.159mhz
+                                    10= 10.737mhz
+                                    11= 10.737mhz
+    
+                                    
+       Bits 01-00 control the speed of the VDC, thus the overall resoluton. You need to adjust for this on
+      the VDC side so as not to have large black horizontal borders on either sides of the screen. Bit 7
+      controls whether the VCE outputs the colors busrt signal at hsync. If you disable this, you'll get a
+      black and white display output. But take note, that the color subcarrier will still be generated in
+      the output signal. You can use this to your advantage to get a much wider grey scale mode. This also
+      only works for composite/RF/NTSC output. Enabling this bit *removes* the color burst signal. This has
+      no effect on the RGB output of the VCE.
+      
+       Bit 2 is a type of filter for composite/RF/NTSC output. Enabling this causes every other scanline to
+      shift by *half* a pixel. On the next frame, it will do this on the alternate set of interleaved scan
+      lines. It only shifts one interleave set at a time. This smooths the screen a tad and removes some
+      color artifacting for still pictures. When this bit is enabled, the frame increases to 263 scanlines.
+      The frame is 262 scanlines when this filter is disabled. Switching back and fourth between these two
+      modes nets you a nice 'illegal' interlaced display ;) Mind your timings though.
+      
+       These register take effect almost immediately. I say almost as it looks like there is a 16-20 pixel
+      gap betweening re-reading this reg by the VCE. Disabling the color burst signal *mid* screen causes
+      the TVs HUE to drift because there's nothing to re-sync it to. Giving a nice rainbow hue going down
+      the screen :D Of course if left disabled, the TV will check it during vblank period and adjust the
+      set to either B&W or Color signal. So you have to enable it and then disable it again each frame.
+      We're talking *millions* of colors on screen! Yeah! Woohoo! Let's move on..
+      
+      
+       The VCE has three more registers on its list. Those would be CTA, CTW, and CTR. All registers are 
+      16bit wide like with the VDC (the VCE being another 16bit device). The CTA register selects which
+      color slot you want to access. There are a total of 512 color slots. Because of how the VDC sends out
+      the pixel data, this is divided into 256 for tiles and 256 for sprites. Of the 9bit pixel data being
+      sent to the VCE, the VDC sets the most significant bit to 1 if the pixel is from a sprite and 0 if
+      the pixel if from a tile.
+     
+      
+       The pixel format looks like this: 
+       
+                    bit:   8 = tile(0) or sprite(1)
+                    Bit: 7-0 = the (tile/sprite) 4bit pixel multiplied by the 4bit palette number.
+     
+      
+       Bit 7-0 is an 8bit color number, but since it's the result of two 4bit multiply, every 16th color is
+      going to equal 0... because any number times 0 equals 0 ;). This gives you and me a total of 241 unique
+      possible colors for tiles, and 240 unique and separate posibble colors for sprites.
+      
+      So there you have how the whole 512 color slot bank is divided up. CTA is located at port $402. The port
+      is auto incremented by 1 color slot.
+    
+      
+                lda #$03
+                sta $402
+                lda #$00
+                sta $403          ;// now we've select color slot #3 of the CTA port
+                
+                
+       Fairly straight foreward stuff. Now to write a color to slot #3 via the CTW port.
+       
+                lda #$ff
+                sta $404
+                lda #$01
+                sta $405          ;// Color slot 3 = $01ff, and now CTA is color slot #4
+      
+                
+       More straight foreward stuff.  The upper port of CTW contains the latch, if you haven't guessed.
+      When the latch is activated, the port buffer contents transfer to the internal color bank, and the 
+      color slot is incremented by 1. If the color clot is $1ff and you write to CTW, the color slot will
+      wrap on increment. That's right, it's a 9bit counter.
+      
+       Alternatively, you can write to the upper port multiple times without writing to the lower port of
+      CTW, and it will latch on each write. Since CTW lower port wasn't changed, it will keep using that
+      value for the transfer. Pretty nift, huh? 
+      
+       The CTR register ($406) works in the same way, except for reading. The latch is on the upper port of 
+      CTR. And of course reading the upper port of CTR increments the color slot #. There is only one pointer 
+      for both CTR and CTW and it's shared, unlike the VDC vram read/write port.
+      
+       
+       Now, for the last bit of info for the VCE. On the VDC, the internal registers have priority over the 
+      cpu, so if there's a conflict writing to vram, the VDC wins over the CPU. And the CPU is just stalled
+      for a fraction of a cpu cycle with /RDY. And few case like SATB DMA and such where the CPU is stalled
+      for the whole length. But on the VCE, it doesn't assert /RDY to stall the CPU. Instead, it gives the 
+      CPU priority over it's own internal registers/processes.
+      
+       This can and does leave an interesting artifact on screen when accessing the palette bank. Since the
+      VCE can not access it at the same time as the CPU, it outputs the last color it fetched to the scan 
+      line. You can use this trick to your advantage to draw solid lines over the top of the 'display'.
+       
+      
+       Lastly, is the color format itself. The VCE takes a 16bit value for the color slot entry, but only 
+      the lower 9bits are used. The format is GRB.
+      
+              (MSB)    (LSB)
+            -------G GGRRRBBB
+            
+       There you have it. The tile or sprite pixel goes through two palette systems before finally reaching
+      the true color definition.
+
+
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''    
+
+
+
+

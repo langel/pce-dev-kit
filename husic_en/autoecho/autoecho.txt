@@ -1,0 +1,41 @@
+new smaller version, same damn place at 81k instead of bloaty 500.
+-----------------------------------------------------------------------------------
+
+i use single-channel echo in a lot of my songs, but it\'s a pain to write it in MCK.  i don\'t have PPMCK and i don\'t really want to use it, so i wrote my own program to convert plain notes into single channel echo-ized notes.
+
+usage:
+
+autoecho <filename>
+
+the program will look for my made-up EKO macro in the file you type in after its name. here\'s how it works.
+
+EKO <length1> <length2> <vol1> <vol2> <notes> EKOF
+where length1 and vol1 correspond to the main notes, and length2 and vol2 correspond to the echo values.
+
+for example:
+
+EKO 16 16 8 4 a b>c d e EKOF 
+
+would be converted to
+
+v8 a16 v4 a16 v8 b16 v4 a16 v8 >c16 v4 <b16 v8 >d16 v4 c16 v8 e16 v4 d16
+
+you can obviously change up the four variables at the beginning.  instead of 16 and 16, 12 and 24 would work for length1 and length2 respectively for a shorter echo and longer note hold time (dotted notes don\'t work, so using their substitutes like this is the only option for now).
+
+issues:
+1. EKOF can\'t be the last thing in the file.  you can put a space at the end of this to fix it (or more MML code, etc).
+2. don\'t put comments between EKO and EKOF AND don\'t mention EKO or EKOF in comments as this program doesn\'t yet distinguish between comments and code
+3. for that matter, don\'t put anything but notes or > or < between EKO and EKOF thanks to the same reason as above 
+
+you can get it from http://4x86.com/autoecho.exe .  i hope this helps a few of you out!
+
+oh and as for integration into MuMML, here are some steps:
+
+1. go to the configuration
+2. click on BAT script at the top
+3. after CD $progpath$ go to the next line and add \"autoecho $temp$\" (minus quotes)
+4. save autoecho.exe to your /prog/mck folder (same folder as mckc.exe)
+
+this should work (it does for me).  post here if you have any issues, and please report any additional bugs!
+
+Last edited by RushJet1 (14-03-07 22:10:55)

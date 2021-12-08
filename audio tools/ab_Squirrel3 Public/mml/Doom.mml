@@ -1,0 +1,46 @@
+.TRACK DOOM
+
+.CHANNEL 0 setup
+T80 V31 L16 ^D0 
+
+
+.CHANNEL 1 lead1
+O1 P15,0 @17 @E01 L16 ^ME0 ^MD1
+
+
+.CHANNEL 2 Lead2
+O1 P0,15 @17 @E01 L16 ^ME0 ^MD1
+
+
+.CHANNEL 3 BASS
+O1 P15,15 @19 @E01 L16
+
+
+.CHANNEL 5 drummage
+O3 P13,13 @M1 L8 
+
+
+.CHANNEL 6 HiHatting
+O5 P0,0 @M1 L16 
+
+
+.Envelope
+     .mod 0 wiggle2
+     0,0,1,2,4,8,12,16,20,16,12,8,4,2,1,0,0,-1,-2,-4,-8,-12,-16,-20,-16,-12,-8,-4,-2,-1,0,0
+
+.Perc 0 
+       C:  E01 W00 P14,14 T9000 T10000 T12000 T14000 T17000 T22000         
+       C#: E01 W00 P0,14  T200  T400   T1000  N15 N20 T3000 T7000 N9 N15  
+       D:  E00 W00 P14,0  T90 T90 T110    N31 n30 n30 n29
+       D#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       E:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       F:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       F#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       G:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       G#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       A:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       A#: E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+       B:  E17 W45 P15,15 T940  T103      N31 N27 N29 N26
+        
+;Only the first three drums have a defined sound.  The rest will sound like something but who knows
+;If it will sound any good.  

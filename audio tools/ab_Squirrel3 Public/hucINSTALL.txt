@@ -1,0 +1,113 @@
+          8   8       8""""8   8                                      
+          8   8 e   e 8    "   8  eeeee eeeee eeeee eeeee e     e     
+          8eee8 8   8 8e       8e 8   8 8   "   8   8   8 8     8     
+          88  8 8e  8 88       88 8e  8 8eeee   8e  8eee8 8e    8e    
+          88  8 88  8 88   e   88 88  8    88   88  88  8 88    88    
+          88  8 88ee8 88eee8   88 88  8 8ee88   88  88  8 88eee 88eee 
+                                                                      
+                          8""""8                     
+                          8    " e   e e  eeeee eeee 
+                          8e     8   8 8  8   8 8    
+                          88  ee 8e  8 8e 8e  8 8eee 
+                          88   8 88  8 88 88  8 88   
+                          88eee8 88ee8 88 88ee8 88ee 
+
+					 
+----------------------------------------
+========================================
+THIS INSTALLATION GUIDE IS FOR WINDOWS
+========================================
+----------------------------------------
+You need to have HuC installed in order to use Squirrel.  The MAKE.bat file in the Squirrel
+directory will automagically call HuC for you.  Once it is installed, you should be able to use
+Squirrel no problem.
+
+
+[Step 1]: Download HuC from zeograd.com
+
+http://www.zeograd.com/download_presentation.php?lang=en&id=310
+
+[Step 2]: unzip this file and place it somewhere where you do not intend to move it.
+
+I suggest you place it directly on your C drive at C:\
+
+[Step 3]:  if you want, rename the folder you have unzipped to something short and easy.  I suggest
+"HuC" (without quotes).
+
+
+Either way, you now need to edit your PATH and define a user variable in Windows.
+
+---------
+Under XP:
+---------
+-Right click my computer and select properties.
+-press advanced tab
+-press environment variables button
+-Under system variables section press NEW
+     - Set name to PCE_INCLUDE
+	- Set value to C:\huc\include\pce  where huc is whatever you named your folder to
+	  NOTE: If you did not place it directly on C:\, you will need to fix this directory to match
+	  wherever it is you put the directory!
+-Again, Under system variables
+     -Find the PATH variable in the box and highlight it.
+	-Press EDIT.
+	-append this to the end of value field: ;C:\huc\bin
+	   NOTE you need a semicolon as shown.  Semicolons separate each directory.
+	   
+-Hit OK until all windows close.
+
+
+-----------------
+Under Vista/Win7:
+-----------------
+-Right click computer and select properties.
+-press advanced system settings button on the left
+-press environment variables button
+-Under system variables section press NEW
+     - Set name to PCE_INCLUDE
+	- Set value to C:\huc\include\pce  where huc is whatever you named your folder to
+	  NOTE: If you did not place it directly on C:\, you will need to fix this directory to match
+	  wherever it is you put the directory!
+-Again, Under system variables
+     -Find the PATH variable in the box and highlight it.
+	-Press EDIT.
+	-append this to the end of value field: ;C:\huc\bin
+	   NOTE you need a semicolon as shown.  Semicolons separate each directory.
+	   
+-Hit OK until all windows close.
+--------
+TEST IT!
+--------
+
+Open a new command prompt (Start--->Run--->CMD)
+
+type HuC and press enter.
+
+~~~~~~~~~~~~~~~~~~~~~
+You should get this:
+~~~~~~~~~~~~~~~~~~~~~
+HuC (v3.21, 2005/04/09, Denki release)
+
+USAGE: c:/huc/bin/huc.exe [-options] infile
+
+Options to compile step:
+-s/-S       : create asm output only (do not invoke assembler)
+-t/-T       : include text of 'C' in asm output/listings
+-Dsym[=val] : define symbol 'sym' when compiling
+-O[val]     : invoke optimization (level <value>)
+-cd/-scd    : create CDROM output
+-over(lay)  : create CDROM overlay section
+
+Options to assembler step:
+-Asym[=val] : define symbol 'sym' to assembler
+-v/-V       : verbose - maximum information in output files
+
+
+
+If you did not, please try the steps again.  If you are still not having success, please contact me!
+
+aetherbyte@gmail.com
+
+or post on our forums at aetherbyte.com/forum
+
+Good Luck!

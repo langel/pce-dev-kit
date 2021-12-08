@@ -1,0 +1,101 @@
+How to HES
+
+HuSIC is a way (the only way?) to make music for the PC Engine/Turbografx-16. This is everything you need, and English (google translator!) translations of all the documents.
+
+Also included is Rushjet1's autoecho and mmltranspose programs to make MML composition nicer, Nullsleep and Virt's MCK tutorials, and NEZplug, for Winamp/XMplay, to let you listen to whatever you make.
+
+
+--------------------------------------------------------
+
+
+Things to do first:
+
+- Install NEZplug. It's in the 'nezplug' folder. It should work for either Winamp, or XMplay. If you are using XMplay, copy it to your XMplay program files folder. I don't know how to install Winamp plugins, sorry.
+
+
+--------------------------------------------------------
+
+
+Using HuSIC:
+
+- Create a folder inside 'husic>songs', put your MML in it. You can look at my MML which was included in 'husic>songs>test' if you want to see some HuSIC-ready MML.
+
+- Copy the MML into the 'husic>songs' directory, and run 'start_here.bat'.
+
+- Type 'make_hes test' (no quotes) and hit enter. Obviously if the MML is not called test.mml, use whatever appropriate name. Do not include ".mml" on the end though - 'make_hes test.mml' is wrong.
+
+- You can now delete 'define.inc', 'effect.h', 'makehes.lst', 'makehes.pce', 'makehes.sym', 'test.h' (or whatever song name). DO NOT delete 'make_hes.bat', 'make_hes.sh', 'start_here.bat', or 'test.hes' (or whatever song name). You can delete the mml, because you already have a copy of it in the subdirectory you made for your song.
+
+- Copy the 'test.hes' (or whatever) back to the subdirectory. Now 'husic>songs' should look just how it did when you started.
+
+- If you've installed NEZplug, you should be able to listen to your hes file, convert it to wav, etc.
+
+
+--------------------------------------------------------
+
+
+Using heswav:
+
+This is really easy...
+
+- Run heswav001.exe in the heswav folder.
+
+- Draw a wave.
+
+- Click 'Clipboard' to copy it to clipboard, paste it into your MML.
+
+- Change the 'x' in the pasted data to a number which you haven't used for a wave yet. So:
+
+@WTx={
+	$1f,$1f,$1e,$1d,$1d,$1c,$1b,$1b,$1a,$19,$18,$17,$17,$16,$16,$16,$14,$13,$12,$12,$12,$11,$11,$10,$0f,$0f,$0e,$0c,$0a,$08,$06,$04
+	}
+
+becomes...
+
+@WT1={
+	$1f,$1f,$1e,$1d,$1d,$1c,$1b,$1b,$1a,$19,$18,$17,$17,$16,$16,$16,$14,$13,$12,$12,$12,$11,$11,$10,$0f,$0f,$0e,$0c,$0a,$08,$06,$04
+	}
+
+
+--------------------------------------------------------
+
+
+Basic MML things:
+
+
+Channels ABCDEF are available. They are all pretty much the same. FM is only available to channels A and B, samples only to channel F.
+
+
+@WTx={    }    Wavetable. It should be 32 samples long, values can range from $00 --> $1f. The easiest way to make this is with heswav.
+
+Wx             Select a wavetable. 'A W1' would set channel A to use wavetable one. Simple!
+Nx             Noise. 'B N1' would set channel B to use noise instead of a wavetable.
+
+
+PLxx           Left pan    
+PRxx           Right pan 
+PCxx           Center Pan 
+Pxx            Pan 
+               Don't set it and things will be centre panned
+
+
+FS             'FM LFO' on.
+FSOF           'FM LFO' off.
+FF             'FM LFO' frequency.
+
+
+@vx={     }    Define a volume envelope. Numbers go to at least 29, I haven't tried any higher. ;)
+
+@vx            Select a volume envelope. 
+
+vx             Set channel volume. Note - this overrides any volume envelopes you are using, and vice versa
+
+
+--------------------------------------------------------
+
+
+
+
+I think that's pretty much it!! 
+
+ant1 :)

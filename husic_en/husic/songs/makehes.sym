@@ -1,0 +1,1896 @@
+Label				Addr	Bank
+-----				----	----
+_scan_map_table.3		eff4	 00
+	.x2			f070	 00
+	.l4			f046	 00
+	.l3			f035	 00
+	.l2			f024	 00
+	.x1			f056	 00
+	.l1			f013	 00
+psg_waveforms			c4c3	 02
+_bm_disable			fac1	 00
+_mov32.sub			f739	 00
+	.l1			f73b	 00
+SIZE_16x64			0030	 f0
+LL28				ac00	 05
+LL30				a683	 05
+	.x_00947		a691	 05
+sound_data_table		44cb	 03
+_gfx_point.2			f702	 00
+psg_swptime			24e7	 f8
+LL116				b5e3	 07
+psg_astop			c17b	 02
+	.loop			c184	 02
+_bm_errno			fa36	 00
+mapwrap				26c3	 f8
+ARG_REG				0001	 f0
+__ldd_b				0000	 f0
+_pcm_off			a06c	 05
+	.x00742			a079	 05
+TOTAL_SONGS			0001	 f0
+mapbat_top			26c8	 f8
+psg_fmdelay			2433	 f8
+PSG_DDA				0040	 f0
+psg_noise			0807	 f0
+LL99				a9d0	 07
+	.x02543			a9ef	 07
+psg_env7			cc36	 02
+gfx_getaddr			af33	 01
+ugt_y1				e983	 00
+	.gt_end			e992	 00
+	.gt_must_test_lobyte	e98c	 00
+joybuf				2681	 f8
+irq1_jmp			2202	 f8
+ac_identver_h			1afe	 f0
+DEVELO				0000	 f0
+psg_initsong			c259	 02
+	.x_00618		c30c	 02
+	.endloop		c30c	 02
+	.x_00617		c303	 02
+	.nextmain		c2fc	 02
+	.nextsub		c305	 02
+	.nextvoice		c2f7	 02
+	.x_00616		c287	 02
+	.processmask		c27e	 02
+	.subtrack		c27c	 02
+_mouse_y			fb1e	 00
+_rti				e1be	 00
+psg_lfofreq			0808	 f0
+psgf_fulltransp			c4a3	 02
+__spr_max			201a	 f8
+_strncmp.3			e710	 00
+	.x_00136		e734	 00
+	.x_00135		e72e	 00
+	.out			e747	 00
+	.plus			e71d	 00
+	.cont			e724	 00
+	.minus			e720	 00
+	.cmplp			e714	 00
+setbgmap			0000	 f0
+LL65				ae2f	 06
+	.x01760			ae55	 06
+pitchenve_table			4492	 03
+_set_color_rgb.4		f497	 00
+zp_ptr1				2012	 f8
+psg_sstat			c0db	 02
+	.next			c0e9	 02
+	.empty			c0e7	 02
+	.loop			c0de	 02
+_bcd_set.2			f7e7	 00
+sdiv_end			ebc0	 00
+_hes_init			e020	 00
+	.l2			e044	 00
+joytmp6				26ac	 f8
+psg_savepoint_h			2313	 f8
+__submi				0000	 f0
+_put_string.main		efa1	 00
+	.x_00274		efce	 00
+	.l2			efb8	 00
+	.l1			efb1	 00
+	.l3			efce	 00
+_dl				20fe	 f0
+LL0				4000	 03
+LL31				a694	 05
+LL29				a66a	 05
+	.x00944			a680	 05
+_joy				fae5	 00
+LL117				b5e3	 07
+psgf_jump			c478	 02
+	.x_00625		c481	 02
+msflag				2984	 f8
+__subw				0000	 f0
+_fade_color.2			f452	 00
+psg_envlevel_h			23bb	 f8
+spr_pal				0000	 f0
+_ah				20f9	 f0
+SEQ_F0				a937	 06
+	.x_01585		a962	 06
+	.x_01580		a940	 06
+_pcewav				4416	 03
+psg_env8			cc43	 02
+_line_color			2981	 f8
+NO_FLIP_X			0000	 f0
+ac_base1_h			1a04	 f0
+__comw				0000	 f0
+_line_currx			2974	 f8
+getA_ult			e934	 00
+lib2_load_bat			a64a	 01
+	.l3			a663	 01
+	.l2			a653	 01
+	.l1			a64e	 01
+__ldb_s				0000	 f0
+LL66				af33	 06
+fds_data_table			44a4	 03
+mapctablebank			26c0	 f8
+_bank_base			0000	 f0
+delay240			b49c	 01
+	.lp			b4a0	 01
+_joybuf				fafd	 00
+_joytrg				faed	 00
+_vsync				efd3	 00
+	.l1			efd9	 00
+_rndptr				2741	 f8
+ENV_RLS				0000	 f0
+song_000_02_lp			457f	 03
+asl				ea60	 00
+	.asl_begin		ea70	 00
+	.asl_end		ea79	 00
+psg_panpot			25d1	 f8
+XRES_SHARP			0000	 f0
+color_reg_h			0403	 f0
+video_data_h			0003	 f0
+LL32				aa8c	 05
+LL1				a05c	 05
+lib2_bm_write.4			b08e	 01
+	.l2			b0a8	 01
+	.l1			b09d	 01
+	.ok			b0c1	 01
+	.x1			b0cc	 01
+eqzp				e8fc	 00
+	.x1_eq			e90b	 00
+	.x_ne			e909	 00
+VADDR_INC_32			0008	 f0
+lsrw				0000	 f0
+LL120				b6e9	 07
+	.x03039			b81f	 07
+	.x03037			b815	 07
+LL118				b5e6	 07
+	.x02967			b605	 07
+__spr_flag			201b	 f8
+START_BANK			0000	 f0
+VADDR_INC_1			0000	 f0
+_vsync_drv			fd95	 00
+_fade_color.3			f452	 00
+	.l3			f487	 00
+	.l2			f473	 00
+	.l1			f462	 00
+	.l5			f491	 00
+	.l4			f48e	 00
+SIZE_16x32			0010	 f0
+SEQ_F1				a8d3	 06
+	.x_01571		a8fe	 06
+	.x_01566		a8dc	 06
+psg_env9			cc50	 02
+_bcd_init.clear			f7db	 00
+	.l2			f7e1	 00
+set_xres			e583	 00
+NO_FLIP_Y			0000	 f0
+__orw				0000	 f0
+_line_curry			2976	 f8
+lib2_load_palette		a600	 01
+	.loop_a			a629	 01
+spr_ctrl			0000	 f0
+psg_freqhi			0803	 f0
+irq_m				20f5	 f0
+mousneg				fb1b	 00
+user_hsync			e205	 00
+clock_tt			2692	 f8
+psg_fmhdr			22d9	 f8
+ac_identflag			1aff	 f0
+LL67				aeb9	 06
+_lfo_sw				2a54	 f8
+_line_adjust			297e	 f8
+_memcmp.3			e6b7	 00
+	.x_00127		e6d7	 00
+	.x_00126		e6d1	 00
+	.plus			e6c4	 00
+	.cont			e6cb	 00
+	.minus			e6c7	 00
+	.cmplp			e6bb	 00
+hdw				26de	 f8
+_font_color			2771	 f8
+__stbps				0000	 f0
+psgf_sweep			c476	 02
+__andwi				0000	 f0
+_bm_read.4			fa67	 00
+mapbat_bottom			26c9	 f8
+_ram_hdwr_tia_rts		26d3	 f8
+psg_wavehdr			22d3	 f8
+colorport			0400	 f0
+LL33				aa96	 05
+	.x01095			aaac	 05
+LL2				a05c	 05
+_bm_testram			f8c3	 00
+	.l3			f8dc	 00
+	.l2			f8d4	 00
+	.l1			f8c5	 00
+mapwidth			26b4	 f8
+rcr_on				e340	 00
+BGMAP_SIZE_32x64		0004	 f0
+__lbeq				0000	 f0
+LL121				b8d5	 07
+LL119				b666	 07
+	.x02985			b685	 07
+_xpcm_sw			2a62	 f8
+joyold				2232	 f8
+vsync_hook			2208	 f8
+lfo_data			44a4	 03
+psgf_contfromsave		c448	 02
+_map_get_tile.2			f57b	 00
+lezp				ea4f	 00
+rcr_off				e350	 00
+_decw				0000	 f0
+bhi				0000	 f0
+SEQ_F2				a764	 06
+	.x01529			a7b6	 06
+	.x01526			a7a7	 06
+	.x_01522		a78f	 06
+	.x_01517		a76d	 06
+psgf_relvolume			c43a	 02
+_rndseed			2743	 f8
+psg_fadevolcut			2605	 f8
+rorw				0000	 f0
+psg_fadecount			2603	 f8
+_scroll				f5d4	 00
+_spr_x				f32b	 00
+sub				0000	 f0
+LL70				b175	 06
+	.x01879			b1a2	 06
+LL68				af11	 06
+SOFT_RESET			0006	 f0
+JOY_BITUP			0004	 f0
+bram_lock			1803	 f0
+scr_h				2246	 f8
+vdc_crh				20f4	 f0
+_chg_pcmbank			a2b0	 05
+BANKSWITCH_INIT_MACRO		0000	 f0
+lib2_mousread			b407	 01
+	.exit			b49b	 01
+	.loop1			b409	 01
+_farpeekw.1			fbd7	 00
+_bm_getptr.2			fa43	 00
+_bm_open			fa9d	 00
+gezp				e9fa	 00
+ac_port				1a00	 f0
+__stw_s				0000	 f0
+LL34				aaaf	 05
+	.x_01098		aabd	 05
+LL3				a083	 05
+COMPOSER			0000	 f0
+psg_bytefunctbl			c374	 02
+_init_satb			f437	 00
+	.l1			f439	 00
+le				ea4a	 00
+LL122				b8d5	 07
+_set_pcmintr			a295	 05
+_pcm_intr			a0d0	 05
+	.x_00763		a108	 05
+	.x00762			a0ff	 05
+	.x00757			a0ec	 05
+pitchenve_lp_000		449e	 03
+psg_bios			fc53	 00
+	.functbl		fc6e	 00
+	.indir_jmp		fc6b	 00
+gtzp				e9cc	 00
+	.true			e9d6	 00
+	.false			e9da	 00
+	.geta_ugt		e9de	 00
+HSR				0000	 f0
+_load_bat.4			e411	 00
+psg_envptr_h			2397	 f8
+s_xh				2705	 f8
+joyold6				269d	 f8
+_noise_freq			2a28	 f8
+psgf_pitchenv			c46c	 02
+psgf_tempo			c3ff	 02
+	.okval			c407	 02
+_random				fc26	 00
+_font_base			276f	 f8
+divu10				e761	 00
+	.l2			e76f	 00
+	.l1			e768	 00
+ac_identver_l			1afd	 f0
+_drv_pitchenv			a000	 07
+	.x02259			a107	 07
+	.x02231			a04f	 07
+psgf_savepoint			c453	 02
+s_work				273e	 f8
+__fbank				200d	 f8
+_spr_y				f348	 00
+smul				eab4	 00
+psg_cntdown			231f	 f8
+LL71				afd4	 06
+	.x_01853		b0e9	 06
+	.x_01848		b0c7	 06
+	.x01818			afe6	 06
+	.x01816			afdc	 06
+LL69				bb00	 06
+psg_bank			c064	 02
+_ram_hdwr_tia_size		26d1	 f8
+psgf_tie			c3f9	 02
+_memcpy.3			e68f	 00
+	.x_00121		e6a3	 00
+	.x_00120		e69d	 00
+	.cpylp			e693	 00
+psg_savepoint_l			2307	 f8
+JOY_BITVI			0003	 f0
+_loop_cnt			29ca	 f8
+_reset_satb			f437	 00
+_line_deltax			2978	 f8
+mulu32				e7ce	 00
+	.next			e813	 00
+	.loop			e7e8	 00
+joytmp				26a7	 f8
+joy6				2693	 f8
+psg_fadespeed			2601	 f8
+_adcw				0000	 f0
+_cx				20fc	 f0
+__addwi				0000	 f0
+LL35				aac0	 05
+_note_envadr			2a14	 f8
+LL4				a083	 05
+_spr_pal			f3a9	 00
+JOY_IV				0002	 f0
+LL123				ac6a	 08
+n106_channel			44a4	 03
+pitchenve_lp_001		44a0	 03
+pitchenve_000			449e	 03
+psg_play			c0c1	 02
+psg_envduratn			23df	 f8
+HUC				0001	 f0
+_seq_freq			29e4	 f8
+_def_cbank			a2d6	 05
+smod				ec07	 00
+psg_envlevel_l			23af	 f8
+_al				20f8	 f0
+SEQ_F4				a6e5	 06
+	.x_01505		a710	 06
+	.x_01500		a6ee	 06
+MAKER				0000	 f0
+softenve_table			441a	 03
+_clock_tt			fb92	 00
+sdiv_no_invert_secondary	eba5	 00
+BGMAP_SIZE_32x32		0000	 f0
+ac_base1_l			1a02	 f0
+n106_wave_init			44a5	 03
+timer_cnt			0c00	 f0
+_si				20ee	 f0
+_ena_irq_tmr			a28f	 05
+dutyenve_table			441a	 03
+psgf_freqmod			c469	 02
+_rcr_on				e340	 00
+psg_ch				0800	 f0
+LL72				b1fd	 06
+_lfo_num			2a2c	 f8
+song_000_03_lp			45ad	 03
+fntcpy				0000	 f0
+ac_data1_alt			1a01	 f0
+timerport			0c00	 f0
+__subws				0000	 f0
+_call_bank			0009	 f0
+_now_cbank			a2d1	 05
+_line_deltay			297a	 f8
+ule				ea55	 00
+JOY_BITV			0002	 f0
+decw				0000	 f0
+ARG_LABEL			0006	 f0
+color_reg_l			0402	 f0
+video_data_l			0002	 f0
+LL36				ab5b	 05
+LL5				a0c0	 05
+_get_joy_events.sub		fb57	 00
+_tstw				0000	 f0
+ac_offset1_l			1a05	 f0
+LL124				a01b	 08
+	.x03092			a033	 08
+pitchenve_lp_002		44a2	 03
+pitchenve_001			44a0	 03
+psg_fm				c090	 02
+mapbank				26b1	 f8
+_main				ac7a	 08
+bg_y1				2210	 f8
+ac_base1_m			1a03	 f0
+psg_dobytecodes			c330	 02
+	.tablejump		c358	 02
+	.x_00619		c348	 02
+	.next			c336	 02
+bat_height			26d6	 f8
+s_bottom			272e	 f8
+psg_percusshdr			22d7	 f8
+__asrw				0000	 f0
+_ram_hdwr_tia_src		26cd	 f8
+timer_ctrl			0c01	 f0
+LL73				b2d9	 06
+	.x01927			b2ff	 06
+_ch_nowbank			29a0	 f8
+_gfx_plot.3			f6f0	 00
+_ram_hdwr_tia_dest		26cf	 f8
+PTRDPCM				0004	 f0
+_sub32.2			f756	 00
+	.l1			f75e	 00
+_satb				2773	 f8
+joycallback			2688	 f8
+set_bgpal			0000	 f0
+__orws				0000	 f0
+_bm_mpr4			2982	 f8
+lib2_load_map_8			a780	 01
+	.l6			a7ef	 01
+	.l4			a7da	 01
+	.l3			a7b5	 01
+	.l5			a7ed	 01
+	.l1			a78e	 01
+	.l2			a793	 01
+__lbra				0000	 f0
+LL37				ab76	 05
+	.x01130			ab8c	 05
+LL6				a27f	 05
+ac_offset1_m			1a06	 f0
+LL125				a036	 08
+	.x_03095		a04d	 08
+pitchenve_002			44a2	 03
+udiv				ebc2	 00
+	.sdiv_end		ebef	 00
+	.sdiv_begin		ebd7	 00
+psg_voicectrl			22e3	 f8
+hsync_hook			220a	 f8
+__ldd_i				0000	 f0
+lib2_set_xres			a9ad	 01
+	.xres_err		aa4d	 01
+	.xres_putit		aa17	 01
+	.hde_tab		aa5b	 01
+	.hds_tab		aa58	 01
+	.hsw_tab		aa55	 01
+	.vce_tab		aa52	 01
+	.x_00099		a9e3	 01
+	.x_00097		a9d6	 01
+	.xres_calc		a9e6	 01
+remap_data			e3ea	 00
+	.l1			e3fe	 00
+__lbne				0000	 f0
+gt				e958	 00
+	.gt_primary_minus	e968	 00
+bg_y2				2212	 f8
+setvwaddr			0000	 f0
+psgf_volume			c411	 02
+lib2_gfx_line.5			ab98	 01
+	.x_00443		adf6	 01
+	.ylppos			adee	 01
+	.ylp2			adf8	 01
+	.x_00440		adbe	 01
+	.ylp1			ad82	 01
+	.x_00435		ad82	 01
+	.x_00425		ad00	 01
+	.xlp3			ad02	 01
+	.x_00423		ace0	 01
+	.xlp2			ace0	 01
+	.xlppos			acd8	 01
+	.out			ae21	 01
+	.x_00421		acc0	 01
+	.xlp1			ac89	 01
+	.x_00416		ac89	 01
+	.xbiglp			ac32	 01
+	.ybiglp			ad2b	 01
+	.x_00408		ac32	 01
+	.x_00407		ac2d	 01
+	.l3			ac1f	 01
+	.l2			abe1	 01
+	.l1			abcd	 01
+	.x_00395		aba5	 01
+JOY_BITDN			0006	 f0
+spr_set				0000	 f0
+_farpeekb.1			fbc6	 00
+_set_joy_callback.4		fb25	 00
+	.l1			fb4a	 00
+lib2_load_font			a92e	 01
+	.t5			a992	 01
+	.t4			a98e	 01
+	.t3			a980	 01
+	.t2			a97c	 01
+	.t1			a971	 01
+	.p5			a968	 01
+	.p4			a964	 01
+	.p3			a956	 01
+	.p2			a952	 01
+	.p1			a947	 01
+	.copy			a946	 01
+	.l2			a940	 01
+	.l1			a939	 01
+joytrg				222d	 f8
+JOY_LEFT			0080	 f0
+tstw				0000	 f0
+adcw				0000	 f0
+__stb_s				0000	 f0
+__addw				0000	 f0
+LL74				b35a	 06
+BANK_MAX_IN_4KB			0001	 f0
+video_reg			0000	 f0
+_seq_ptr			29d2	 f8
+__vs_bx				202c	 f8
+_peekw				fbba	 00
+lib2_bm_disable			b238	 01
+psg_inhibit			20e7	 f0
+JOY_V				0004	 f0
+videoport			0000	 f0
+vdc_crl				20f3	 f0
+_lfo_cnt			2a34	 f8
+asr				ea89	 00
+	.asr_begin		ea99	 00
+	.asr_end		eaa4	 00
+clock_hh			268f	 f8
+psg_trkptr_h			22fb	 f8
+JOY_SEL				0004	 f0
+load_sprites			0000	 f0
+__stbi_s			0000	 f0
+LL38				ab8f	 05
+	.x_01133		ab9d	 05
+LL40				abfa	 05
+LL7				a27f	 05
+_bm_id				fa3b	 00
+_gfx_line.5			f714	 00
+_put_char.2			eec7	 00
+LL126				a051	 08
+	.x03124			a12f	 08
+	.x03122			a125	 08
+_pcm_set			a084	 05
+_get_map_width			f139	 00
+_load_font.2			ee3e	 00
+	.x_00249		ee4b	 00
+_farpeekw.sub			fbee	 00
+	.l1			fbfd	 00
+s_xl				26fd	 f8
+psg_envptr_l			238b	 f8
+TIMER				0002	 f0
+lblo				0000	 f0
+ARG_INDIRECT			0004	 f0
+SEQ_F7				a666	 06
+	.x_01488		a691	 06
+	.x_01483		a66f	 06
+_get_color.1			f449	 00
+mapaddr				26b2	 f8
+setcolor			0000	 f0
+divu8				e74a	 00
+	.l2			e759	 00
+	.l1			e752	 00
+psg_detune			2487	 f8
+_load_vram.3			e460	 00
+lbhs				0000	 f0
+CDROM				0000	 f0
+LL75				b436	 06
+	.x01975			b455	 06
+psg_init			c017	 02
+	.loop1			c031	 02
+psg_panpotaccum			24b7	 f8
+psg_peptr_h			2457	 f8
+_bm_enable			faaf	 00
+_put_tile_16			f4fc	 00
+	.x_00362		f570	 00
+	.x_00357		f543	 00
+	.x_00355		f533	 00
+_put.xy				eea3	 00
+spr_x				0000	 f0
+_ch_cnt				2988	 f8
+_set_screen_size		f61f	 00
+_rndzp				2014	 f8
+lbpl				0000	 f0
+LL39				aba0	 05
+LL8				a16e	 05
+	.x00791			a1f1	 05
+	.x_00778		a195	 05
+	.x_00776		a177	 05
+_put_char.3			eebc	 00
+_strcmp.2			e6ec	 00
+	.x_00132		e70c	 00
+	.x_00131		e706	 00
+	.out			e70e	 00
+	.plus			e6f5	 00
+	.cont			e6fc	 00
+	.minus			e6f8	 00
+	.cmplp			e6ec	 00
+LL127				ac6a	 08
+LL41				ad9a	 05
+_bm_free			f923	 00
+	.ok			f956	 00
+	.err			f962	 00
+_load_font.3			ee4b	 00
+	.l2			ee61	 00
+	.l1			ee5a	 00
+HSYNC				0005	 f0
+color_reg			0402	 f0
+__ldw				0000	 f0
+_seq				a000	 06
+ugt				e981	 00
+_irq1				e1c6	 00
+	.l5			e1f3	 00
+	.exit			e1f9	 00
+	.l4			e1ea	 00
+	.l3			e1e4	 00
+	.hsync			e1ea	 00
+	.vsync			e1d1	 00
+CHAR				0000	 f0
+lbcc				0000	 f0
+map				0000	 f0
+_bh				20fb	 f0
+SEQ_F8				a5e7	 06
+	.x_01471		a612	 06
+	.x_01466		a5f0	 06
+_xpcmdata			4418	 03
+hsw				26dc	 f8
+scroll				0000	 f0
+_set_bgpal			0000	 f0
+song_000_04_lp			4615	 03
+_init				e0c4	 00
+	.fntld			e16d	 00
+	.l2			e0d5	 00
+FLIP_X				0008	 f0
+writevram			f649	 00
+	.x_00370		f665	 00
+	.x_00369		f65a	 00
+_gfx_pal			2973	 f8
+_disp_on			fc98	 00
+psg_envtbl			ccd5	 02
+lib2_mousinit			b378	 01
+	.mous			b3fd	 01
+	.l1			b3e7	 01
+	.loop1			b3d8	 01
+FONT_VADDR			0800	 f0
+__incw_s			0000	 f0
+LL76				b641	 06
+	.x02108			b867	 06
+	.x02102			b842	 06
+song_000_00			44ef	 03
+psg_octavetbl			c36c	 02
+spr_y				0000	 f0
+batcpy				0000	 f0
+stwz				0000	 f0
+MAGICKIT			0001	 f0
+_lfo_stp			2a44	 f8
+_clock_hh			fb83	 00
+ac_identbase			1afd	 f0
+__addmi				0000	 f0
+LL9				a211	 05
+_farmemget.3			fc00	 00
+lib2_bm_create.2		b0cd	 01
+	.ok			b183	 01
+	.l3			b16a	 01
+	.l2			b163	 01
+	.sum			b172	 01
+	.l1			b146	 01
+	.x_00548		b10e	 01
+	.x1			b0d8	 01
+	.x2			b0da	 01
+	.go			b0e6	 01
+_strncpy.3			e663	 00
+	.x_00116		e679	 00
+	.x_00115		e673	 00
+	.out			e68e	 00
+	.lp			e667	 00
+_ram_hdwr_tia			26cc	 f8
+psg_transpose			2373	 f8
+_nb_bank			000a	 f0
+LL130				a527	 08
+LL128				a255	 08
+	.x03215			a397	 08
+	.x03187			a2df	 08
+LL42				aca8	 05
+_set_font_color.2		eda0	 00
+random				e8b4	 00
+	.l1			e8c2	 00
+_vdc				2747	 f8
+psg_fmptr_h			240f	 f8
+_add32.2			f743	 00
+	.l1			f74b	 00
+_xres				0100	 f0
+_irq2				e1bf	 00
+	.user			e1c3	 00
+soft_reset			2284	 f8
+SIZE_32x16			0001	 f0
+lbmi				0000	 f0
+SEQ_F9				a191	 06
+lib2_bm_open			b18d	 01
+	.x4			b20c	 01
+	.ok			b1ea	 01
+	.next			b1ef	 01
+	.l2			b1d2	 01
+	.x_00559		b1cd	 01
+	.x3			b208	 01
+	.x_00557		b1c1	 01
+	.x1			b1fe	 01
+	.l1			b19a	 01
+	.x2			b200	 01
+umul8				eb54	 00
+	.l2			eb67	 00
+	.l1			eb5b	 00
+lib2_load_map_16		a67f	 01
+	.x_00056		a77d	 01
+	.x_00055		a771	 01
+	.x_00053		a760	 01
+	.x_00048		a733	 01
+	.x_00046		a723	 01
+	.l6			a6fd	 01
+	.x_00040		a6c3	 01
+	.x_00039		a6bd	 01
+	.l4			a6c3	 01
+	.l3			a6b7	 01
+	.l2			a69e	 01
+	.l5			a6e1	 01
+	.l1			a690	 01
+psg_pedelay			246f	 f8
+FLIP_Y				0080	 f0
+softenve_lp_000			4437	 03
+psgf_notused			c3da	 02
+psg_dopercuss			c4c0	 02
+_rts				e1bd	 00
+JOY_III				0001	 f0
+_put_raw.main			eefa	 00
+ltzp				e9a3	 00
+	.false			e9ad	 00
+	.true			e9b1	 00
+	.geta_ult		e9b5	 00
+LL77				b49f	 06
+	.x_02018		b5b5	 06
+	.x_02013		b593	 06
+	.x01986			b4b1	 06
+	.x01984			b4a7	 06
+song_000_01			4521	 03
+_mouse_disable			fb0a	 00
+_map_put_tile.3			f585	 00
+__calls				0000	 f0
+JOY_UP				0010	 f0
+lbeq				0000	 f0
+PTRMMC5				0005	 f0
+_set_map_data.1			f095	 00
+	.x_00293		f0d9	 00
+	.x_00291		f0ba	 00
+	.l1			f0f1	 00
+lib2_put_number.3		ab32	 01
+LL131				ac51	 08
+LL129				a536	 08
+	.x03307			a617	 08
+	.x03279			a55f	 08
+LL43				ad9a	 05
+psg_mstop			c0ed	 02
+	.pause2			c124	 02
+	.out			c12a	 02
+	.pause			c108	 02
+	.nextvoice		c118	 02
+	.loop			c0fa	 02
+	.nopause		c0f8	 02
+_put_string.2			ef9c	 00
+rcr_init			e2be	 00
+	.r3			e2d2	 00
+psg_trkctrl			22dd	 f8
+rolw				0000	 f0
+AC_IDENT			0051	 f0
+psg_tempotbl			cb13	 02
+_bm_error			2983	 f8
+_put_tile.2			f4cf	 00
+_spr_set			f2c2	 00
+	.l1			f2ce	 00
+	.l2			f2df	 00
+bat_width			26d4	 f8
+rcr_set				e300	 00
+_srand				fc12	 00
+setvdc				ed06	 00
+	.l2			ed2e	 00
+	.l1			ed16	 00
+	.l3			ed3c	 00
+psgf_dataend			c4b9	 02
+randomize			e84b	 00
+	.l1			e8a9	 00
+	.x_00172		e89f	 00
+	.x_00171		e891	 00
+	.x_00170		e883	 00
+softenve_lp_001			4445	 03
+_spr_get_x			f33a	 00
+___case				ec4c	 00
+	.x00229			eccd	 00
+	.end_case_default	ece8	 00
+	.x00221			ec85	 00
+	.begin_case		ec68	 00
+psg_envrels_h			23f7	 f8
+LL80				b9c9	 06
+LL78				b9c9	 06
+	.x_02178		ba77	 06
+	.x_02173		ba55	 06
+_set_vol			ac10	 05
+	.x01154			ac3d	 05
+song_000_02			4553	 03
+_timer				e363	 00
+	.exit2			e379	 00
+	.exit			e37b	 00
+ARG_IMMED			0002	 f0
+_ch_vol				2990	 f8
+DPCM_EXTRA_BANK_START		0001	 f0
+lib2_readjoy			b4c3	 01
+	.l6			b5b5	 01
+	.rdlp			b58a	 01
+	.delay			b5b3	 01
+	.hook			b5be	 01
+	.l5			b566	 01
+	.l4			b556	 01
+	.bitmsk			b5b9	 01
+	.l3			b53d	 01
+	.l2a			b513	 01
+	.type6			b50b	 01
+	.notswap		b4fe	 01
+	.l2			b4ea	 01
+	.readjoys		b575	 01
+_vreg				efdc	 00
+	.l1			efe3	 00
+sdiv_no_invert_primary		eb80	 00
+s_top				2725	 f8
+psg_trkptr_l			22ef	 f8
+JOY_VI				0008	 f0
+BGMAP_SIZE_128x64		0007	 f0
+ac_addoffset1			1a0a	 f0
+irq_disable			1402	 f0
+lib2_put_number.4		ab27	 01
+_strcpy.2			e615	 00
+	.x_00107		e627	 00
+	.x_00106		e621	 00
+	.out			e629	 00
+	.cpylp			e615	 00
+psg_swptmcntdn			24f3	 f8
+setxres				0000	 f0
+LL132				a795	 08
+	.x03395			a8c7	 08
+	.x03363			a7aa	 08
+LL44				af79	 05
+_put_string.3			ef91	 00
+mapbat_ptr			26c4	 f8
+mapnbtile			26be	 f8
+JOY_BITRT			0005	 f0
+FLIP_MASK			0088	 f0
+neg				0000	 f0
+_color_reg			0402	 f0
+__tmr_ptr			2024	 f8
+_bcd_mov.2			f7e7	 00
+	.x1			f7fe	 00
+_gfx_setbgpal			f672	 00
+_put_tile.3			f4b8	 00
+	.l1			f4c9	 00
+s_yh				2715	 f8
+SEQ_EC				ab5b	 06
+	.x_01661		ab86	 06
+	.x_01656		ab64	 06
+_set_map_data.main		f119	 00
+psg_pehdr			22db	 f8
+vdc_reg				20f7	 f0
+LL10				a20e	 05
+psgf_wave			c460	 02
+set_bat_size			e595	 00
+	.height			e5d6	 00
+	.width			e5ce	 00
+__rcr_on			e344	 00
+psg_mode			2595	 f8
+_sbcw				0000	 f0
+PTRN106				0005	 f0
+SOUND_GENERATOR			0000	 f0
+JOY_RIGHT			0020	 f0
+__ldd_s_w			0000	 f0
+__boolw				0000	 f0
+softenve_lp_002			4450	 03
+_scroll_disable			f616	 00
+_spr_get_y			f358	 00
+mapctable			26c1	 f8
+psg_peptr_l			244b	 f8
+irq_status			1403	 f0
+__farptr_i			0000	 f0
+_lfo_lev			2a4c	 f8
+LL81				bbeb	 06
+LL79				b91d	 06
+__tmr_tmp			201c	 f8
+song_000_03			4585	 03
+load_font			e44e	 00
+_set_sprpal			0000	 f0
+vec_off				0000	 f0
+_addw				0000	 f0
+__andws				0000	 f0
+__ldwi				0000	 f0
+_set_map_data.3			f113	 00
+ult_y1				e938	 00
+	.lt_end			e947	 00
+	.lt_must_test_lobyte	e940	 00
+mousread			fc41	 00
+JOY_BITSEL			0002	 f0
+XRES_SOFT			0004	 f0
+_dx				20fe	 f0
+LL45				bb00	 06
+hde				26df	 f8
+wait_vsync			fcc8	 00
+	.callback		fd38	 00
+	.t2			fd15	 00
+	.t1			fd0e	 00
+	.t3			fd35	 00
+	.x_00718		fced	 00
+	.l5			fce5	 00
+	.l4			fce2	 00
+	.l3			fcda	 00
+	.l2			fcd9	 00
+	.l1			fcce	 00
+psg_freqlo			0802	 f0
+LL133				a9bf	 08
+	.x03452			aa9b	 08
+SEQ_ED				aaea	 06
+	.x01647			ab2b	 06
+	.x_01643		ab15	 06
+	.x_01638		aaf3	 06
+psgf_fmcorrect			c46b	 02
+irq_cnt				2241	 f8
+bhs				0000	 f0
+_bl				20fa	 f0
+_freq				401c	 03
+LL11				a211	 05
+psg_doreladjust			c4bf	 02
+msbutt				b4a9	 01
+vreg				0000	 f0
+irqport				1400	 f0
+smul_no_invert_primary		eac7	 00
+endpoint			ab99	 06
+_volume_envadr			2a04	 f8
+softenve_lp_003			4457	 03
+_rand				fc1e	 00
+_abs				f726	 00
+	.l1			f734	 00
+_spr_ctrl.2			f397	 00
+getvdc				ed48	 00
+	.l1			ed54	 00
+calc_vram_addr			e4c2	 00
+	.s32			e4d3	 00
+	.s128			e4d9	 00
+	.s64			e4d6	 00
+psg_irqflag			20e6	 f0
+scr_mode			2244	 f8
+VADDR_INC_128			0018	 f0
+LL82				bb4e	 06
+	.x02206			bb7a	 06
+song_000_04			45b3	 03
+psgf_octup			c3eb	 02
+_spr_get_pal			f3b9	 00
+negw				0000	 f0
+__eorws				0000	 f0
+_ch_bank			2998	 f8
+psgf_transpose			c48a	 02
+_gfx_init			f67b	 00
+	.x_00380		f6b9	 00
+	.l3			f6a9	 00
+	.l2			f6a6	 00
+_timer_user			e360	 00
+psg_percuss_h			250b	 f8
+blo				0000	 f0
+psg_enva			cc63	 02
+_set_map_data.4			f10a	 00
+_load_background		0000	 f0
+LL46				a026	 06
+	.x01271			a056	 06
+	.x01267			a03e	 06
+_dis_irq_tmr			a292	 05
+psg_fmptr_l			2403	 f8
+psg_currvoice			22df	 f8
+JOY_BITII			0001	 f0
+__stwp				0000	 f0
+LL134				a914	 08
+psgf_voladjust			c4a4	 02
+gfx_bittbl2			af2b	 01
+BGMAP_SIZE_128x32		0003	 f0
+lbne				0000	 f0
+ac_shftreg			1ae0	 f0
+SEQ_EE				aa2c	 06
+	.x_01621		aa57	 06
+	.x_01616		aa35	 06
+softenve_lp_table		4426	 03
+lib2_farmemget.3		b2e6	 01
+	.l5			b377	 01
+	.l3			b34e	 01
+	.l2			b34c	 01
+	.l1			b338	 01
+	.l4			b354	 01
+	.t2			b32a	 01
+	.t1			b302	 01
+	.x_00584		b2f8	 01
+_put_tile_8			f4da	 00
+smul_end			eb07	 00
+cmp_false			e923	 00
+psg_sweepamt_h			24db	 f8
+vsync				0000	 f0
+ac_shft_bits			1ae4	 f0
+LL12				a2cc	 05
+_gfx_clear			f6c0	 00
+	.l4			f6d1	 00
+	.l3			f6cf	 00
+	.l2			f6cc	 00
+scroll_xh			26e4	 f8
+vdc_dcr				2243	 f8
+LL100				aa53	 07
+	.x02641			accc	 07
+	.x02639			acc2	 07
+psgf_panpot			c420	 02
+_mouse_enable			fb10	 00
+psg_freq_h			2343	 f8
+_subw				0000	 f0
+joyport				1000	 f0
+PTRFME7				0005	 f0
+softenve_lp_004			4481	 03
+maptiletype			26b8	 f8
+LL83				bb7d	 06
+	.x_02209		bb94	 06
+song_000_00_lp			451b	 03
+song_000_05			461b	 03
+__arg				2a64	 f8
+joybuf6				26a2	 f8
+__phw				0000	 f0
+MAKE_HES			0001	 f0
+PITCH_CORRECTION		0000	 f0
+psgf_fadeout			c4a8	 02
+	.positive		c4af	 02
+rcr4				e318	 00
+FLIP_Y_MASK			0080	 f0
+sbcw				0000	 f0
+__addws				0000	 f0
+psg_envb			cc70	 02
+psgf_panlftadjust		c4a6	 02
+psgf_panrtadjust		c4a5	 02
+psg_env				c085	 02
+_bcd_init.2			f7ce	 00
+	.l1			f7d5	 00
+set_write			e4a5	 00
+psg_envptr_off			23a3	 f8
+ENV_DLY				0000	 f0
+_seqproc			fdd3	 00
+LL47				af4d	 06
+	.x01813			afd0	 06
+	.x01798			af65	 06
+psg_tmpptr1			20ea	 f0
+update_satb			0000	 f0
+color_data_h			0405	 f0
+__aslw				0000	 f0
+LL135				a96b	 08
+pce_002				44ab	 03
+_get_joy_events.1		fb56	 00
+_bm_exist			f9fc	 00
+	.noerr			fa11	 00
+	.l1			fa0f	 00
+__farptr_get			0000	 f0
+SEQ_EF				a9c9	 06
+	.x01614			aa22	 06
+	.x01609			aa0c	 06
+	.x_01605		a9f4	 06
+	.x_01600		a9d2	 06
+_set_drvintr			a63c	 05
+_bcd_add.2			f84e	 00
+	.l3			f895	 00
+	.l4			f89b	 00
+	.l2			f885	 00
+	.l1			f87e	 00
+	.x1			f893	 00
+s_cr				271d	 f8
+LL13				a3d5	 05
+_reg_ch				2987	 f8
+_xpcm_len			2a5e	 f8
+__lsrw				0000	 f0
+LL101				ad1b	 07
+__tmr_bx			2026	 f8
+psgf_rptbegin			c45e	 02
+psg_dcnt			c20a	 02
+softenve_lp_005			4490	 03
+lib2_bm_enable			b210	 01
+	.x1			b223	 01
+	.l1			b215	 01
+psg_envrels_l			23eb	 f8
+add				0000	 f0
+addw				0000	 f0
+LL84				bb98	 06
+softenve_000			4432	 03
+lib2_bm_checksum		b243	 01
+	.l3			b270	 01
+	.l2			b26b	 01
+	.l1			b260	 01
+psg_octave			232b	 f8
+DATA_BANK			0004	 f0
+_ch_topbank			29a1	 f8
+_bcd_set.bcd			f831	 00
+	.l2			f848	 00
+	.l1			f83a	 00
+	.x1			f84d	 00
+mulu8				e777	 00
+	.next			e78a	 00
+	.l1			e77e	 00
+mapheight			26b6	 f8
+rcr5				e326	 00
+psg_envc			cc80	 02
+bat_hmask			26d7	 f8
+setvraddr			0000	 f0
+LL50				a29d	 06
+	.x01351			a2af	 06
+	.x01349			a2a5	 06
+LL48				ab9c	 06
+	.x01677			abe8	 06
+	.x_01671		abc2	 06
+	.x01669			abb4	 06
+_spr_pattern			f365	 00
+psg_driver			e37f	 00
+	.noreset		e3a6	 00
+SPR_VRAM			0000	 f0
+subw				0000	 f0
+LL136				aaff	 08
+_get_joy_events.2		fb4b	 00
+_bm_rawwrite.2			f9d5	 00
+	.err			f9f4	 00
+rand				e83d	 00
+_color_data			0404	 f0
+load_vram			e460	 00
+	.out			e485	 00
+	.l2			e47b	 00
+	.l1			e46b	 00
+	.l3			e481	 00
+s_yl				270d	 f8
+LL14				a364	 05
+	.x00843			a37c	 05
+	.x00841			a372	 05
+psg_mstat			c0c9	 02
+	.next			c0d7	 02
+	.empty			c0d5	 02
+	.loop			c0cc	 02
+vsync_cnt			2680	 f8
+ENV_LEV				0000	 f0
+PSG_INHIBIT			0080	 f0
+vdc_mwr				2242	 f8
+__fgetb				0000	 f0
+LL102				ad1b	 07
+_note_sw			29b2	 f8
+_i				2a24	 f8
+psgf_sweeptime			c477	 02
+psg_settempo			c0b1	 02
+	.okvalue		c0b9	 02
+stw				0000	 f0
+__ldb				0000	 f0
+_cmp32.2			f7b2	 00
+	.l3			f7ca	 00
+	.l2			f7c4	 00
+	.l1			f7b8	 00
+_mul32.2			f769	 00
+srand				e817	 00
+	.exit			e83c	 00
+_drv_init			a64b	 05
+LL85				bbe0	 06
+softenve_001			4439	 03
+lib2_bm_setup_ptr		b279	 01
+	.ok			b2dc	 01
+	.l2			b2a6	 01
+	.l1			b29e	 01
+	.x1			b2a0	 01
+eq				e8ce	 00
+	.eq_endyes		e8da	 00
+	.eq_endno		e8eb	 00
+psg_wavenum			25dd	 f8
+__notw				0000	 f0
+__farptr			0000	 f0
+bat_vmask			26d8	 f8
+rcr6				e336	 00
+font_table			e3b7	 00
+psg_envd			cc90	 02
+psgf_keyratio			c42f	 02
+_satb_update			f3d1	 00
+	.l3a			f415	 00
+	.l4			f435	 00
+	.l2			f3e1	 00
+	.l3			f3e5	 00
+	.l1			f3db	 00
+set_read			e488	 00
+mapbat_top_base			26c6	 f8
+psg_volchgaccum			249f	 f8
+LL51				a593	 06
+LL49				a2b2	 06
+psgf_octdown			c3f2	 02
+psg_envduratn_h			23d3	 f8
+LL137				aaae	 08
+psg_off				c00d	 02
+	.nostop			c013	 02
+psg_stack_0			2517	 f8
+psgf_envelope			c468	 02
+_clock_reset			fb97	 00
+putnum.main			ab37	 01
+	.l4			ab85	 01
+	.l2			ab7f	 01
+	.l3			ab83	 01
+	.l1			ab65	 01
+	.l5			ab97	 01
+_line_xdir			2980	 f8
+__remain			2016	 f8
+read_joypad			fd3b	 00
+ENV_END				0000	 f0
+JOY_RUN				0008	 f0
+mapcpy				0000	 f0
+_ch				20fd	 f0
+_ax				20f8	 f0
+_bp				20ec	 f0
+LL15				a30a	 05
+	.x00830			a31c	 05
+	.x00828			a312	 05
+LL103				ad1e	 07
+	.x02658			ad3d	 07
+_j				2a26	 f8
+_mixvol				a2db	 05
+	.x00825			a306	 05
+ALLOW_BANK_SWITCH		0001	 f0
+mshorz				2986	 f8
+_bm_sizeof			fa12	 00
+	.l1			fa33	 00
+_cls.1				ed6c	 00
+	.l3			ed7d	 00
+	.l2			ed7a	 00
+_drv_intr			a000	 08
+_spr_get_pattern		f37e	 00
+FONT_BANK			0001	 f0
+setmap				0000	 f0
+LL86				a6fa	 07
+softenve_002			4447	 03
+_bcd_set.ascii			f7ff	 00
+	.l4			f829	 00
+	.l3			f810	 00
+	.l2			f80d	 00
+	.l1			f800	 00
+lt_primary_minus		e91d	 00
+vdc_sr				20f6	 f0
+__call				0000	 f0
+psgf_inctmpptr			c3d4	 02
+	.x_00621		c3da	 02
+lib2_gfx_plot.3			ae22	 01
+	.l4a			aebd	 01
+	.l4			aeba	 01
+	.l3a			aeb1	 01
+	.l3			aeae	 01
+	.l2a			ae5c	 01
+	.l2			ae59	 01
+	.l1a			ae50	 01
+	.l1			ae4d	 01
+_spr_show			f310	 00
+	.l1			f321	 00
+	.l2			f322	 00
+psg_noisefreq			25e9	 f8
+psg_percuss_l			24ff	 f8
+psg_lfoctrl			0809	 f0
+__swapw				0000	 f0
+psg_enve			cc9d	 02
+nezp				ea39	 00
+	.x1_eq			ea48	 00
+	.x_ne			ea46	 00
+LL52				a5e4	 06
+LL138				ad5d	 08
+LL140				acc1	 08
+	.x_03523		acd7	 08
+__vs_ptr			202a	 f8
+readvram			f62f	 00
+ulezp				ea5a	 00
+psg_stack_1			2522	 f8
+irq2_jmp			2200	 f8
+_lfo_ct2			2a3c	 f8
+SEQ_FA				a500	 06
+	.x01442			a541	 06
+	.x_01438		a52b	 06
+	.x_01433		a509	 06
+_timer_pcm			fd4d	 00
+arpeggio_lp_table		44a4	 03
+psg_cont			c1bc	 02
+	.next1			c1ee	 02
+	.loop1			c1dc	 02
+	.end			c1f6	 02
+	.next			c1ce	 02
+	.loop			c1c4	 02
+	.sub			c1d6	 02
+getA_ugt			e97f	 00
+_strncat.3			e62a	 00
+	.x_00111		e64c	 00
+	.x_00110		e646	 00
+	.out			e662	 00
+	.x_00109		e638	 00
+	.cpylp			e63a	 00
+	.endlp			e62e	 00
+mapbat_x			26ca	 f8
+psg_sweepamt_l			24cf	 f8
+LL16				a390	 05
+scroll_top			26f0	 f8
+scroll_xl			26e0	 f8
+__plw				0000	 f0
+SUPPORT_MOUSE			0001	 f0
+LL104				ad9e	 07
+	.x02676			adbd	 07
+s_idx				26fc	 f8
+_hsync_hndl			e26d	 00
+	.r2			e2b7	 00
+	.out			e2bd	 00
+	.r1			e285	 00
+psg_peptr_off			2463	 f8
+psg_freq_l			2337	 f8
+PTR_TRACK_END			0005	 f0
+mousinit			fc2f	 00
+SIZE_16x16			0000	 f0
+__sp				2000	 f8
+LL87				a6fa	 07
+__vs_tmp			2028	 f8
+softenve_003			4452	 03
+lib2_bm_unlock			b227	 01
+psg_stkoff			25a1	 f8
+_snd_saw			a3e5	 05
+scr_w				2245	 f8
+__expr				2010	 f8
+_pcm_on				a000	 05
+	.x00730			a02d	 05
+	.x00728			a023	 05
+psg_envf			ccaa	 02
+psg_track			c06f	 02
+hook				ed03	 00
+smul_no_invert_secondary	eaec	 00
+psg_volchg			2493	 f8
+joyena				2227	 f8
+LL53				a8d0	 06
+lt				e90d	 00
+_rndn1				2745	 f8
+LL141				acdb	 08
+LL139				aca7	 08
+	.x03520			acbe	 08
+psg_stack_2			252d	 f8
+color_data_l			0404	 f0
+__ldw_s				0000	 f0
+DPCM_RESTSTOP			0000	 f0
+_strcat.2			e609	 00
+	.x_00105		e613	 00
+	.endlp			e609	 00
+joyhook				2686	 f8
+psg_tone_h			25b9	 f8
+SEQ_FB				a361	 06
+	.x_01382		a38c	 06
+	.x_01377		a36a	 06
+LL17				a3d5	 05
+LL105				ae21	 07
+	.x02730			af57	 07
+	.x02728			af4d	 07
+_xpcm_bank			2a60	 f8
+_vsync_hndl			e20b	 00
+	.out			e26c	 00
+	.l3			e269	 00
+	.lclmm			e254	 00
+	.lclss			e258	 00
+	.lcltt			e25c	 00
+	.l2			e21c	 00
+	.l1			e219	 00
+init_psg			e5de	 00
+	.clear			e5ec	 00
+vload				0000	 f0
+ac_shftreg_0			1ae0	 f0
+LL90				a2e7	 07
+	.x02330			a30e	 07
+	.x02326			a2f9	 07
+	.x02324			a2ef	 07
+LL88				a285	 07
+	.x02315			a29d	 07
+softenve_004			4459	 03
+psg_drivevoice			c320	 02
+ugezp				ea05	 00
+psg_drive			c20b	 02
+	.subok			c258	 02
+	.mainok			c24c	 02
+	.dovoice		c22d	 02
+	.next			c235	 02
+	.chksub			c21f	 02
+	.chkmain		c228	 02
+	.loop			c218	 02
+	.skipsong		c213	 02
+PTRFDS				0005	 f0
+SIZE_32x64			0031	 f0
+__ldd_s_b			0000	 f0
+ugtzp				e9e0	 00
+	.true			e9e6	 00
+	.false			e9f1	 00
+	.test_lo		e9ea	 00
+psg_song			22e0	 f8
+PSG_SUBPAUSE			0040	 f0
+BATVAL				0000	 f0
+__ldwp				0000	 f0
+LL54				a83c	 06
+dpcm_data			44a5	 03
+psg_wave			c07a	 02
+_peek				fbb1	 00
+umul				eb09	 00
+ne				ea0b	 00
+	.ne_endeq		ea17	 00
+	.ne_endne		ea28	 00
+_rndn2				2746	 f8
+maptilebank			26b9	 f8
+scr_height			26da	 f8
+LL142				acf5	 08
+TITLE				0000	 f0
+psgf_detune			c46e	 02
+psg_stack_3			2538	 f8
+psg_fmptr_off			241b	 f8
+PSG_MAINPAUSE			0080	 f0
+setvinc				0000	 f0
+psgf_setmode			c4a7	 02
+_bm_create.2			fa8b	 00
+psg_trkhdr			22d1	 f8
+setvec				0000	 f0
+JOY_II				0002	 f0
+color_data			0404	 f0
+__stw				0000	 f0
+SEQ_FC				a24f	 06
+	.x01346			a299	 06
+	.x_01341		a27a	 06
+	.x_01336		a258	 06
+LL18				a4c4	 05
+LL20				a45d	 05
+_xpcm_mode			2a61	 f8
+psg_pc				c0a6	 02
+ac_cntrol1			1a09	 f0
+video_data			0002	 f0
+LL106				b00d	 07
+msvert				2985	 f8
+psg_fmcorrect			2427	 f8
+IRQ1				0001	 f0
+lib2_bm_delete			afe0	 01
+	.out			b03e	 01
+_bm_size			f96d	 00
+	.ok			f997	 00
+	.err1			f9a3	 00
+	.err			f9a5	 00
+ac_shftreg_1			1ae1	 f0
+__popw				0000	 f0
+LL91				a3da	 07
+LL89				a525	 07
+	.x02394			a53a	 07
+softenve_005			4483	 03
+arpeggio_table			44a4	 03
+umod				ec07	 00
+	.smod_end		ec34	 00
+	.smod_begin		ec1c	 00
+ge				e9f5	 00
+JOY_BITLT			0007	 f0
+color_ctrl			0400	 f0
+__ptr				200b	 f8
+_sound_dat			4400	 03
+sdiv				eb6d	 00
+psg_stack_10			2581	 f8
+psg_pedelcntdn			247b	 f8
+JOY_TYPE6			0050	 f0
+spr_pattern			0000	 f0
+psg_pan				0805	 f0
+__pea_s				0000	 f0
+_noise_sw			2a2a	 f8
+fds_4088_data			44a4	 03
+_pokew.2			fba8	 00
+lib2_gfx_point.2		aedd	 01
+	.l4			af1f	 01
+	.l3			af17	 01
+	.l2			aefa	 01
+	.l1			aef2	 01
+ult				e936	 00
+_reset				e0ac	 00
+spr_pri				0000	 f0
+LL55				a8d0	 06
+dutyenve_lp_table		441a	 03
+_vram_addr.2			efe9	 00
+umul16				eb2d	 00
+	.l2			eb50	 00
+	.l1			eb39	 00
+_rcr_off			e350	 00
+psg_envduratn_l			23c7	 f8
+_incw				0000	 f0
+__ldd_w				0000	 f0
+__pushw				0000	 f0
+LL143				ad48	 08
+	.x03544			ad55	 08
+_panpod				29c2	 f8
+song_000_05_lp			489b	 03
+pce_data_table			44a5	 03
+_put_digit.sub			ee8c	 00
+	.l1			ee93	 00
+psg_stack_4			2543	 f8
+NMI				0003	 f0
+_init_pcmdrv			a2b4	 05
+psgf_call			c488	 02
+_srand32.2			fc1a	 00
+mulu16				e790	 00
+	.x_00153		e7ca	 00
+	.l3			e7ca	 00
+	.l2			e7ab	 00
+	.l1			e79d	 00
+JOY_BITI			0000	 f0
+_cl				20fc	 f0
+SEQ_FD				a1a8	 06
+	.x_01320		a1d3	 06
+	.x_01315		a1b1	 06
+LL21				a47a	 05
+LL19				a444	 05
+	.x00871			a45a	 05
+_xpcm_addr			2a5c	 f8
+_farpeekw.fast			fbe5	 00
+cmp_ok				e96e	 00
+LL107				b00d	 07
+_bm_delete			fa55	 00
+IRQ2				0000	 f0
+psg_env0			cbf0	 02
+psg_dodata2hdwr			c31f	 02
+_put_digit.2			ee81	 00
+disp_cr				268e	 f8
+cd_port				1800	 f0
+LL92				a496	 07
+psgf_reltransp			c493	 02
+ac_shftreg_2			1ae2	 f0
+__temp				2003	 f8
+_bm_rawread			f9b0	 00
+	.err			f9cd	 00
+_mov32.2			f735	 00
+_put_digit.main			ee86	 00
+psg_stack_11			258b	 f8
+__tstw				0000	 f0
+_chg_cbank			a2cd	 05
+maptileaddr			26ba	 f8
+_set_font_addr			edae	 00
+clock_ss			2691	 f8
+ARG_ABS				0003	 f0
+__stwi_s			0000	 f0
+__ldbp				0000	 f0
+LL56				aa29	 06
+_snd_chg			a4d4	 05
+psg_freqtbl			ca63	 02
+lib2_bm_getptr.2		af8a	 01
+	.empty			afd5	 01
+	.x2			afd6	 01
+_div32.2			f7a1	 00
+__phb				0000	 f0
+LL144				ad5d	 08
+_detune				29ba	 f8
+psg_dotone			c35b	 02
+vdc_blur			26db	 f8
+build_disp_list			aa5e	 01
+	.x2			ab24	 01
+	.x1			ab19	 01
+	.t5			ab11	 01
+	.t3			aafc	 01
+	.t2			aad9	 01
+	.t1			aad4	 01
+	.t4			ab0d	 01
+	.l3			aac4	 01
+	.check_list		ab18	 01
+	.l2			aab1	 01
+	.l1			aa72	 01
+	.l0			aa70	 01
+psg_stack_5			254e	 f8
+SIZE_32x32			0011	 f0
+__aslws				0000	 f0
+_put_raw.2			eef5	 00
+psg_ch_value			22de	 f8
+_cmpw				0000	 f0
+SEQ_FE				a17a	 06
+LL22				a490	 05
+PTRVRC6				0005	 f0
+psgf_timebase			c3db	 02
+_load_default_font.1		edf2	 00
+	.x_00243		edff	 00
+scroll_yh			26ec	 f8
+LIB2_BANK			0001	 f0
+JOY_BITRUN			0003	 f0
+LL110				b113	 07
+	.x02833			b242	 07
+	.x02831			b238	 07
+LL108				b010	 07
+	.x02761			b02f	 07
+psg_dofreqstuff			c4c2	 02
+psg_pe				c09b	 02
+psg_sweep			24c3	 f8
+__fptr				200e	 f8
+psg_env1			cbfa	 02
+_put_digit.3			ee76	 00
+uge				ea00	 00
+psg_duratnmult			237f	 f8
+BGMAP_SIZE_64x64		0005	 f0
+LL93				a5e0	 07
+_load_palette.3			e3ff	 00
+JOY_BITIII			0000	 f0
+scroll_disable			0000	 f0
+_stw				0000	 f0
+ac_shftreg_3			1ae3	 f0
+vrc7_data_table			44a5	 03
+ARG_STRING			0005	 f0
+set_intvec			fcaa	 00
+	.reset			fcb2	 00
+	.exit			fcc6	 00
+	.vector			fcba	 00
+_set_tile_data.1		f147	 00
+joytrg6				2698	 f8
+LL57				aa29	 06
+_set_font_pal			ed8e	 00
+JOY_I				0001	 f0
+_bm_format			f8e4	 00
+	.setsz			f914	 00
+	.l2			f902	 00
+	.l1			f8eb	 00
+	.ok			f919	 00
+psg_stack_6			2559	 f8
+aslw				0000	 f0
+psg_ctrl			0804	 f0
+video_reg_h			0001	 f0
+xpcm_data			44cb	 03
+psg_mvoff			c194	 02
+	.skip			c1b6	 02
+	.loop			c197	 02
+_get_map_height			f140	 00
+_put_raw.3			eeea	 00
+psg_tone_l			25ad	 f8
+joy				2228	 f8
+_note_data			29a2	 f8
+SEQ_FF				a0b6	 06
+LL23				a62c	 05
+PTRVRC7				0005	 f0
+psg_fdout			c1f9	 02
+	.positive		c200	 02
+_bm_check			f8a2	 00
+	.err			f8bf	 00
+_put_char.main			eecc	 00
+	.l1			eed9	 00
+_load_default_font.2		edff	 00
+	.l3			ee28	 00
+	.l2			ee15	 00
+	.l1			ee0e	 00
+s_list				2736	 f8
+psg_strikephase			25f5	 f8
+psg_volume			25c5	 f8
+LIB1_BANK			0000	 f0
+LL111				b2f8	 07
+LL109				b090	 07
+	.x02779			b0af	 07
+_pitch_sw			29aa	 f8
+psg_on				c000	 02
+	.noturnoff		c007	 02
+_bm_write.4			fa79	 00
+incw				0000	 f0
+psg_env2			cc04	 02
+delay14				b4a8	 01
+psg_keycntdown			2367	 f8
+psg_perchvol			234f	 f8
+ARG_NONE			0000	 f0
+LL94				a676	 07
+_spr_hide			f2e0	 00
+	.l1			f2f1	 00
+	.l2			f2f2	 00
+unmap_data			e3e1	 00
+_disp_off			fca2	 00
+psg_sstop			c12b	 02
+	.pause2			c174	 02
+	.out			c17a	 02
+	.skipwave		c15a	 02
+	.pause1			c14d	 02
+	.pause			c148	 02
+	.nextvoice		c168	 02
+	.loop			c138	 02
+	.nopause		c136	 02
+lib2_bm_read.4			b03f	 01
+	.l2			b06e	 01
+	.l1			b063	 01
+	.ok			b076	 01
+	.x1			b082	 01
+	.x2			b08d	 01
+_map_calc_tile_addr		f58d	 00
+	.l2			f5af	 00
+	.l1			f59c	 00
+stb				0000	 f0
+LL60				af33	 06
+LL58				ab3f	 06
+gfx_bittbl			af23	 01
+load_map_exit			a809	 01
+_set_xres.1			f623	 00
+_line_error			297c	 f8
+_cls				ed62	 00
+psg_stack_7			2563	 f8
+psg_tempo			22d0	 f8
+__subwi				0000	 f0
+__arg_idx			2002	 f8
+__stack				2000	 f8
+scr_width			26d9	 f8
+LL24				a5af	 05
+	.x00919			a5c5	 05
+psg_fmdelcntdn			243f	 f8
+ARG_ABSOLUTE			0003	 f0
+psg_wavebuf			0806	 f0
+LL112				b2f8	 07
+_xpcm_sp			2a63	 f8
+psg_env3			cc0e	 02
+_clear_joy_events		fb5f	 00
+	.l2			fb7c	 00
+	.l1			fb63	 00
+clock_mm			2690	 f8
+LL95				b977	 07
+_clock_ss			fb8d	 00
+user_irq1			e202	 00
+psg_panpotchg			24ab	 f8
+_load_map.6			f211	 00
+	.l7			f2bb	 00
+	.x_00325		f28b	 00
+	.l4			f27f	 00
+	.l5			f29e	 00
+	.l3			f26b	 00
+	.x_00319		f243	 00
+	.l1			f237	 00
+	.l2			f256	 00
+	.x_00317		f227	 00
+	.l6			f2b3	 00
+	.x_00315		f21c	 00
+_load_tile			f1c9	 00
+	.l1			f1f8	 00
+_set_tile_data.3		f17f	 00
+	.l1			f1b9	 00
+	.l2			f1ba	 00
+_put_number.3			ef0b	 00
+psg_bank1			22e1	 f8
+user_jmptbl			2200	 f8
+init_satb			0000	 f0
+set_sprpal			0000	 f0
+cmpw				0000	 f0
+_drv_lfoseq			a70a	 07
+	.x02463			a756	 07
+LL61				accb	 06
+	.x01742			addd	 06
+	.x_01718		ad1b	 06
+	.x_01716		ad0d	 06
+	.x_01711		aceb	 06
+	.x01710			ace3	 06
+LL59				ab58	 06
+mouspos				fb23	 00
+BGMAP_SIZE_64x32		0001	 f0
+DPCM_BANKSWITCH			0000	 f0
+_set_xres.2			f627	 00
+psg_stack_8			256d	 f8
+lbcs				0000	 f0
+__orwi				0000	 f0
+_bss_end			2a64	 f0
+fds_effect_select		44a4	 03
+psgf_rptend			c45f	 02
+PSG_BANK			0002	 f0
+_dh				20ff	 f0
+_bx				20fa	 f0
+LL25				a5c8	 05
+sound_data_bank			44d7	 03
+timer_jmp			2204	 f8
+LL113				b2fb	 07
+	.x02864			b31a	 07
+_seq_pos			29d4	 f8
+_put_hex.main			ef3f	 00
+	.h4			ef71	 00
+	.h3			ef7a	 00
+	.h2			ef81	 00
+	.h1			ef8a	 00
+	.tbl			ef69	 00
+	.l2			ef61	 00
+	.l1			ef56	 00
+	.l3			ef68	 00
+ultzp				e9b7	 00
+	.true			e9bd	 00
+	.false			e9c8	 00
+	.test_lo		e9c1	 00
+init_vdc			e4e7	 00
+	.l3			e53c	 00
+	.l2			e53b	 00
+	.l1			e4f0	 00
+	.table			e55f	 00
+psg_env4			cc18	 02
+psg_doenvelope			c4c1	 02
+_spr_pri			f3c2	 00
+	.l1			f3ce	 00
+LL96				b977	 07
+HDR				0000	 f0
+maptilebase			26bc	 f8
+JOY_DOWN			0040	 f0
+__plb				0000	 f0
+loop_point_table		44dd	 03
+_bm_unlock			fad3	 00
+_put_number.4			ef1d	 00
+psg_bank2			22e2	 f8
+LL62				acb8	 06
+psg_envhdr			22d5	 f8
+nmi_jmp				2206	 f8
+psgport				0800	 f0
+__addw_s			0000	 f0
+__andw				0000	 f0
+n106_wave_table			44a5	 03
+_load_default_font		edf0	 00
+load_map_next_line		a8a0	 01
+	.l5			a92d	 01
+	.l4			a90e	 01
+	.l2			a8cd	 01
+	.l3			a8de	 01
+	.l1			a8cb	 01
+psg_stack_9			2577	 f8
+NO_FLIP				0000	 f0
+load_bat			e411	 00
+load_palette			e3ff	 00
+ac_data1			1a00	 f0
+_di				20f0	 f0
+__lea_s				0000	 f0
+LL26				a5e5	 05
+	.x_00931		a617	 05
+_put_hex.3			ef3a	 00
+scroll_cr			26f8	 f8
+scroll_yl			26e8	 f8
+LL114				b37b	 07
+	.x02882			b39a	 07
+song_000_01_lp			454d	 03
+_clock_mm			fb88	 00
+_get_font_addr			edd8	 00
+__sign				2016	 f8
+font_1				6000	 01
+CONST_BANK			0003	 f0
+psg_env5			cc22	 02
+_joyold				faf5	 00
+LL97				b8db	 07
+psgf_return			c489	 02
+psgf_pedelay			c46d	 02
+psgf_fmdelay			c46a	 02
+psg_tmpptr			20e8	 f0
+bg_x1				220c	 f8
+FLIP_X_MASK			0008	 f0
+_divxt				bb10	 06
+psg_keyonratio			235b	 f8
+__ldb_p				0000	 f0
+LL63				accb	 06
+pitchenve_lp_table		4498	 03
+_com32.1			f7a2	 00
+	.l1			f7a8	 00
+hds				26dd	 f8
+JOY_BITIV			0001	 f0
+maplibfunc			0000	 f0
+psg_mainvol			0801	 f0
+_mouse_exists			fb05	 00
+user_vsync			e208	 00
+video_reg_l			0000	 f0
+loop_point_bank			44e9	 03
+psgf_octave			c3e5	 02
+SIZE_MASK			0031	 f0
+LL27				a61b	 05
+psg_dofade			c31e	 02
+_poke.2				fba4	 00
+_spr_hide.sub			f2fb	 00
+_put_hex.4			ef2f	 00
+_put.vram			eeaa	 00
+LL115				b3fe	 07
+	.x02936			b52d	 07
+	.x02934			b523	 07
+__rcr_off			e354	 00
+font_2				6300	 01
+__extw				0000	 f0
+__stwps				0000	 f0
+_pitch_envadr			29f4	 f8
+psg_env6			cc2c	 02
+psg_trkptr_replace		c35e	 02
+_nmi				e3b0	 00
+	.user			e3b4	 00
+VSYNC				0004	 f0
+bram_unlock			1807	 f0
+LL98				b8f3	 07
+_set_note			adaa	 05
+__spr_ptr			2018	 f8
+load_map			e423	 00
+	.l1			e43c	 00
+bg_x2				220e	 f8
+_mouse_x			fb16	 00
+_get_font_pal			edce	 00
+load_map_init			a813	 01
+	.l3			a869	 01
+	.l2			a852	 01
+	.l1			a822	 01
+map_data			e3bf	 00
+	.l1			e3d0	 00
+scroll_bottom			26f4	 f8
+vec_on				0000	 f0
+LL64				af33	 06
+ovlarray			6000	 04
+VADDR_INC_64			0010	 f0
+__negw				0000	 f0

@@ -1,0 +1,45 @@
+DD:DirectDrawCreate...Done
+DD:QueryInterface...Done
+DD:SetCooperativeLevel...Done
+DD:CreateSurface...Done
+DD:CreateClipper...Done
+DD:SetHWnd...Done
+DD:SetClipper...Done
+DD:CreateSurface(back)...Done
+DS:DirectSoundCreate...Done
+DS:SetCooperativeLevel...Done
+DS:CreateSoundBuffer(primary)...Done
+DS:GetCaps...Done
+DS:CreateSoundBuffer...Done
+DS:GetCaps(dsound)...Done
+DS:SetFormat...Done
+DS:SetFormat(primary)...Done
+DS:GetCurrentPosition...Done
+DS:Play(primary)...Done
+DS:Play...Done
+DI:DirectInputDevice not found
+DS:waiting thread termination...Done
+DS:Stop...Done
+DS:Stop(primary)...Done
+DD:Release(clipper)...Done
+DD:Release(backsurface)...Done
+DD:Release(primarysurface)...Done
+DD:SetCooperativeLevel...Done
+DD:CreateSurface...Done
+DD:CreateClipper...Done
+DD:SetHWnd...Done
+DD:SetClipper...Done
+DD:CreateSurface(back)...Done
+DS:Play(primary)...Done
+DS:Play...Done
+DS:waiting thread termination...Done
+DS:Stop...Done
+DS:Stop(primary)...Done
+DS:Release(soundbuffer)...Done
+DS:Release(primary soundbuffer)...Done
+DS:Release(dsound)...Done
+DD:Release(clipper)...Done
+DD:Release(backsurface)...Done
+DD:Release(primarysurface)...Done
+DD:SetCooperativeLevel...Done
+DD:Release(ddraw)...Done

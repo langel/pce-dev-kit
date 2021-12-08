@@ -1,0 +1,785 @@
+------------------------------------------------------------------------
+MCKC: MML > MCK Converter Ver 0.14 by Manbow-J
+(manbow-j@hamal.freemail.ne.jp)
+
+NES/NSF sound driver by Izumi
+
+English Translation and additional documentation by virt
+(virt@vgmix.com | virt.vgmix.com)
+------------------------------------------------------------------------
+
+Introduction
+
+     As you may or may not know, MML (Music Macro Language) is a popular form of
+     sound programming in Japan, and has been shaped into a creation tool for
+     everything from music for various game consoles to General MIDI sequences.
+     Its huge array of commands and extremely simplified macro structure make it
+     quite fast and adaptable for composition in many forms, past a relatively
+     simple learning curve.
+
+     Americans and Europeans have typically relied on module trackers to create
+     chiptunes - or, as they're called in Japan, VGM. A tracker is certainly an
+     incredibly precise, visually straightforward, and otherwise logical tool.
+     However, in imitating a NES, there are many things that it just can't pull
+     off, and others that take far more effort than they should.
+
+     For one thing, in such a restrictive timing grid, it's difficult to cram a
+     lot of timbral changes into a short space. There's no facility in a sample-
+     based tracker for programming changes in the sound into the instrument
+     script, so a quick change of timbre at the beginning of the note has to be
+     put into the pattern each time, and this can drastically complicate the
+     composition of a tune. Every note echo, every timbral attack, all by hand.
+     We do it out of necessity, but it's extremely inefficient, and leaves me
+     wanting for more control.
+
+     Plus, there's that whole feeling of disconnection one gets when working
+     with audio samples to emulate the realtime synthesizer of the NES. Sampled
+     noise sounds fake and reacts too predictably, since it's not at all random.
+     The triangle's aliasing is weak and unconvincing. DPCM doesn't sound right
+     when mixed at 44.1khz. We need to be composing for the actual console's
+     limits and structure, not a crude imitation. While NSF might still be an
+     emulation, it's a LOT closer than an S3M or XM module.
+
+     But NSFs are just big chunks of ASM instructions! What's a NES-obsessed
+     musician to do? Either devote months (or years!) to perfecting 6502
+     assembly and code your own sound driver, then worry about a script for the
+     music itself -- or use the fantastic MCK driver, and program it with MML,
+     then compile it into a finished NSF or NES binary. Let the authentic
+     Western NESchip love begin!
+
+
+------------------------------------------------------------------------
+
+Using MCKC
+
+MCKC, specifically, is the program that you run to convert your raw MML sequence
+(just a plain old text file) into assembly-language source code compatible with
+the MCK sound driver, to be compiled with NESASM into a finished NSF or NES rom.
+Once you have created your MML document, you run MCKC on it like so:
+
+     Mckc [switch] [mml file] ([output file, optional])
+
+You'll probably want to name the file songdata.h so it won't be necessary to
+edit the compilation scripts, but you can change the file that the scripts call
+for from songdata.h to whatever you like, and thus the filename becomes
+unimportant.
+
+* Command-line switches:
+
+     -h or -?
+          A help message is printed out.
+
+     -n
+          Helpful information is written to the screen but "effect.h", an
+          assembly file defining the various macros used in the song, is not
+          created as it normally would be.
+
+     -o[str]
+          The same data is printed and "effect.h" is created with a filename
+          equivalent to [str].
+
+     -w
+          Suppress warnings.
+
+------------------------------------------------------------------------
+
+Explanation of conventions used in this text
+
+* Note: Hexidecimal Notation
+     Within this document there are several instances where a number is preceded
+     by a "$" and may contain the letters A ~ F. This is standard hexidecimal
+     notation, and it is assumed that the reader is familiar with hex numbers,
+     although for most functions described no hexidecimal values are necessary.
+
+
+* Duration Conventions and Timing
+
+     MML's notation works much like traditional staff notation. Quarter notes,
+     Hemisemidemiquavers, 16th notes, Half rests, they're all used. "c4", in
+     addition to being a powerful explosive, is a "c" quarter note. c16 is a
+     16th note.
+
+     Furthermore, you can 'dot' your notes, extending them by half their length,
+     by adding a period. "c4." is equivalent to c4 with a c8 added to the end.
+     An interesting thing about MML is that you can chain certain modifiers like
+     dots - you can type "c4..." and it will be equivalent to c4 with c8, c16,
+     and c32 tied onto it.
+
+     There is another division within notes: 'Count Length', which works as
+     follows: All notes are broken up into 192 equal pieces, regardless of their
+     time duration. This is used in such commands as the "q" effect as noted
+     below, when it is necessary to divide a note proportionally in order to
+     alter some part of it.
+
+     Finally, in the terms of the NES, a 'frame' is a period of time equal to
+     1/60 second. This is not related to tempo in the traditional musical sense,
+     but the values for many commands are stepped through once per frame and
+     thus take the same amount of time regardless of the song's tempo. Things
+     like volume envelopes have discrete values that are not scaled to match the
+     speed of the song.
+
+
+------------------------------------------------------------------------
+
+The Script Header
+
+          There are a number of fields that you will find at the top of the
+          file, before all of the note data. This information is the header, and
+          it sets forth a number of parameters that define the properties of the
+          song, and establishes "macros" that will allow you to automate volume,
+          pitch, and timbre changes by issuing simple commands in the sequence
+          script.
+
+Credits
+
+     None of the following three fields are included in the final output
+     assembly file once run through MCK. To have them show up in the final NSF,
+     you will have to edit the appropriate fields in the make_nsf.txt assembly
+     file included with your MCK distribution. These fields are simply included
+     in the format so that MML files can be identified upon examination.
+
+     #TITLE[str]
+          The title of your tune.
+
+     #COMPOSER[str]
+          The name of the person who composed the tune.
+
+     #PROGRAMER[str] <--sic, typo is correct form
+          The name of the person, if applicable, who created the MML file from a
+          pre-existing composition in another format and compiled it into binary
+          data with the player code. In the Japanese VGM industry, it is not
+          uncommon for a composer to work with a sound programmer.
+
+Definitions and Includes
+
+     #OCTAVE-REV[num] (0)
+          Normally, the way you change octaves within your sequence is by
+          writing > (raise octave) or < (lower octave) in between notes. If you
+          use #OCTAVE-REV, however, with a non-zero value for [num], the
+          "polarity" of octave-changes will be reversed; < will increase the
+          octave by one. and > will decrease it.> " with +1, " < " with -1).
+
+     #INCLUDE[str]
+          Inserts a separate, supplementary file into the current file at the
+          conversion-to-assembly stage. You can chain together up to 16 files in
+          this manner. This will allow you to have un-changing or oft-used
+          values such as #COMPOSER or a complex set of volume/timbre envelopes
+          set aside in a text file - and call them other text files without
+          having to paste them in each time.
+
+Macros
+
+     MML stands for Music Macro Language - and as such, it relies heavily upon
+     the definition of key sequences and complicated series of operations that
+     are defined once and then called upon later in a sequence. These are just
+     like word-processing macros or macros in other types of programming
+     languages, and they save quite a bit of time as opposed to inputting volume
+     commands, "instrument" sounds, and the like each time by hand.
+
+     For someone used to module tracking, this is a huge boon when writing
+     chiptunes with limited timbres and volumes! If, for example, you wanted to
+     have each note start with a 50% square wave attack and then quickly jump to
+     a 25% pulse wave to approximate a piano-like "pling", you'd have to change
+     the instruments on subsequent rows in a tracker every time you put in
+     notes. This is exceptionally inefficient. Consider the difference between
+     the following examples:
+
+            Tracking         vs.          MML
+
+          |C-5 01 ---
+          |C-5 02 ---                   Defined once at top of file:
+          |--- -- ---                   @01 = { 1 2 }
+          |E-5 01 ---
+          |E-5 02 ---                   Then, in the composition:
+          |--- -- ---                   @@01 c e g
+          |G-5 01 ---
+          |G-5 02 ---
+
+     It very quickly becomes obvious that by using macros you can save yourself
+     a whole lot of time with note entry and timbre/volume/pitch changes. You
+     define these macros before the sequence data, or even in a separate
+     #include file. The following is a list of the various macros you can use.
+
+
+Timbre Macro
+     @[num] = { - | - }
+          Accepting values between 0 ~ 127 for [num] and 0 ~ 15 within the { }
+          brackets, this macro will change the duty ratio (timbre) of the sound
+          while playing, as follows:
+
+               0... 12.5% (thin, raspy pulse wave)
+               1... 25.0% (smooth, thickly timbral pulse wave)
+               2... 50.0% (clear, thin bell-like square wave)
+               3... 75.0% (identical to 25%, but phase-inverted)
+
+          Multiple values are separated by spaces or commas.
+
+          The first value defines the initial timbre, and the last number the
+          final timbre, to be held until the note is stopped. In between,
+          however, the timbre will "sweep" through each value, advancing once
+          each frame, until it reaches the end. In this manner, you can give
+          each note an "attack" that will make it rapidly change from one timbre
+          to another when the sound starts.
+
+          The versatility of this technique is not to be underestimated; it is
+          integral to many fuller-sounding NES soundtracks. It enables the
+          composer to choose from a wide range of instrument sounds far beyond
+          the simple ping of the pulse wave's four duty ratios.
+
+          Using a "|" between numbers will allow for a loop in the macro. Once
+          the end of the macro is reached, it will return to the number
+          immediately following the "|" and sweep through again. This repetition
+          will continue until the note is stopped. A loop with dissimilar
+          timbres will lend a thick, burbly character to the sustained sound,
+          similar to the "PWM" technique used in C64 and some European NES
+          soundtracks.
+
+          If the "|" is immediately before the last number in the macro, only
+          that last number will loop, rendering the "|" superfluous. Therefore,
+          the following two macros function identically:
+
+               @0 = { 0, 1, | 2 }
+               @02 = { 0 1 2 }
+
+          The [num] value is called by the corresponding value accompanying the
+          @@ command, as discussed below.
+
+          NOTE: If you're using the triangle channel, use @3 - and if you're
+          using the noise channel, use either @0 or @1 for a smooth or buzzy
+          noise sound.
+
+Volume Envelope Macro
+     @v[num] = { - | - }
+          Accepting values between 0 ~ 127 for [num] and 0 ~ 15 within the { }
+          brackets, this macro will change the amplitude of the sound while
+          playing. This is known as a volume envelope, and enables a slow
+          gradual fade, a fast fade, or an instant cutoff of sound. This is also
+          a facility by which echoes can be created automatically by turning the
+          sound back on briefly once it has faded out, or to achieve other
+          special volume effects in a reusable macro.
+
+          Using a "|" between numbers will allow for a loop in the macro. Once
+          the end of the macro is reached, it will return to the number
+          immediately following the "|" and sweep through again. This repetition
+          will continue until the note is stopped. If the loop point changes the
+          volume back drastically, it will sound like the sound itself has
+          restarted, and "stutter".
+
+          If the "|" is immediately before the last number in the macro, only
+          that last number will loop, rendering the "|" superfluous and
+          maintaining the volume level of the final value indefinitely until the
+          channel is reused.
+
+          The [num] value is called by the corresponding value accompanying the
+          @v command, as discussed below
+
+          NOTE: The triangle channel, because of the way it produces sound
+          (through very rapid volume sweeps) is incapable of playing at any
+          volume other than full. This channel is either on or off, never in
+          between. Volume Macros should not be used on it.
+
+
+Pitch Envelope Macro
+     @EP [num] = { - | - }
+          Accepting values between -127 ~ 126 for [num] and 0 ~ 15 within the {
+          } brackets, this macro will change the frequency (pitch) of the sound
+          while playing. This is known as a pitch envelope. The source of
+          classic video game bwoops and bleeps, this converts the pulse wave
+          voices into exponentially increasing or decreasing sweeps through
+          frequency.
+
+          Using a "|" between numbers will allow for a loop in the macro. Once
+          the end of the macro is reached, it will return to the number
+          immediately following the "|" and sweep through again. This repetition
+          will continue until the note is stopped.
+
+          If the "|" is immediately before the last number in the macro, only
+          that last number will loop, rendering the "|" superfluous and
+          maintaining the pitch change of the final value indefinitely until the
+          channel is reused.
+
+          The [num] value is called by the corresponding value accompanying the
+          EP command, as discussed below.
+
+
+Arpeggio (Note Envelope) Macro
+     @EN [num] = { - | - }
+          A more flexible equivalent of module tracking programs' legendary
+          "Arpeggio" functions, this macro will allow you to define a rapid
+          series of note changes to approximate a musical chord, while using
+          only one channel. The result is the synthetic equivalent of gargling,
+          and has long been a trusty standby in the chiptunist's repertoire of
+          texture-thickening tricks. Each value in { } brackets, separated by
+          space or comma, can range from -127 ~ 126, and that value determines
+          the number of semitones to change the note by on each subsequent
+          frame. The pitch does not return to the start after each frame, but
+          remains at the previous pitch and adds or subtracts to it by the
+          amount of the next value, as illustrated in this example:
+
+               @EN00 = { 0, 1, 1, 1, -1, -1, -1 }
+
+               If a C is played, the notes in the arpeggio will be:
+               C, C#, D, D#, D, C#, and C - each note occupying one frame.
+
+          Using a "|" between numbers will allow for a loop in the macro. Once
+          the end of the macro is reached, it will return to the number
+          immediately following the "|" and gargle its way through again. This
+          repetition will continue until the note is stopped.
+
+          If the "|" is immediately before the last number in the macro, only
+          that last number will loop, rendering the "|" superfluous and
+          maintaining the note of the final value indefinitely until the channel
+          is reused.
+
+          The [num] value is called by the corresponding value accompanying the
+          EN command, as discussed below.
+
+
+Pitch LFO (Vibrato) Macro
+     @MP[num] = { [delay], [speed], [depth] }
+          Used to define a reusable pitch LFO (Low Frequency Oscillator, in this
+          case a sine-wave pattern of pitch modulation, better known to
+          musicians as vibrato.) [num] can range from 0 ~ 63. An explanation of
+          each parameter follows:
+
+               [delay] is the period of time spent with no vibrato before the
+               LFO takes effect. This is useful for many lead voices, as it is
+               often not desirable to have the note start with immediate
+               vibrato, but to let it come in after a short time. Value can be 0
+               ~ 255 ticks.
+
+               [speed] is the frequency of the LFO.  Ranges from 1 ~ 255. The
+               smaller the value, the faster the pitch will oscillate.
+
+               [depth] is how drastic or pronounced the vibrato is. Accepts a
+               value of -255 ~ 255. The larger the value, the more the pitch is
+               changed. Extremely large values may cause the pitch to "overlap"
+               to the bottom of the frequency range or other anomalous behavior.
+
+          The [num] value is called by the corresponding value accompanying the
+          EN command, as discussed below.
+
+
+------------------------------------------------------------------------
+
+Channels
+
+          NES audio consists of five voices, or musical parts, that can play
+          simultaneously, referred to here as 'channels'. They cover the melody,
+          harmonic accompaniment, bass, and drums, as well as producing sound
+          effects within a game. The five channels and their designated sound
+          capabilities are as follows:
+
+          A = Pulse Wave 1 (variable duty ratio [timbre])
+          B = Pulse Wave 2 (same)
+          C = Triangle Wave (16-level amplitude modulated square)
+          D = White Noise (dual-mode, buzz and hiss)
+          E = DPCM (tiny samples, drums, basses, "Double Dribble!")
+
+          In the body of the MML sequence, notes and commands are targeted at a
+          particular channel by calling that channel to 'attention' by issuing a
+          channel header command. This can either be done at the front of each
+          line in the text file, or whenever you want within the sequence.
+
+          Having header commands 'switch channels' in the middle of a line will
+          not in any way affect the timing of notes, because all of the notes
+          and commands belonging to each channel are separated and reassembled
+          into one solid track during compilation. Thus, the following
+          examples...
+
+               1) A cd   B c   A efg   B defg
+
+               2) A cdefg   B cdefg
+
+               3) A cdef   B cd   A g   B efg
+
+               4) A cdefg
+                  B cdefg
+
+          ...Will all sound identical, regardless of spacing or interruption.
+
+          Another concept is that of pluralization. You can chain together
+          several channels and call them all to 'attention' concurrently, so
+          that a single string of notes or commands passed to that group will be
+          played on all of them. Thus, the following examples...
+
+               1) ACE cdefg
+
+               2) A cdefg C cdefg E cdefg
+
+          ...Will sound identical. This flexibility in note entry lends itself
+          to many different programming styles, and is one of the chief
+          advantages of MML over other sequencing techniques for chiptunes.
+
+
+Comments
+
+     /* ~ */
+     /* This is a comment. */ Any data surrounded in these symbols is ignored by
+     the compiler and serves only as comments to the source sequence, as a
+     reminder to yourself or explanation for examiners.
+
+     ; and /
+     These symbols both will cause the compiler to ignore the rest of the line,
+     until the next line break.
+
+
+
+
+
+------------------------------------------------------------------------
+
+MML Commands
+
+          These are the commands used within a sequence, following the song
+          headers and after issuing a channel header, to accompany and modify
+          the notes you enter. They range from changing the character of the
+          sound to altering the flow of the music. The number in (parentheses),
+          following the form illustration, is the hard-wired default value that
+          will be assumed by the player code if the command is not issued in the
+          sequence.
+
+
+     * Data Skip
+          !
+               All data on the channel on which this command is issued will be
+               ignored, although further data on other channels will still be
+               executed. This is a sort of break-point that will allow you to
+               stop the music without permanently deleting notes.
+
+     * Tempo
+          t[num] (120)
+               Sets the tempo of a track, in BPM (beats per minute). Valid range
+               is from 1 ~ 255.
+
+     * Default Note Duration
+          l[len] (4)
+               Sets the default length, in traditional measure/[len] notation,
+               of a note unaccompanied by a duration flag, i.e., "c" instead of
+               "c4" or "c16".
+
+     * Pitch Sweep
+          s[speed],[depth] (0,0)
+               Pitch Sweep, similar to the pitch envelope. The range for [speed]
+               appears to only function in the range of 9 ~ 15, where a higher
+               value will effect a more subtle change every frame, and the range
+               of [depth] appears to function according to this chart:
+
+                   |1  2  3  4  5  6  7  8  9  10 11 12 13 14 15|
+                   |drastic<--->slight->/^\<-slight<---->drastic|
+                   |       DOWN         OFF          UP         |
+
+               Here the closer to the ends of the spectrum, the more drastic the
+               pitch change is, and if the value is 8, nothing happens.
+
+     * Timbre Single Select
+          @[num] (0)
+               Sets the duty ratio (timbre) of the square wave accordingly:
+
+                    0... 12.5% (thin, raspy pulse wave)
+                    1... 25.0% (smooth, thickly timbral pulse wave)
+                    2... 50.0% (clear, thin bell-like square wave)
+                    3... 75.0% (identical to 25%, but phase-inverted)
+
+               This cannot be used at the same time as the @@ command, described
+               below - whichever command is used last will take priority.
+
+     * Timbre Macro Select
+          @@[num] (0)
+               Selects a Timbre Macro to apply to subsequent notes. This cannot
+               be used at the same time as the above @ command - whichever
+               command is used last will take priority.
+
+     * Volume
+          v[num] (0)
+               This is used to directly set the volume of the current channel
+               for subsequent notes, ignoring any volume envelope you may have
+               set. Valid settings are 1 ~ 15. As expected, this cannot be used
+               at the same time as the @v command - whichever is used last will
+               take priority.
+
+     * Volume Up
+          v+[num] (1)
+               This will increase the volume of the current channel for
+               subsequent notes - as an addendum to the v command. This is
+               useful when you want to implement a sequenced volume fade by hand
+               but do not want to have to change every value by hand should you
+               decide to start the fade at another level. Valid range is 1 ~ 15.
+               As with the v command, you cannot use this at the same time as
+               the @v command.
+
+     * Volume Down
+          v-[num] (1)
+               Identical to the above, but for a decrease in volume.
+
+     * Envelope
+          @v[num] (0)
+               Selects a Volume Envelope Macro to apply to subsequent notes.
+               This cannot be used at the same time as the above v command -
+               whichever command is used last will take priority.
+
+     * Octave Select
+          o[num] (4)
+               Chooses an octave in which notes will play. The octaves
+               accessible on the NES range from 2 ~ 7.
+
+     * Octave Up
+          >
+               Increases the octave by one and signals that subsequent notes be
+               played in the next octave. Multiple > commands in series will
+               raise the octave multiple times. The polarity of this command
+               will switch if you issue an #OCTAVE-REV directive in the header.
+
+     * Octave Down
+          <
+               Same as above, except reversed.
+
+     * Play Note
+          c,d,e,f,g,a,b[len] (4)
+
+               Just the same as traditional note scales. Here sharps are
+               represented by + and flats are represented by -. Note that the
+               assignment of sharps and flats are independent of the scale and
+               otherwise unconditional, so it is possible to designate
+               enharmonics. Therefore, A++, C- and d+++++++++ will all produce a
+               B note. [len] will set the length of the note, in (measure/[len])
+               notation, such as c16, f32, or b8, but if [len] is left blank,
+               the value of L will be used as the duration.
+
+     * Direct Note Select
+          n[num],[len]
+               Note is played by number, instead of by name or octave.
+               Supposedly, the first C in octave 2 is note #0. It does not
+               appear to produce any sound below note #9 on the pulse wave
+               channels, however, only on the triangle wave, so don't plug these
+               exact values into the pulse wave channels, only extrapolate up
+               from #9.
+
+                       Numerical Designations
+                        Across Second Octave
+                    +-------+---+  +-------+---+
+                    |C      |  0|  |F+(G-) |  6|
+                    |C+(D-) |  1|  |G      |  7|
+                    |D      |  2|  |G+(A-) |  8|
+                    |D+(E-) |  3|  |A      |  9|
+                    |E      |  4|  |A+(B-) | 10|
+                    |F      |  5|  |B      | 11|
+                    +-------+---+  +-------+---+
+
+     * Direct Frequency Select
+          @n[num],[len]
+               This command allows you to set the register of the NES that
+               controls the pitch of each channel directly. This bypasses the
+               note interface completely and allows you to access the full range
+               of frequency available to the hardware.
+
+               The range of values that can be used are 8 ~ 2034 ($07f2 [hex]) -
+               the smaller the value, the higher the frequency.
+
+               The pitch register has an exponential response. Changes become
+               twice as drastic with each octave increase - the space between
+               discrete notes shrinks exponentially as you get higher up the
+               scale. Here is a chart (again, doesn't expect any sound at this
+               range on the pulse channels, just go on this reference and
+               divide) which details the tuning of specific discrete pitches
+               across the lowest octave.
+
+                    +---------+-----+ +---------+-----+
+                    |A-1      |$07f2| |D-2+(E-) |$059E|
+                    |A-1+(B-) |$0780| |E-2      |$054E|
+                    |B-1      |$0714| |F-2      |$0501|
+                    |C-2      |$06AE| |F-2+(G-) |$04B9|
+                    |C-2+(D-) |$064E| |G-2      |$0476|
+                    |D-2      |$05F4| |G-2+(A-) |$0436|
+                    +---------+-----+ +---------+-----+
+
+               Notice that in the course of this scale, the number shrinks in
+               half? To find the value of a chromatic note in another octave,
+               divide the value of that note given in this chart by 2 for each
+               higher octave.
+
+               For example, you can see that C-2 is $6AE. To find C-4, $6AE/2/2=
+               $1AB, so C-4 is $1AB.
+
+
+     * Rest Sign
+          r[len] (4)
+               Just as in traditional notation, the rest is the equivalent of a
+               silent note. The [len] parameter works exactly as in a normal
+               note, but the channel will be silent instead for that period of
+               time.
+
+     * Tuplet
+          { ~ } [len]
+               Best introduced through example, { ccc }8 will play three c notes
+               in the same amount of time it would take to play one normal
+               eighth note. In traditional notation this is called a triplet.
+               Although they might sound muddy or indistinguishable, it is
+               possible by this same method to create quintuplets, septuplets,
+               25-tuplets. or whatever you can imagine-tuplets.
+
+     * Quantize (Note Cut) Commands
+          q[num] (8)
+               Quantization, slightly different from the typical MIDI
+               definition, controls here the length of the note. The value given
+               here will allow [num]/8 of the note to play. In other words, each
+               note is divided into 8 parts and, using this command, [num] of
+               them will play before the sound is cut off. This is more useful
+               than it seems for lead parts where you might want to abbreviate
+               some of the notes on off-beats to make the lead sound more
+               energetic, instead of letting every note drag until the next one
+               starts. The range of input is, of course, 1 ~ 8.
+
+          @q [num] (0)
+               q's more flexible but perhaps less intuitive big brother, This
+               one is independent of note length, and will make the note stop
+               [num] frames prematurely, regardless of its length. Calculations
+               as to exact note equivalents are possible by measuring against
+               the tempo - at 120 bpm, 15 frames is equivalent to an 8th note,
+               since there are 60 frames per second.
+
+               A side note of personal interest: If you're trying to reproduce
+               the style of K. SAWA of Technos Japan fame, you'll probably be
+               relying on this command constantly to emulate the tendency of
+               their player engine to clip each note a few frames before the
+               next.
+
+     * Slur
+          &
+               Used to connect two notes of the same pitch, adding their
+               duration together to make one long note. "a8 & a8" will combine
+               together to play as a4, which is twice as long as its components.
+
+     * Tie
+          ^
+               Similar to the Slur in that it can be used to extend the duration
+               of a note by adding another note to the end of it, but the Tie
+               does not require a note to be declared. It simply functions as
+               follows: "a8+8" to create an a4.
+
+               I am not entirely sure why these two commands exist separately,
+               as they seem to do the same thing (Slur does not change the pitch
+               of the note, as one would expect, and there seems to be no note
+               portamento command) but there it is. Perhaps in future versions
+               of MCK there will be a discrete way to change to a new single
+               pitch while playing, perhaps a note slide (portamento) function,
+               which would be quite ideal.
+
+     * Detune
+          D[num]
+               Detune gives you fine control over the frequency of the channel
+               in close steps. At low levels it is quite subtle but it can also
+               be used to dramatically alter the pitch of notes. Its main use
+               when subtle is to create a "flanging" effect by playing the same
+               notes on two channels, with one channel slightly detuned. This is
+               another way to create sounds that go beyond the standard four
+               duty ratio timbres of the pulse channels.
+
+               The valid range is -127 ~ 126. When the value is set at 255, the
+               effect is cancelled.
+
+     * Pitch LFO Macro Select
+          MP[num]
+               This will choose a particular Pitch LFO Macro to apply to the
+               subsequent notes, and the [num] corresponds directly to the
+               assigned value of the @MP[num] you want.
+
+               The valid range is 0 ~ 127, and 255 cancels the effect.
+
+     * Pitch LFO OFF
+          MPOF
+               This is equivalent to issuing MP255 - it turns off the Pitch LFO
+               Macro, effective at the beginning of the next note (issuing it
+               after the currently playing note will not cancel it on that
+               note).
+
+     * Pitch Envelope Macro Select
+          EP[num]
+               This will choose a particular Pitch Envelope Macro to apply to
+               the subsequent notes, and the [num] corresponds directly to the
+               assigned value of the @EP[num] you want.
+
+               The valid range is 0 ~ 127, and 255 cancels the effect
+
+     * Pitch Envelope OFF
+          EPOF
+               This is equivalent to issuing EP255 - it turns off the Pitch
+               Envelope Macro, effective at the beginning of the next note
+               (issuing it after the currently playing note will not cancel it
+               on that note)
+
+     * Note Arpeggio Macro Select
+          EN[num]
+               This will choose a particular Arpeggio Macro to apply to the
+               subsequent notes, and the [num] corresponds directly to the
+               assigned value of the @EN[num] you want.
+
+               The valid range is 0 ~ 127, and 255 cancels the effect
+
+     * Note Arpeggio OFF
+          ENOF
+               This is equivalent to issuing EN255 - it turns off the Pitch
+               Envelope Macro, effective at the beginning of the next note
+               (issuing it after the currently playing note will not cancel it
+               on that note)
+
+     * Track Loop
+          L
+               The almighty L sets a loop point in your sequence. This will
+               ensure that your chiptune plays forever in the minds of your
+               fans. Until they hit stop. Then, maybe, if you're lucky and
+               skillful, afterwards too.
+
+               Simply place the L at the beginning of the sequence you wish to
+               have looping continuously - make sure that the loop points of all
+               of the active channels line up, unless you have planned
+               otherwise, like for a repetitive drum track.
+
+     * Repeat
+          [ ~ | ~ ][num]
+               This will repeat any sequence of events (notes or commands) [num]
+               times. For example, [ cdefg ]4 is equivalent to
+               cdefgcdefgcdefgcdefg. Useful as a limited loop.
+
+     * Wait
+          w [len]
+               Delays execution of the next command by [len], and preserves the
+               execution of the current command for the duration of the wait.
+               This is similar to r but it doesn't necessarily impose silence.
+
+     * Direct Memory Entry
+          y[adr],[num]
+               1 byte of a numeric value of your choosing [num] will be written
+               to [adr] register location in the NES memory, directly. This can
+               have undesirable results, naturally, so make sure you know what
+               you're doing. I know I sure as hell don't.
+
+
+------------------------------------------------------------------------
+
+(To-do list, this document: DPCM and noise channel quirks - how to add samples
+and make them work - varies from the typical pulsewave notation!)
+
+(To-do list, separate from this document: DPCM/DMC conversion primer, full
+explanation and clear, refined translation of MCK compilation guide (i.e. how to
+set everything up so it's ready to compile, including all your samples,
+configuring the make_n** scripts, etc.))
+
+For the time being, information on compiling the finished MCK-ready assembly is
+available in English at the same place you most likely got MCK/MCKC to begin
+with: http://nesmusic.zophar.net.
+
+The wealth of NES music information that exists in Japanese is quite vast, and
+is far beyond the scope of my extremely limited translation ability. I would
+appreciate any help that anyone can contribute toward translating interesting or
+useful documents about NES music.
+
+For up-to-date, interesting, and exceptionally varied news coverage of the
+chiptune/VGM world, please visit http://www.vorc.org.
+
+(Warranty and Software Version History from original Japanese text omitted)
+-j
+
+
+English v1.0 - August 1, 2002 - Initial Release
+

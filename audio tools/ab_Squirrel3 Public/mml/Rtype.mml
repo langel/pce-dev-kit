@@ -1,0 +1,79 @@
+; RType.  Sloppily redone by Arkhan
+; Could use macros.  Has some fade out problems at the end, since it was all
+; experimenting.
+
+.TRACK  rytpe
+.CHANNEL 0  Setup
+T60 V31 L16 ^D0
+
+.CHANNEL 1  introthingy
+O5 P13,13 @32 @E09 ^ME0 ^MD5
+r1c1l32o2dfadfa>dfadfa>dfadfa>dfadfa>dfa>d<dfa>dl1rrl16o4cd4&df4.>c
+d1&d8.
+
+.CHANNEL 2 Chord1
+O5 P13,13 @09 @E01 ^ME0 ^MD1
+l1r<arl16>cd4&df4.gag2&g8g4f4cd4&df4.>cd2&d8.<g4f4r1r1rer8.dr8er8.<c-c
+der>er8.dr8er8.<c-cder>er8.dr8er8.<<ab>cdr>er8.dr8er8.<<ab>cdr>er8.d
+r8er8.<c-cder>er8.dr8er4.r<a2a4b+4b1r>argrgar4rf+e8.rargrgar4rf+e8.r
+a2&a8.gageg2.egfef2.fagfe8.g+8.b8.>d8.e8.l16r<ffreerddrccrc-8c8ffreerddrccr
+c-8c8r2.fgabddrddrddrddrd4rer8.dr8er8.<c-cder>er8.dr8er8.<c-cder>e
+r8.dr8er8.<<ab>cdr>er8.dr8er8.<<ab>cdr>er8.dr8er8.<c-cder>er8.d
+r8er4.r<a2a4b+4b1r>argrgar4rf+e8.rargrgar4rf+e8.ra2&a8.gageg2.egfe
+f2.fagfe8.g+8.b8.>d8.e8.l16r<ffreerddrccrc-8c8ffreerddrccrc-8c8r2.fgabddrddr
+ddrddrd4rer8.dr8er8.<c-cder>er8.dr8er8.<c-cder>er8.dr8er8.<<ab>cd
+r>er8.dr8er8.<<ab>cdr>er8.d^FV-40r8er8.<c-cder>er8.dr8er4.r<a2a4b+4b1r>a
+rgrgar4rf+e8.rargrgar4rf+e8.ra2&a8.
+
+
+.CHANNEL 3  BASS
+O4 P15,15 @19 @E01
+l1rrrl16o2ddddddffffffggggggggggggggggffffddddddffffffgggggggggggggggg
+ffffffffffffffffffffgggggggggggggggggaaaaaaaaaaaa>a<a>a<gaaaaaaaaaaaa>
+a<a>a<fgggggggggggg>g<g>g<fgggggggggggg>g<g>g<gaaaaaaaaaaaa>a<a>a<gaaa
+aaaaaad8.d+8eefffffffffaaggfffgggggggggbbaagg8a8g8ga8>ed+dcdc4<a8g8g
+a8>ed+dcdc8.<gaaaaaaaaaaaa>a<a>a<fgggggggggggg>g<g>g<effffffffffff>f<f>f
+<ee8ee8ee8ee8ee8efffeeedddccc<bb>ccfffeeedddccc<bb>cc<dd>>d<<dd>>d<<dd>>d<<d
+d>>d<ddddee8ee8ee8ee8e4gaaaaaaaaaaaa>a<a>a<gaaaaaaaaaaaa>a<a>a<fgggggg
+gggggg>g<g>g<fgggggggggggg>g<g>g<gaaaaaaaaaaaa>a<a>a<gaaaaaaaaad8.d+8e
+efffffffffaaggfffgggggggggbbaagg8a8g8ga8>ed+dcdc4<a8g8ga8>ed+dcdc8.<ga
+aaaaaaaaaaa>a<a>a<fgggggggggggg>g<g>g<effffffffffff>f<f>f<ee8ee8ee8e
+e8ee8efffeeedddccc<bb>ccfffeeedddccc<bb>cc<dd>>d<<dd>>d<<dd>>d<<dd>>d<ddddee8e
+e8ee8ee8e4gaaaaaaaaaaaa>a<a>a<gaaaaaaaaaaaa>a<a>a<fgggggggggggg>g<g>g<
+fgggggggggggg>g<g>g<gaaaaaaaaaaaa>a<a>a<ga^FV-40aaaaaaaad8.d+8eefffffffffaag
+gfffgggggggggbbaagg8a8g8ga8>ed+dcdc4<a8g8ga8>ed+dcdc8.<gaaaaaaaaaaa
+
+.CHANNEL 4  Chord2
+O4 P13,13 @10 @E07 ^ME0 ^MD1
+L1r1r1r1e4.f4.g2.g4f4e4.f4.g2.g4f4r1r1r1r1r1r1r1r1<a2a4>c4<b1r1r1r1r1r1>e8.g+8.b8.>d8.e8.rr1r1r1r1r1r1r1r1r1r16<<a2a4>c4<b1r1r1r1r1r1>e8.^FV-40g+8.b8.>d8.e8.r1r1r1r1r1r1r1r1r1r1r16<<a2a4>c4<b1
+
+.CHANNEL 5 Chords
+O4 P13,13 @06 @E01 ^ME0 ^MD1
+r1r2r1r2r1r2r1r2r1l16>ffreerddrccrc-8c8ggrffreerddrc8d8rar8.gr8ar8.efgarar8.g
+r8ar8.efgargr8.f+r8gr8.def+grgr8.f+r8gr8.def+grar8.gr8ar8.efgarar8.gr8ar
+<d8rd+rer1r1r>argrgar4rf+e8.rargrgar4rf+e8.rar8.gr8ar8.<efgar>g
+r8.f+r8gr8.<defgr>fr8.er8fr8.<cdefr1>ffreerddrccrc-8c8ffreerddrccrc-8c8ggrffr
+eerffrfgabggrggrggrggre4rar8.gr8ar8.efgarar8.gr8ar8.efgargr8.f+r8gr8.d
+ef+grgr8.f+r8gr8.def+grar8.gr8ar8.efgarar8.gr8ar<d8rd+rer1r1r>argrga
+r4rf+e8.rargrgar4rf+e8.rar8.gr8ar8.<efgar>gr8.f+r8gr8.<defgr>fr8.er8f
+r8.<cdefr1>ffreerddrccrc-8c8ffreerddrccrc-8c8ggrffreerffrfgabggrggrggrggr
+e4rar8.gr8ar8.efgarar8.gr8ar8.efgargr8.f+r8gr8.def+grgr8.f+r8gr8.def+g
+rar8.gr8ar8.efgarar8.g^FV-40r8ar<d8rd+rer1r1r>argrgar4rf+e8.rargrgar4rf+e8.r
+ar8.gr8a
+
+.CHANNEL 6 Chords2
+O3 P13,13 @12 @E01 ^ME0 ^MD1
+r1r2r1r2r1r2r1r2r1r2r1r2r1r2r1r2r1r2r1r2r1r2r2l16redcc-dc<bab+bagfefg>edcc-dc<bab+bagfefgr1r1r2r4.re
+g+begbegbegbegbe>cfac-eg<a>df<g>cec-dcecfac-eg<a>df<g>cec-dc
+er1r2r1r2r1r2r1r2r1r2r1r2r1l16redcc-dc<bab+bagfefg>edcc-dc<bab+bagfefgr1r1r2r4.reg+begbegbegbegbe
+>cfac-eg<a>df<g>cec-dcecfac-eg<a>df<g>cec-dcer1r2r1r2r1r2r1r2r1r2r1r2r1l16^FV-40redcc-dc<ba
+b+bagfefg>edcc-dc<bab+bagfefg
+
+
+
+.Envelope
+     .mod 0 wiggle
+     0,0,1,1,2,2,3,3,2,2,1,1,0,0,-1,-1,-2,-2,-3,-3,-2,-2,-1,-1
+
+     .mod 1 wiggle2
+     0,0,2,2,4,4,6,6,4,4,2,2,0,0,-2,-2,-4,-4,-6,-6,-4,-4,-2,-2     
