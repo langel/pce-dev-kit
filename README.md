@@ -5,7 +5,7 @@ This is a collection of resources found around the web pertaining to homebrew de
 The PCE has a custom 65C02 processor sometimes referred to by its CMOS designation 65CS02, but more commonly known as the HuC6280. The 6280 has extra opcodes specific for quicker operations with the console's Video Display Controller. The 6280 package also holds the programmable sound generator (sometimes referred to as an SCC chip by VGM nerds).
 
 ## MagicKit's HuC and PCEAS
-HuC is a library and transpiler for making PC Engine ROMs using the C language. It converts the project into assembly and the compiles with PCEAS (PC Engine ASembler). DOS version literally requires DOSBOX on a modern Windows PC. Windows version works on modern installs with Command Prompt. OSX version could easily predate OSX since the HuC/PCEAS source has not been updated since Dec 2000.
+HuC is a library and transpiler for making PC Engine ROMs using the C language. It converts the project into assembly and then compiles with PCEAS (PC Engine ASembler). DOS version literally requires DOS or DOSBOX. Windows version works on modern installs with Command Prompt. OSX version could easily predate OSX since the HuC/PCEAS source has not been updated since Dec 2000. Linux version wouldn't work on modern Debian. `"windows huc\bin\pceas.exe" -S test.asm` ftw
 
 ## Audio Notes
 MML, Squirrel, Deflemask -- maybe some more notes someday haha  xD
