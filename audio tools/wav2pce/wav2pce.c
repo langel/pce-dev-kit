@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 
@@ -19,6 +20,7 @@ int main(int argc, char* args[]) {
 		printf("failed access to : %s\n", args[1]);
 		return 1;
 	}
+	printf("source file : %s\n", args[1]);
 
 	// detect wave header
 	fseek(fp, 0, SEEK_SET); // "RIFF" at position 0
@@ -53,6 +55,9 @@ int main(int argc, char* args[]) {
 	uint32_t data_length;
 	fread(&data_length, 4, 1, fp);
 	printf("data length : %d\n", data_length);
+	int sample_count_per_channel = data_length / (channel_count * byte_size);
+	printf("sample count per channel : %d\n", sample_count_per_channel);
+	printf("wav file playback length : %fs\n", (float) sample_count_per_channel / (float) sample_rate);
 
 	// PC Engine clock and audio
 	float pce_cpu_clock = 7160.f; // 7.16 mHz
@@ -78,9 +83,17 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 	
-	// process / convert / save
-	
+	// create target file
+	char target_filename[2048];
+	char * extension = strrchr(args[1], '.');
+	strncpy(target_filename, args[1], extension - args[1]);
+	strcat(target_filename, ".bin");
+	printf("\ntarget file : %s\n", target_filename);
 
+	// process / convert / save
+	printf("target playback rate : %fkHz\n", pce_timer_rate);
+
+	// cleanup and shutdown
 	fclose(fp);
 
 	return 0;
