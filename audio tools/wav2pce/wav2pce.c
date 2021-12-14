@@ -20,6 +20,21 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 
+	// detect wave header
+	fseek(fp, 0, SEEK_SET); // "RIFF" at position 0
+	uint32_t header_reader;
+	fread(&header_reader, 4, 1, fp);
+	if (header_reader != 1179011410) {
+		printf("missing or wrong file header\n");
+		return 1;
+	}
+	fseek(fp, 8, SEEK_SET); // "WAVE" at position 8
+	fread(&header_reader, 4, 1, fp);
+	if (header_reader != 1163280727) {
+		printf("found RIFF header but not of type WAVE\n");
+		return 1;
+	}
+
 	// detect sample data
 	fseek(fp, 22, SEEK_SET);
 	uint16_t channel_count;
@@ -32,6 +47,8 @@ int main(int argc, char* args[]) {
 	uint16_t bit_depth;
 	fread(&bit_depth, 2, 1, fp);
 	printf("bit depth : %d\n", bit_depth);
+	uint8_t byte_size = bit_depth >> 3;
+	printf("byte size per sample : %d\n", byte_size);
 	fseek(fp, 40, SEEK_SET);
 	uint32_t data_length;
 	fread(&data_length, 4, 1, fp);
