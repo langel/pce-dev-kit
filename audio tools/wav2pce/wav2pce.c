@@ -43,6 +43,10 @@ int main(int argc, char* args[]) {
 	uint16_t channel_count;
 	fread(&channel_count, 2, 1, fp);
 	printf("channel count : %d\n", channel_count);
+	if (channel_count > 1) {
+		printf("wav2pce does not support non-mono wav files yet\n");
+		return 1;
+	}
 	uint32_t sample_rate;
 	fread(&sample_rate, 4, 1, fp);
 	printf("sample rate : %dHz\n", sample_rate);
@@ -60,9 +64,12 @@ int main(int argc, char* args[]) {
 	printf("sample count per channel : %d\n", sample_count_per_channel);
 	printf("wav file playback length : %fs\n", (float) sample_count_per_channel / (float) sample_rate);
 
-	// PC Engine clock and audio
+	// PC Engine clock and audio playback timer
 	float pce_cpu_clock = 7160000.f; // 7.16 mHz
-	// XXX timer rate could vary
+	// timer uses multiples of 1024 cpu cycles
+	// timer counter is 0 based (off by 1!)
+	// 60Hz frame rate has 119333.333 cpu cycles
+	// timer counter set to 0 gets called 116.536/frame
 	float pce_timer_rate = pce_cpu_clock / 1024.f;
 
 	// conversion adjusters
@@ -70,17 +77,20 @@ int main(int argc, char* args[]) {
 	float bit_ratio = 0.f;
 	float bit_offset = 0.f;
 	// XXX target bit depth could vary
+	//     4 bit storage would use half the space
+	//     stacking channels could create more bit depth
 	uint8_t pce_bit_depth = 5;
 	if (bit_depth == 32) {
-		bit_ratio = (float) pce_bit_depth / 2.f;
 		bit_offset = 1.f;
+		bit_ratio = (float) pce_bit_depth / 2.f;
 	}
 	else {
+		bit_offset = 1 << (bit_depth - 1);
 		bit_ratio = (float) (2 << pce_bit_depth) / (float) (2 << bit_depth);
 	}
 	
 	// create target file and spit out info
-	char target_filename[2048];
+	char target_filename[2048] = "";
 	char * extension = strrchr(args[1], '.');
 	strncpy(target_filename, args[1], extension - args[1]);
 	strcat(target_filename, ".bin");
@@ -98,16 +108,14 @@ int main(int argc, char* args[]) {
 	uint8_t target_data;
 	for (int i = 0; i < data_length; i += byte_size) {
 		fread(&source_data, byte_size, 1, fp);
-		source_data += (65536 >> 1);
+		source_data += bit_offset;
 		target_data = (uint8_t) ((float) source_data * bit_ratio);
 		fwrite(&target_data, 1, 1, tp);
-//		printf("source : %d\t target : %d\n", source_data, target_data);
 	}
-
 
 	// cleanup and shutdown
 	fclose(fp);
 	fclose(tp);
-
+	printf("\nsuccessful conversion\n");
 	return 0;
 }
