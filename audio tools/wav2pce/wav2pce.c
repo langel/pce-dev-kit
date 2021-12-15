@@ -13,6 +13,14 @@ int main(int argc, char* args[]) {
 		printf("  outputs .bin of same name\n");
 		return 1;
 	}
+	
+	// PC Engine clock and audio playback timer
+	float pce_cpu_clock = 7160000.f; // 7.16 mHz
+	// timer uses multiples of 1024 cpu cycles
+	// timer counter is 0 based (off by 1!)
+	// 60Hz frame rate has 119333.333 cpu cycles
+	// timer counter set to 0 gets called 116.536/frame
+	float pce_timer_rate = pce_cpu_clock / 1024.f;
 
 	// try to open the source file
 	FILE * fp;
@@ -38,7 +46,7 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 
-	// detect sample data
+	// detect sample meta data
 	fseek(fp, 22, SEEK_SET);
 	uint16_t channel_count;
 	fread(&channel_count, 2, 1, fp);
@@ -50,6 +58,10 @@ int main(int argc, char* args[]) {
 	uint32_t sample_rate;
 	fread(&sample_rate, 4, 1, fp);
 	printf("sample rate : %dHz\n", sample_rate);
+	if ((float) sample_rate < pce_timer_rate) {
+		printf("sample rate must be above pce timer rate of %fHz\n", pce_timer_rate);
+		return 1;
+	}
 	fseek(fp, 34, SEEK_SET);
 	uint16_t bit_depth;
 	fread(&bit_depth, 2, 1, fp);
@@ -64,28 +76,19 @@ int main(int argc, char* args[]) {
 	printf("sample count per channel : %d\n", sample_count_per_channel);
 	printf("wav file playback length : %fs\n", (float) sample_count_per_channel / (float) sample_rate);
 
-	// PC Engine clock and audio playback timer
-	float pce_cpu_clock = 7160000.f; // 7.16 mHz
-	// timer uses multiples of 1024 cpu cycles
-	// timer counter is 0 based (off by 1!)
-	// 60Hz frame rate has 119333.333 cpu cycles
-	// timer counter set to 0 gets called 116.536/frame
-	float pce_timer_rate = pce_cpu_clock / 1024.f;
-
 	// conversion adjusters
 	float sample_ratio = pce_timer_rate / sample_rate;
-	float bit_ratio = 0.f;
-	float bit_offset = 0.f;
+	float bit_offset, bit_ratio;
 	// XXX target bit depth could vary
 	//     4 bit storage would use half the space
 	//     stacking channels could create more bit depth
 	uint8_t pce_bit_depth = 5;
 	if (bit_depth == 32) {
-		bit_offset = 1.f;
+		bit_offset = (float) 1;
 		bit_ratio = (float) pce_bit_depth / 2.f;
 	}
 	else {
-		bit_offset = 1 << (bit_depth - 1);
+		bit_offset = (float) (1 << (bit_depth - 1));
 		bit_ratio = (float) (2 << pce_bit_depth) / (float) (2 << bit_depth);
 	}
 	
@@ -104,6 +107,10 @@ int main(int argc, char* args[]) {
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
 	// XXX need separate loop for 32bit float wav data
+	if (bit_depth == 32) {
+	}
+	else {
+	}
 	uint16_t source_data;
 	uint8_t target_data;
 	for (int i = 0; i < data_length; i += byte_size) {
