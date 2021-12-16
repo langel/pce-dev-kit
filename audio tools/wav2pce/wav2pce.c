@@ -47,14 +47,7 @@ int main(int argc, char* args[]) {
 	}
 
 	// detect sample meta data
-	fseek(fp, 22, SEEK_SET);
-	uint16_t channel_count;
-	fread(&channel_count, 2, 1, fp);
-	printf("channel count : %d\n", channel_count);
-	if (channel_count > 1) {
-		printf("wav2pce does not support non-mono wav files yet\n");
-		return 1;
-	}
+	fseek(fp, 24, SEEK_SET);
 	uint32_t sample_rate;
 	fread(&sample_rate, 4, 1, fp);
 	printf("sample rate : %dHz\n", sample_rate);
@@ -75,6 +68,13 @@ int main(int argc, char* args[]) {
 	uint32_t data_length;
 	fread(&data_length, 4, 1, fp);
 	printf("data length : %d\n", data_length);
+	fseek(fp, 22, SEEK_SET);
+	uint16_t channel_count;
+	fread(&channel_count, 2, 1, fp);
+	printf("channel count : %d\n", channel_count);
+	if (channel_count > 1) {
+		printf("WARNING : conversion only uses first channel\n");
+	}
 	int sample_count_per_channel = data_length / (channel_count * byte_size);
 	printf("sample count per channel : %d\n", sample_count_per_channel);
 	printf("wav file playback length : %fs\n", (float) sample_count_per_channel / (float) sample_rate);
@@ -111,28 +111,36 @@ int main(int argc, char* args[]) {
 	fseek(fp, 44, SEEK_SET);
 	uint8_t target_data;
 	float sample_pos = 0.f;
+	unsigned long int sample_counter = 0;
 	for (int i = 0; i < data_length; i += byte_size) {
-		sample_pos += sample_ratio;
 		if (bit_depth == 32) {
 			float source_data;
 			fread(&source_data, byte_size, 1, fp);
 			target_data = (uint8_t) ((source_data + bit_offset) * bit_ratio);
-			if (sample_pos >= 1.f) printf("%d\t%f\n", target_data, source_data);
+		}
+		if (bit_depth == 24) { // XXX almost guaranteed not to work
+			int32_t source_data;
+			fread(&source_data, byte_size, 1, fp);
+			target_data = (uint8_t) (((float) source_data + bit_offset) * bit_ratio);
 		}
 		if (bit_depth == 16) {
 			int16_t source_data;
 			fread(&source_data, byte_size, 1, fp);
 			target_data = (uint8_t) (((float) source_data + bit_offset) * bit_ratio);
 		}
-		if (byte_size == 8) {
+		if (byte_size == 8) { // XXX not very tested
 			uint8_t source_data;
 			fread(&source_data, byte_size, 1, fp);
 			target_data = (uint8_t) (((float) source_data + bit_offset) * bit_ratio);
 		}
-		if (sample_pos >= 1.f) {
-			fwrite(&target_data, 1, 1, tp);
-			sample_pos -= 1.f;
+		if (sample_counter % channel_count == 0) {
+			sample_pos += sample_ratio;
+			if (sample_pos >= 1.f) {
+				fwrite(&target_data, 1, 1, tp);
+				sample_pos -= 1.f;
+			}
 		}
+		sample_counter++;
 	}
 
 	// cleanup and shutdown
