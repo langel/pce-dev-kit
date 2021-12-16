@@ -66,6 +66,9 @@ int main(int argc, char* args[]) {
 	uint16_t bit_depth;
 	fread(&bit_depth, 2, 1, fp);
 	printf("bit depth : %d\n", bit_depth);
+	if (bit_depth != 32 && bit_depth != 16 && bit_depth != 8) {
+		printf("WARNING : source bit depth may not be compatible\n");
+	}
 	uint8_t byte_size = bit_depth >> 3;
 	printf("byte size per sample : %d\n", byte_size);
 	fseek(fp, 40, SEEK_SET);
@@ -85,11 +88,11 @@ int main(int argc, char* args[]) {
 	uint8_t pce_bit_depth = 5;
 	if (bit_depth == 32) {
 		bit_offset = (float) 1;
-		bit_ratio = (float) pce_bit_depth / 2.f;
+		bit_ratio = (float) (1 << pce_bit_depth) / 2.f;
 	}
 	else {
 		bit_offset = (float) (1 << (bit_depth - 1));
-		bit_ratio = (float) (2 << pce_bit_depth) / (float) (2 << bit_depth);
+		bit_ratio = (float) (1 << pce_bit_depth) / (float) (1 << bit_depth);
 	}
 	
 	// create target file and spit out info
@@ -106,18 +109,30 @@ int main(int argc, char* args[]) {
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
-	// XXX need separate loop for 32bit float wav data
-	if (bit_depth == 32) {
-	}
-	else {
-	}
-	uint16_t source_data;
 	uint8_t target_data;
+	float sample_pos = 0.f;
 	for (int i = 0; i < data_length; i += byte_size) {
-		fread(&source_data, byte_size, 1, fp);
-		source_data += bit_offset;
-		target_data = (uint8_t) ((float) source_data * bit_ratio);
-		fwrite(&target_data, 1, 1, tp);
+		sample_pos += sample_ratio;
+		if (bit_depth == 32) {
+			float source_data;
+			fread(&source_data, byte_size, 1, fp);
+			target_data = (uint8_t) ((source_data + bit_offset) * bit_ratio);
+			if (sample_pos >= 1.f) printf("%d\t%f\n", target_data, source_data);
+		}
+		if (bit_depth == 16) {
+			int16_t source_data;
+			fread(&source_data, byte_size, 1, fp);
+			target_data = (uint8_t) (((float) source_data + bit_offset) * bit_ratio);
+		}
+		if (byte_size == 8) {
+			uint8_t source_data;
+			fread(&source_data, byte_size, 1, fp);
+			target_data = (uint8_t) (((float) source_data + bit_offset) * bit_ratio);
+		}
+		if (sample_pos >= 1.f) {
+			fwrite(&target_data, 1, 1, tp);
+			sample_pos -= 1.f;
+		}
 	}
 
 	// cleanup and shutdown
