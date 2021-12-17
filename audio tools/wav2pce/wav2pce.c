@@ -7,13 +7,6 @@
 
 int main(int argc, char* args[]) {
 
-	// give a little help
-	if (argc < 2) {
-		printf("wav2pce {input filename}\n");
-		printf("  outputs .bin of same name\n");
-		return 1;
-	}
-	
 	// PC Engine clock and audio playback timer
 	float pce_cpu_clock = 7160000.f; // 7.16 mHz
 	// timer uses multiples of 1024 cpu cycles
@@ -22,6 +15,14 @@ int main(int argc, char* args[]) {
 	// timer counter set to 0 gets called 116.536/frame
 	float pce_timer_rate = pce_cpu_clock / 1024.f;
 
+	// give a little help
+	if (argc < 2) {
+		printf("wav2pce {input .wav filename}\n");
+		printf("  outputs .bin of same name\n");
+		printf("  converts most bit depths and sample rates to 5bit %fHz data\n", pce_timer_rate);
+		return 1;
+	}
+	
 	// try to open the source file
 	FILE * fp;
 	fp = fopen(args[1], "r");
