@@ -3,7 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+/*
+	8k banks hold 1.171593296089385 seconds
+	2mb max rom == 256 banks
+	  -3 banks for hardware, ram and program
+	253 banks == 296.413029 seconds
+	  or almost 5 minutes of music
+	2mb = 2097152
+	8kb = 8192
+*/
 
 int main(int argc, char* args[]) {
 
@@ -14,6 +22,8 @@ int main(int argc, char* args[]) {
 	// 60Hz frame rate has 119333.333 cpu cycles
 	// timer counter set to 0 gets called 116.536/frame
 	float pce_timer_rate = pce_cpu_clock / 1024.f;
+	// 8kb banks are our bread and butter
+	int pce_bank_size = 8192;
 
 	// give a little help
 	if (argc < 2) {
@@ -107,6 +117,8 @@ int main(int argc, char* args[]) {
 	printf("target bit depth : %d\n", pce_bit_depth);
 	printf("bit ratio : %f\n", bit_ratio);
 	printf("sample ratio : %f\n", sample_ratio);
+
+	printf("\nnumber of banks sample will occupy : %f\n", sample_count_per_channel * sample_ratio / (float) pce_bank_size);
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
