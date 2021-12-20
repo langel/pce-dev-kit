@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 /*
 	8k banks hold 1.171593296089385 seconds
@@ -27,20 +28,36 @@ int main(int argc, char* args[]) {
 
 	// give a little help
 	if (argc < 2) {
-		printf("wav2pce {input .wav filename}\n");
+		printf("wav2pce [options] wav_file\n");
 		printf("  outputs .bin of same name\n");
 		printf("  converts most bit depths and sample rates to 5bit %fHz data\n", pce_timer_rate);
+		printf("options:\n");
+		printf("  -b  backfill last bank with silence ($10)\n");
+		printf("  -t  truncates output to last full bank\n");
+		return 1;
+	}
+
+	// process options
+	int opt_backfill = 0;
+	int opt_truncate = 0;
+	for (int i = 1; i < argc; i++) {
+		if (strcmp(args[i], "-b") == 0) opt_backfill = 1;
+		if (strcmp(args[i], "-t") == 0) opt_truncate = 1;
+	}
+	if (opt_backfill && opt_truncate) {
+		printf("truncate plus backfill does not cornpute\n");
 		return 1;
 	}
 	
 	// try to open the source file
 	FILE * fp;
-	fp = fopen(args[1], "r");
+	int file_arg = argc - 1;
+	fp = fopen(args[file_arg], "r");
 	if (fp == NULL) {
-		printf("failed access to : %s\n", args[1]);
+		printf("failed access to : %s\n", args[file_arg]);
 		return 1;
 	}
-	printf("source file : %s\n", args[1]);
+	printf("source file : %s\n", args[file_arg]);
 
 	// detect wave header
 	fseek(fp, 0, SEEK_SET); // "RIFF" at position 0
@@ -108,8 +125,8 @@ int main(int argc, char* args[]) {
 	
 	// create target file and spit out info
 	char target_filename[2048] = "";
-	char * extension = strrchr(args[1], '.');
-	strncpy(target_filename, args[1], extension - args[1]);
+	char * extension = strrchr(args[file_arg], '.');
+	strncpy(target_filename, args[file_arg], extension - args[file_arg]);
 	strcat(target_filename, ".bin");
 	printf("\ntarget file : %s\n", target_filename);
 	FILE * tp = fopen(target_filename, "w");
@@ -117,14 +134,22 @@ int main(int argc, char* args[]) {
 	printf("target bit depth : %d\n", pce_bit_depth);
 	printf("bit ratio : %f\n", bit_ratio);
 	printf("sample ratio : %f\n", sample_ratio);
-
-	printf("\nnumber of banks sample will occupy : %f\n", sample_count_per_channel * sample_ratio / (float) pce_bank_size);
+	float target_bank_length = sample_count_per_channel * sample_ratio / (float) pce_bank_size;
+	printf("\ndefault output bank length : %f\n", target_bank_length);
+	if (opt_backfill) target_bank_length = ceil(target_bank_length);
+	if (opt_truncate) target_bank_length = floor(target_bank_length);
+	if (opt_backfill || opt_truncate) {
+		printf("target output bank length : %d\n", (int) target_bank_length);
+	}
+	unsigned long int target_byte_length = (unsigned long int) (target_bank_length * (float) pce_bank_size);
+	printf("target output byte length : %lu\n", target_byte_length);
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
 	uint8_t target_data;
 	float sample_pos = 0.f;
-	unsigned long int sample_counter = 0;
+	unsigned long int source_sample_counter = 0;
+	unsigned long int target_sample_counter = 0;
 	for (int i = 0; i < data_length; i += byte_size) {
 		if (bit_depth == 32) {
 			float source_data;
@@ -146,14 +171,21 @@ int main(int argc, char* args[]) {
 			fread(&source_data, byte_size, 1, fp);
 			target_data = (uint8_t) (((float) source_data + bit_offset) * bit_ratio);
 		}
-		if (sample_counter % channel_count == 0) {
+		if (source_sample_counter % channel_count == 0) {
 			sample_pos += sample_ratio;
-			if (sample_pos >= 1.f) {
+			// only write to output 
+			if (sample_pos >= 1.f && target_sample_counter < target_byte_length) {
 				fwrite(&target_data, 1, 1, tp);
+				target_sample_counter++;
 				sample_pos -= 1.f;
 			}
 		}
-		sample_counter++;
+		source_sample_counter++;
+	}
+	target_data = 0x10;
+	while (target_sample_counter < target_byte_length) {
+		fwrite(&target_data, 1, 1, tp);
+		target_sample_counter++;
 	}
 
 	// cleanup and shutdown
