@@ -146,7 +146,7 @@ int main(int argc, char* args[]) {
 	printf("target output byte length : %lu\n", target_byte_length);
 
 	// prepare the anti-aliasing filter
-	linkwitz_riley_scheme filter_scheme = linkwitz_riley_setup(3200.f, (float) sample_rate);
+	linkwitz_riley_scheme filter_scheme = linkwitz_riley_setup(6900.f, (float) sample_rate);
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
@@ -158,6 +158,7 @@ int main(int argc, char* args[]) {
 		if (bit_depth == 32) {
 			float source_data;
 			fread(&source_data, byte_size, 1, fp);
+			// XXX a few $20 are coming back :x
 			source_data = linkwitz_riley_process_lowpass(filter_scheme, source_data);
 			target_data = (uint8_t) ((source_data + bit_offset) * bit_ratio);
 		}
