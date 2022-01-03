@@ -306,19 +306,19 @@ init_psg:
 	sta $0804
 	lda #$ff  ; set L/R volume full
 	sta $0805 
-	lda %11001111 ; set Channel and DDA to on / Volume full
+	lda %11011111 ; set Channel and DDA to on / Volume full
 	sta $0804
 
 	lda #$03
 	sta $0800
+	lda #$40
+	sta $0804
 	lda #$00
-	sta $0802
-	sta $0803
-	sta $0806
-	lda %11000000 ; set Channel and DDA to on / Volume full
 	sta $0804
 	lda #$ff  ; set L/R volume full
 	sta $0805 
+	lda %11001111 ; set Channel and DDA to on / Volume full
+	sta $0804
 
 
 	lda #$04
@@ -379,6 +379,9 @@ timer_snare:
 	phx
 	phy
 	stz $1403 ; reset timer
+	; load next sample
+	lda [snare_lo]
+	tax
 
 	lda #$05 ; use channel 5
 	sta $0800
@@ -386,8 +389,19 @@ timer_snare:
 ;	lda [snare_lo,x]
 ;	ldy #$00
 ;	lda (snare_lo),y
-	lda [snare_lo]
+	txa
 	sta $0806 ; stash into DDA
+	; do it on channel 4
+	lda #$04
+	sta $0800
+	txa
+	sta $0806
+	; do it on channel 3
+	lda #$03
+	sta $0800
+	txa
+	sta $0806
+	; increment sample counter
 	inc snare_lo
 	bne .skip_hi_ops
 	inc snare_hi
@@ -427,5 +441,5 @@ square:
 	.dw start_up
       
 	.bank $01
-	.incbin "audio tools/wav2pce/pizzaball 16bit 6992Hz.bin"
+	.incbin "audio tools/wav2pce/pizzaball 32bit.bin"
 ;#end

@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include "linkwitz_riley_crossover.c"
+#include "lowpass.c"
 
 /*
 	8k banks hold 1.171593296089385 seconds
@@ -146,7 +147,13 @@ int main(int argc, char* args[]) {
 	printf("target output byte length : %lu\n", target_byte_length);
 
 	// prepare the anti-aliasing filter
-	linkwitz_riley_scheme filter_scheme = linkwitz_riley_setup(6900.f, (float) sample_rate);
+// linkwitz_riley_scheme filter_scheme = linkwitz_riley_setup(6900.f, (float) sample_rate);
+	lowpass_scheme lowscheme = lowpass_setup((double) pce_timer_rate / 2.0, (double) sample_rate);
+//	printf(" %f\t %f\t %f\t %f\t %f\t %f\n", lowscheme.sample_rate, lowscheme.frequency, lowscheme.sqrt, lowscheme.tan, lowscheme.scale, lowscheme.b1);
+	printf("%f\t \n", lowscheme.b1);
+	lowpass_scheme *lps_ptr = &lowscheme;
+	printf("%f\t \n", lowscheme.b1);
+	printf("what?\n");
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
@@ -159,7 +166,11 @@ int main(int argc, char* args[]) {
 			float source_data;
 			fread(&source_data, byte_size, 1, fp);
 			// XXX a few $20 are coming back :x
-			source_data = linkwitz_riley_process_lowpass(filter_scheme, source_data);
+//			source_data = linkwitz_riley_process_lowpass(filter_scheme, source_data);
+//			source_data = (float) lowpass_process(lps_ptr, (double) source_data);
+			// clamp to -1 .. 1
+			if (source_data > 1.f) source_data = 0.99f;
+			if (source_data < -1.f) source_data = -1.f;
 			target_data = (uint8_t) ((source_data + bit_offset) * bit_ratio);
 		}
 		if (bit_depth == 24) { // XXX almost guaranteed not to work
@@ -182,6 +193,9 @@ int main(int argc, char* args[]) {
 			// only write to output 
 			if (sample_pos >= 1.f && target_sample_counter < target_byte_length) {
 				fwrite(&target_data, 1, 1, tp);
+				if (target_sample_counter % 100 == 0) {
+	printf("%f\t ", lowscheme.b2);
+				}
 				target_sample_counter++;
 				sample_pos -= 1.f;
 			}
