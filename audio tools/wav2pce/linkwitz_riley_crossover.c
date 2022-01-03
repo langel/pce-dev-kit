@@ -27,12 +27,12 @@ linkwitz_riley_scheme linkwitz_riley_setup(float crossover_frequency, float samp
 	float k2 = k1 * k1;
 	float k3 = k2 * k1;
 	float k4 = k2 * k2;
-	float sq = sqrt(2);
-	float sq1 = sq * wc3 * k1;
-	float sq2 = sq * wc1 * k3;
+	float sqr = sqrt(2);
+	float sq1 = sqr * wc3 * k1;
+	float sq2 = sqr * wc1 * k3;
 	float atp = 4 * wc2 * k2 + 2 * sq1 + k4 + 2 * sq2 + wc4;
 	scheme.b1 = (4 * (wc4 + sq1 - k4 - sq2)) / atp;
-	scheme.b2 = (6 * wc4 - 8 * wc2 + 6 * k4) / atp;
+	scheme.b2 = (6 * wc4 - 8 * wc2 * k2 + 6 * k4) / atp;
 	scheme.b3 = (4 * (wc4 - sq1 + sq2 - k4)) / atp;
 	scheme.b4 = (k4 - 2 * sq1 + wc4 - 2 * sq2 + 4 * wc2 * k2) / atp;
 	scheme.hp.xm1 = scheme.hp.xm2 = scheme.hp.xm3 = scheme.hp.xm4 = 0.f;
@@ -95,6 +95,11 @@ float linkwitz_riley_process_lowpass(linkwitz_riley_scheme scheme, float sample)
 	scheme.lp.ym1 = temp;
 	return temp;
 }
+
+
+// the following code was stolen from : 
+// https://www.musicdsp.org/en/latest/Filters/266-4th-order-linkwitz-riley-filters.html
+
 /*
 #include <iostream>
 #include <stdio.h>
