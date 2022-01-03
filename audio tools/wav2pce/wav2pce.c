@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "linkwitz_riley_crossover.c"
-#include "lowpass.c"
 
 /*
 	8k banks hold 1.171593296089385 seconds
@@ -36,15 +34,21 @@ int main(int argc, char* args[]) {
 		printf("options:\n");
 		printf("  -b  backfill last bank with silence ($10)\n");
 		printf("  -t  truncates output to last full bank\n");
+		printf("  -a  averaging filter (averages source samples between targets)\n");
+		printf("  -n  nyquist filter (averages previous target sample w/ current)\n");
 		return 1;
 	}
 
 	// process options
 	int opt_backfill = 0;
 	int opt_truncate = 0;
+	int opt_antialias = 0;
+	int opt_nyquist = 0;
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(args[i], "-b") == 0) opt_backfill = 1;
 		if (strcmp(args[i], "-t") == 0) opt_truncate = 1;
+		if (strcmp(args[i], "-a") == 0) opt_antialias = 1;
+		if (strcmp(args[i], "-n") == 0) opt_nyquist = 1;
 	}
 	if (opt_backfill && opt_truncate) {
 		printf("truncate plus backfill does not cornpute\n");
@@ -147,13 +151,9 @@ int main(int argc, char* args[]) {
 	printf("target output byte length : %lu\n", target_byte_length);
 
 	// prepare the anti-aliasing filter
-// linkwitz_riley_scheme filter_scheme = linkwitz_riley_setup(6900.f, (float) sample_rate);
-	lowpass_scheme lowscheme = lowpass_setup((double) pce_timer_rate / 2.0, (double) sample_rate);
-//	printf(" %f\t %f\t %f\t %f\t %f\t %f\n", lowscheme.sample_rate, lowscheme.frequency, lowscheme.sqrt, lowscheme.tan, lowscheme.scale, lowscheme.b1);
-	printf("%f\t \n", lowscheme.b1);
-	lowpass_scheme *lps_ptr = &lowscheme;
-	printf("%f\t \n", lowscheme.b1);
-	printf("what?\n");
+	if (opt_antialias) printf("averaging filter enabled\n");
+	if (opt_nyquist) printf("nyquist filter enabled\n");
+	if (opt_antialias && opt_nyquist) printf("averaging may supercede nyquist\n");
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
@@ -161,13 +161,17 @@ int main(int argc, char* args[]) {
 	float sample_pos = 0.f;
 	unsigned long int source_sample_counter = 0;
 	unsigned long int target_sample_counter = 0;
+	float alias_source = 0.f;
+	float alias_value = 0.f;
+	int alias_counter = 0;
+	float nyquist_previous = 0.f;
 	for (int i = 0; i < data_length; i += byte_size) {
+		// XXX need to refactor this so each bit depth returns -1 .. 1 float
+		//     then convert to 5bit afterwards
 		if (bit_depth == 32) {
 			float source_data;
 			fread(&source_data, byte_size, 1, fp);
-			// XXX a few $20 are coming back :x
-//			source_data = linkwitz_riley_process_lowpass(filter_scheme, source_data);
-//			source_data = (float) lowpass_process(lps_ptr, (double) source_data);
+			alias_source = source_data;
 			// clamp to -1 .. 1
 			if (source_data > 1.f) source_data = 0.99f;
 			if (source_data < -1.f) source_data = -1.f;
@@ -190,12 +194,30 @@ int main(int argc, char* args[]) {
 		}
 		if (source_sample_counter % channel_count == 0) {
 			sample_pos += sample_ratio;
+			if (opt_antialias) {
+				alias_value += alias_source;
+				alias_counter++;
+			}
 			// only write to output 
 			if (sample_pos >= 1.f && target_sample_counter < target_byte_length) {
-				fwrite(&target_data, 1, 1, tp);
-				if (target_sample_counter % 100 == 0) {
-	printf("%f\t ", lowscheme.b2);
+				if (opt_nyquist) {
+if (target_sample_counter % 256 == 0) {
+//	printf("%f\t%f\n", alias_source, nyquist_previous);
+}
+					float temp = (alias_source + nyquist_previous) * 0.5f;
+					nyquist_previous = alias_source;
+					alias_source = temp;
 				}
+				if (opt_antialias) {
+					alias_value /= (float) alias_counter;
+					target_data = (uint8_t) ((alias_value + bit_offset) * bit_ratio);
+if (target_sample_counter % 256 == 0) {
+//	printf("%f\t%f\t%d\t%d\n", alias_source, alias_value, alias_counter, target_data);
+}
+					alias_value = 0.f;
+					alias_counter = 0;
+				}
+				fwrite(&target_data, 1, 1, tp);
 				target_sample_counter++;
 				sample_pos -= 1.f;
 			}
