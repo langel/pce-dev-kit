@@ -7,6 +7,12 @@ The PCE has a custom 65C02 processor sometimes referred to by its CMOS designati
 ## MagicKit's HuC and PCEAS
 HuC is a library and transpiler for making PC Engine ROMs using the C language. It converts the project into assembly and then compiles with PCEAS (PC Engine ASembler). DOS version literally requires DOS or DOSBOX. Windows version works on modern installs with Command Prompt. OSX version could easily predate OSX since the HuC/PCEAS source has not been updated since Dec 2000. Linux version wouldn't work on modern Debian. `"windows huc\bin\pceas.exe" -S test.asm` ftw
 
+## PCEAS Updates
+Newer builds of `pceas` can be found in the `pceas_bin` directory. These versions were all derived from the [nop00 repo](https://github.com/nop00/pceas) since it was the first one discovered with somewhat-recent patches. If these versions of pceas do not work on your environment you'll need to pull said repo, run `cmake` then `make`, and then it will be compiled to a `Debug` directory.
+
+## PCEAS Quirks
+indirect mode uses square brackets [] rather than the traditionally notated parenthesis () i.e.: `lda [addr],y` not `lda (addr),y` {rtfm but the manual is the source ;-;}
+
 ## Audio Notes
 MML, Squirrel, Deflemask -- maybe some more notes someday haha  xD
 
