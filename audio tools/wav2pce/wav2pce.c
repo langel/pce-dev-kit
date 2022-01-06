@@ -115,21 +115,23 @@ int main(int argc, char* args[]) {
 
 	// conversion adjusters
 	float sample_ratio = pce_timer_rate / sample_rate;
-	float bit_offset, bit_ratio;
+	float bit_ratio;
+	int bit_offset;
 	// XXX target bit depth could vary
 	//     4 bit storage would use half the space
 	//     stacking channels could create more bit depth
 	uint8_t pce_bit_depth = 5;
 	float float_offset = 1.f;
 	float float_ratio = (float) (1 << pce_bit_depth) / 2.f;
-	if (bit_depth == 32) {
-		bit_offset = (float) 1;
-		bit_ratio = (float) (1 << pce_bit_depth) / 2.f;
+	// unsigned values
+	if (bit_depth == 8) {
+		bit_offset = 128;
+		bit_ratio = 1.f / (float) bit_offset;
 	}
-	else {
-		bit_offset = (float) (1 << (bit_depth - 1));
-		bit_ratio = (float) (1 << pce_bit_depth) / (float) (1 << bit_depth);
-		bit_ratio = 1.f / (float) (1 << (bit_depth - 1));
+	// signed values
+	if (bit_depth > 8 && bit_depth < 32) {
+		bit_offset = 1 << (bit_depth - 1);
+		bit_ratio = 1.f / (float) bit_offset;
 	}
 	
 	// create target file and spit out info
@@ -156,7 +158,7 @@ int main(int argc, char* args[]) {
 	// prepare the anti-aliasing filter
 	if (opt_antialias) printf("averaging filter enabled\n");
 	if (opt_nyquist) printf("nyquist filter enabled\n");
-	if (opt_antialias && opt_nyquist) printf("averaging may supercede nyquist\n");
+	if (opt_antialias && opt_nyquist) printf("thats a lot of filtering! :U\n");
 
 	// process / convert / save
 	fseek(fp, 44, SEEK_SET);
@@ -169,38 +171,27 @@ int main(int argc, char* args[]) {
 	int alias_counter = 0;
 	float nyquist_previous = 0.f;
 	for (int i = 0; i < data_length; i += byte_size) {
-		// XXX need to refactor this so each bit depth returns -1 .. 1 float
-		//     then convert to 5bit afterwards
+		// read next sample and convert to float if necessary
 		if (bit_depth == 32) {
 			fread(&source_sample, byte_size, 1, fp);
 		}
-		else {
-			int source_data;
-			fread(&source_data, byte_size, 1, fp);
-			source_sample = (float) source_data * (1.f / (float) (1 << (bit_depth - 1))); 
-		}
-		/*
-		if (bit_depth == 24) { // XXX almost guaranteed not to work
-			int32_t source_data;
-			fread(&source_data, byte_size, 1, fp);
-			source_sample = (float) (source_data + bit_offset) * bit_ratio;
-		}
-		if (bit_depth == 16) {
+		else if (bit_depth == 16) {
 			int16_t source_data;
 			fread(&source_data, byte_size, 1, fp);
-			source_sample = (float) (source_data + bit_offset) * bit_ratio;
+			source_sample = (float) source_data * bit_ratio;
 		}
-		if (bit_depth == 8) { // XXX not very tested
+		else if (bit_depth == 8) { 
 			uint8_t source_data;
 			fread(&source_data, byte_size, 1, fp);
-			source_sample = (float) (source_data + bit_offset) * bit_ratio;
+			source_sample = (float) ((signed int) source_data - bit_offset) * bit_ratio;
 		}
-		*/
-		// clamp to -1 .. 1
-		if (source_sample >= 1.f) source_sample = 0.99f;
-		if (source_sample <= -1.f) source_sample = -1.f;
-		// convert float sample to 5bit byte
-		target_data = (uint8_t) ((source_sample + float_offset) * float_ratio);
+		else if (bit_depth > 8 && bit_depth < 32) { 
+			// XXX guaranteed not to work
+			// 24 bit might be solved
+			int32_t source_data;
+			fread(&source_data, byte_size, 1, fp);
+			source_sample = (float) source_data * bit_ratio;
+		}
 		if (source_sample_counter % channel_count == 0) {
 			sample_pos += sample_ratio;
 			if (opt_antialias) {
@@ -209,17 +200,24 @@ int main(int argc, char* args[]) {
 			}
 			// only write to output 
 			if (sample_pos >= 1.f && target_sample_counter < target_byte_length) {
+				// clamp to -1 .. 1
+				if (source_sample >= 1.f) source_sample = 0.99f;
+				if (source_sample <= -1.f) source_sample = -1.f;
+				// handle averager anti-alias filter
+				if (opt_antialias) {
+					source_sample = alias_value / (float) alias_counter;
+					target_data = (uint8_t) ((alias_value + bit_offset) * bit_ratio);
+					alias_value = 0.f;
+					alias_counter = 0;
+				}
+				// handle nyquist simple filter
 				if (opt_nyquist) {
 					float temp = (source_sample + nyquist_previous) * 0.5f;
 					nyquist_previous = source_sample;
 					source_sample = temp;
 				}
-				if (opt_antialias) {
-					alias_value /= (float) alias_counter;
-					target_data = (uint8_t) ((alias_value + bit_offset) * bit_ratio);
-					alias_value = 0.f;
-					alias_counter = 0;
-				}
+				// convert float sample to 5bit byte
+				target_data = (uint8_t) ((source_sample + float_offset) * float_ratio);
 				fwrite(&target_data, 1, 1, tp);
 				target_sample_counter++;
 				sample_pos -= 1.f;
