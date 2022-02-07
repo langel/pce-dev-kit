@@ -24,5 +24,6 @@ MML, Squirrel, Deflemask -- maybe some more notes someday haha  xD
 - [ObeyBrew Tutorials](http://obeybrew.com/tutorials.html)
 - [Chris Covell's CPU / Emulator Tester](https://chrismcovell.com/CPUTest/index.html)
 - [Alddee Homebrew Game w/ source](http://www.sebastianmihai.com/turbografx-alddee.html)
+- [Wavegen algo waveform generator](https://melonadem.com/wavegen/)
 - [Squirrel Music Maker for PCE](http://www.aetherbyte.com/aetherbyte-squirrel_for_pc-engine_and_turbografx-16.html)
 - [An Immolated Hot Dog](https://tikolu.net/emojimix/%F0%9F%8C%AD+%F0%9F%94%A5)
