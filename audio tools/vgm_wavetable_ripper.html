@@ -25,6 +25,11 @@
 			margin: 1em;
 			margin-bottom: 2em;
 		}
+		.data {
+			font-family: monospace;
+			font-size: 1.2em;
+			padding: 0 2em;
+		}
 		#droptarg {
 			position: fixed;
 			width: 100%;
@@ -42,20 +47,77 @@
 			const cont = document.getElementById("containment");
 			const droptarg = document.getElementById("droptarg");
 			const output = document.getElementById("output");
+			const domp = new DOMParser();
+			const br = "<br>";
 			// drop handler
 			droptarg.addEventListener("drop", (e) => {
 				e.preventDefault();
 				cont.classList.remove("dragover");
-				let out = '';
+				output.innerHTML = '';
 				[...e.dataTransfer.items].forEach((item, i) => {
 					if (item.kind === 'file') {
 						const file = item.getAsFile();
-						console.log(file);
-						out += "<h3>" + file.name + "</h3>";
+						const r = new FileReader();
+						r.readAsArrayBuffer(file);
+						r.onload = () => {
+							const data = new Uint8Array(r.result);
+							spew(file, data);
+						};
 					}
 				});
-				output.innerHTML = out;
 			});
+			function spew(file, data) {
+				const name = file.name;
+				const size = file.size;
+				let out = "<h2>" + name + " (" + size + " bytes) </h2>";
+				console.log("loaded");
+				console.log(out);
+				console.log(size);
+				if (data[0] != 'V'.charCodeAt() || data[1] != 'g'.charCodeAt() || data[2] != 'm'.charCodeAt() || data[3] != ' '.charCodeAt()) {
+					out += "ERROR: Vgm header identification unfound";
+					output.innerHTML += out;
+					console.log('error');
+					return;
+				}
+				let pos = 0xc0;
+				let chip = false;
+				let addr = false;
+				let table = 0;
+				let temp = '';
+				let val;
+				out += '<div class="data">';
+				while (pos < size) {
+					if (data[pos] == 0xb9) {
+						chip = true;
+					}
+					else if (chip == true && data[pos] == 0x06) {
+						addr = true;
+					}
+					else if (chip == true && addr == true) {
+						val = data[pos];
+						if (val < 10) temp += '&nbsp;';
+						temp += val + ' ';
+						chip = false;
+						addr = false;
+						table++;
+						if (table == 16) {
+							out += temp + br;
+							table = 0;
+							temp = '';
+						}
+					}
+					else {
+						chip = false;
+						addr = false;
+						table = false;
+						temp = '';
+					}
+					pos++;
+				}
+				console.log(table);
+				out += '</div>';
+				output.innerHTML += out;
+			}
 			// drag hover
 			droptarg.addEventListener("dragover", (e) => {
 				e.preventDefault();
@@ -76,6 +138,7 @@
 		Drag a .VGM file with HuC6280 data into this window to start ripping. If your file is .VGZ then rename the file extension to .GZIP and then use 7zip or similar to extract the .VGM file sequestered within.
 		<div id="output">
 		</div>
+		&nbsp;
 		<footer>
 			Tool coded by Langel Bookbinder aka b-knox aka puke7 and is part of this balanced <a href="https://github.com/langel/pce-dev-kit" target="_blank">PCE Dev Kit Library</a>.
 		</footer>
