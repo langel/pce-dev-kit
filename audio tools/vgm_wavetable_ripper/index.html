@@ -51,6 +51,7 @@
 			width: 100%;
 		}
 	</style>
+	<script type="text/javascript" src="pako.min.js"></script>
 	<script>
 		window.addEventListener("DOMContentLoaded", () => {
 			const cont = document.getElementById("containment");
@@ -75,6 +76,9 @@
 					}
 				});
 			});
+			function vgm_affirm(data) {
+				return (data[0] == 'V'.charCodeAt() || data[1] == 'g'.charCodeAt() || data[2] == 'm'.charCodeAt() || data[3] == ' '.charCodeAt());
+			}
 			function spew(file, data) {
 				const name = file.name;
 				const size = file.size;
@@ -82,13 +86,27 @@
 				console.log("loaded");
 				console.log(out);
 				console.log(size);
-				if (data[0] != 'V'.charCodeAt() || data[1] != 'g'.charCodeAt() || data[2] != 'm'.charCodeAt() || data[3] != ' '.charCodeAt()) {
-					out += '<div class="data">';
-					out += "ERROR: 'Vgm ' header identification unfound";
-					out += '</div>';
-					output.innerHTML += out;
-					console.log('error');
-					return;
+				if (!vgm_affirm(data)) {
+					console.log("attempting to uncompress .vgz/.gzip");
+					try {
+						data = pako.inflate(data);
+						if (!vgm_affirm(data)) {
+							out += '<div class="data">';
+							out += "ERROR: 'Vgm ' header identification unfound";
+							out += '</div>';
+							output.innerHTML += out;
+							console.log('error');
+							return;
+						}
+					}
+					catch {
+						out += '<div class="data">';
+						out += "ERROR: 'Vgm ' header identification unfound";
+						out += '</div>';
+						output.innerHTML += out;
+						console.log('error');
+						return;
+					}
 				}
 				let pos = 0xc0;
 				let chip = false;
@@ -152,7 +170,7 @@
 <body>
 	<div id="containment">
 		<h1>PCE VGM Wave Table Ripper</h1>
-		Drag and drop .VGM file(s) with HuC6280 data into this window to start ripping. If your file is .VGZ then rename the file extension to .GZIP and then use 7zip or similar to extract the .VGM file sequestered within. This utility does it's best to find all sets of 32 consecutive writes to the wave table register and remove reduncies. <strike>It's not very smart, but seems to mostly do the job. :D/</strike> Maybe another evening or two experimenting will help it along. Seems like some programmers didn't update the entire wave table when writing to the register.
+		Drag and drop .VGM and/or .VGZ file(s) with HuC6280 data into this window to start ripping. This utility does it's best to find all sets of 32 consecutive writes to the wave table register and remove reduncies. <strike>It's not very smart, but seems to mostly do the job. :D/</strike> Maybe another evening or two experimenting will help it along. Seems like some programmers didn't update the entire wave table when writing to the register.
 		<div id="output">
 		</div>
 		&nbsp;
