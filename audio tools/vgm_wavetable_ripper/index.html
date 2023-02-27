@@ -53,6 +53,32 @@
 	</style>
 	<script type="text/javascript" src="pako.min.js"></script>
 	<script>
+		function chan() {
+			this.dda = false;
+			this.on = false;
+			this.pos =  0;
+			this.wave = Array(32).fill(0);
+			this.wave_next = (val) => {
+				if (this.on == false) {
+					// HuC6280 ignores higher bits
+					this.wave[this.pos] = val & 0x1f;
+					this.pos++;
+					if (this.pos >= 0x20) this.pos = 0;
+				}
+			};
+			this.wave_reset = () => {
+				this.pos = 0;
+			};
+		};
+		let chans = Array.from(Array(6), () => new chan);
+		console.log(chans);
+		let pos = 0xc0;
+		let chip = false;
+		let odda = false;
+		let wave = false;
+		let targ = false;
+		let chancur = 0;
+		let tables = [];
 		window.addEventListener("DOMContentLoaded", () => {
 			const cont = document.getElementById("containment");
 			const droptarg = document;
@@ -108,38 +134,65 @@
 						return;
 					}
 				}
-				let pos = 0xc0;
-				let chip = false;
-				let addr = false;
-				let table = [];
-				let tables = [];
 				out += '<div class="data">';
 				while (pos < size) {
+				try {
 					if (data[pos] == 0xb9) {
 						chip = true;
 					}
-					else if (chip == true && data[pos] == 0x06) {
-						addr = true;
+					else if (chip == true && data[pos] == 0x00) {
+						targ = true;
 					}
-					else if (chip == true && addr == true) {
+					else if (chip == true && targ == true) {
 						// HuC6280 ignores higher bits
-						table.push(data[pos] & 0x1f);
+						chancur = data[pos] % 6;
 						chip = false;
-						addr = false;
-						if (table.length == 0x20) {
-							let original = true;
-							tables.forEach((tabl) => {
-								if (tabl.every((val, i) => val === table[i])) original = false;
-							});
-							if (original) tables.push(table);
-							table = [];
+						targ = false;
+					}
+					else if (chip == true && data[pos] == 0x04) {
+						odda = true;
+					}
+					else if (chip == true && odda == true) {
+						if (data[pos] & 0x40) {
+							chans[chancur].dda = true;
+							chans[chancur].wave_reset();
 						}
+						else chans[chancur].dda = false;
+						if (data[pos] & 0x80) {
+							chans[chancur].on = true;
+							tables.push(chans[chancur].wave);
+						}
+						else chans[chancur].on = false;
+						chip = false;
+						odda = false;
+					}
+					else if (chip == true && data[pos] == 0x06) {
+						wave = true;
+					}
+					else if (chip == true && wave == true) {
+						chans[chancur].wave_next(data[pos]);
+						chip = false;
+						wave = false;
+						/*
+							let original = true;
+							tables.forEach((table) => {
+								if (table.every((val, i) => val === chans[chancur].wave[i])) original = false;
+							});
+							if (original) tables.push(chans[chancur].wave);
+						*/
 					}
 					else {
 						chip = false;
-						addr = false;
-						table = [];
+						wave = false;
+						odda = false;
+						targ = false;
 					}
+				}
+				catch (e) {
+					console.log(e);
+					console.log(chans);
+					console.log("curchan: " + chancur);
+				}
 					pos++;
 				}
 				console.log(tables);
