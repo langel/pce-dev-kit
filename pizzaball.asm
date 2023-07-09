@@ -299,15 +299,15 @@ init_psg:
 	sta snare_hi
 ; SNARE WAVE channel 5 (pcm / DDA)
 	lda #$05
-	sta $0800
+	sta $0800 ; set channel
 	lda #$40
-	sta $0804
+	sta $0804 ; set ch off and dda on
 	lda #$00
+	sta $0804 ; disable sound
+	sta $0806
+	lda #$ff ; set Channel and DDA to on / Volume full
 	sta $0804
-	lda #$ff  ; set L/R volume full
-	sta $0805 
-	lda %11011111 ; set Channel and DDA to on / Volume full
-	sta $0804
+	sta $0805 ; set L/R volume full 
 
 	lda #$03
 	sta $0800
@@ -315,19 +315,22 @@ init_psg:
 	sta $0804
 	lda #$00
 	sta $0804
+	sta $0806
 	lda #$ff  ; set L/R volume full
 	sta $0805 
-	lda %11001111 ; set Channel and DDA to on / Volume full
+	lda #$df ; set Channel and DDA to on / Volume full
 	sta $0804
-
 
 	lda #$04
 	sta $0800
-	lda #$ff  ; set L/R volume full
-	sta $0805 
+	lda #$40
+	sta $0804
 	lda #$00
 	sta $0804
-	lda %11011111 ; set Channel and DDA to on / Volume full
+	sta $0806
+	lda #$ff  ; set L/R volume full
+	sta $0805 
+	lda #$df ; set Channel and DDA to on / Volume full
 	sta $0804
 
 
@@ -385,10 +388,6 @@ timer_snare:
 
 	lda #$05 ; use channel 5
 	sta $0800
-;	ldx #$00
-;	lda [snare_lo,x]
-;	ldy #$00
-;	lda (snare_lo),y
 	txa
 	sta $0806 ; stash into DDA
 	; do it on channel 4
